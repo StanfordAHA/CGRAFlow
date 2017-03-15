@@ -1,0 +1,14 @@
+language: c
+dist: trusty
+
+before_install:
+  - git clone https://github.com/jameshegarty/rigel.git
+  - ./rigel/.travis.trusty.sh
+
+  - git clone https://github.com/rdaly525/coreir.git
+  - git clone https://github.com/StanfordAHA/CGRAMapper.git
+  - git clone https://github.com/StanfordAHA/CGRAGenerator.git
+  - git clone https://github.com/cdonovick/smt-pnr
+
+script:
+  - cd examples
