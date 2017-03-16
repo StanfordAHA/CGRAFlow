@@ -3,7 +3,7 @@ dist: trusty
 
 before_install:
   - git clone https://github.com/jameshegarty/rigel.git
-  - ./rigel/.travis.trusty.sh
+#  - ./rigel/.travis.trusty.sh
 
   - git clone https://github.com/rdaly525/coreir.git
 
@@ -15,3 +15,9 @@ before_install:
 
 script:
   - cd examples
+
+addons:
+  apt:
+    packages:
+      - verilator
+      - luajit
