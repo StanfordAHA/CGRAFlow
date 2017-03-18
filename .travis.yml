@@ -9,15 +9,8 @@ compiler:
 before_install:
   # Optionally bypass one or more installs, for e.g. quick debugging of CGRA-gen scripts.
   - CGRA_QUICKTEST=true
-  - USE_COREIR=true
-  - if [[ "$CGRA_QUICKTEST" == "true" ]]; then USE_COREIR=false; fi
-  # OR maybe
-  - if [[ -v BYPASS_COREIR ]]; then echo set1; else echo unset1; fi
-  - if [[ ! -v BYPASS_COREIR ]]; then echo unset1a; else echo set1a; fi
   - if [[ "$CGRA_QUICKTEST" == "true" ]]; then BYPASS_COREIR=true; fi
-  - if [[ -v BYPASS_COREIR ]]; then echo set2; else echo unset2; fi
-  - if [[ ! -v BYPASS_COREIR ]]; then echo unset3; else echo set3; fi
-  - echo $USE_COREIR
+  - if [[ -v BYPASS_COREIR ]]; then echo BYPASS_COREIR set; else echo BYPASS_COREIR unset; fi
 
 
   - git clone https://github.com/jeffsetter/Halide_CoreIR.git
@@ -32,15 +25,17 @@ before_install:
  #- wget https://github.com/zdevito/terra/releases/download/release-2016-02-26/terra-Linux-x86_64-2fa8d0a.zip
  # - unzip terra-Linux-x86_64-2fa8d0a.zip
 
-  - git clone https://github.com/rdaly525/coreir.git
-  - export CORECONFIG="g++-4.9";
-  - make -C coreir/src
-  - make -C coreir/src ../build/coreir.so
-  - make -C coreir/tests
-  - pip install pytest
-  - cd coreir
-  - pip install -e bindings/python
-  - cd ..
+  # Hope this isn't too ugly for you; it solves problems for me (steveri);
+  # also I'm sure there's a better way to do this but I didn't find it...
+  - if [[ ! -v BYPASS_COREIR ]]; then git clone https://github.com/rdaly525/coreir.git; fi
+  - if [[ ! -v BYPASS_COREIR ]]; then export CORECONFIG="g++-4.9"; fi
+  - if [[ ! -v BYPASS_COREIR ]]; then make -C coreir/src; fi
+  - if [[ ! -v BYPASS_COREIR ]]; then make -C coreir/src ../build/coreir.so; fi
+  - if [[ ! -v BYPASS_COREIR ]]; then make -C coreir/tests; fi
+  - if [[ ! -v BYPASS_COREIR ]]; then pip install pytest; fi
+  - if [[ ! -v BYPASS_COREIR ]]; then cd coreir; fi
+  - if [[ ! -v BYPASS_COREIR ]]; then pip install -e bindings/python; fi
+  - if [[ ! -v BYPASS_COREIR ]]; then cd ..; fi
 
 
   - git clone https://github.com/StanfordAHA/CGRAMapper.git
@@ -51,6 +46,7 @@ before_install:
 
 install:
   -  pwd
+  - if [[ -v BYPASS_COREIR ]]; then echo BYPASS_COREIR set; else echo BYPASS_COREIR unset; fi
 
   # Halide
   - wget http://llvm.org/releases/${LLVM_VERSION}/clang+llvm-${LLVM_VERSION}-x86_64-linux-gnu-ubuntu-14.04.tar.xz
