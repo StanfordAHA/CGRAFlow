@@ -128,7 +128,6 @@ addons:
       - zlib1g
       - zlib1g-dev
       - graphviz-dev
-      - python-3.5
 
 env:
   # halide
