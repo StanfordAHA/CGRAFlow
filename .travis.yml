@@ -35,7 +35,7 @@ before_install:
   - git clone https://github.com/cdonovick/smt-pnr
 
 install:
-  - pwd
+  -  pwd
 
   # Halide
   - wget http://llvm.org/releases/${LLVM_VERSION}/clang+llvm-${LLVM_VERSION}-x86_64-linux-gnu-ubuntu-14.04.tar.xz
@@ -44,23 +44,23 @@ install:
 
   # pnr
     # Build monosat
-    - git clone https://github.com/sambayless/monosat.git 
-    - cd monosat
-    - cmake .
-    - make -j 2
-    - sudo make install
-    - cd src/monosat/api/python
-    - pip install -e .
-    - cd $TRAVIS_BUILD_DIR
+  - git clone https://github.com/sambayless/monosat.git 
+  - cd monosat
+  - cmake .
+  - make -j 2
+  - sudo make install
+  - cd src/monosat/api/python
+  - pip install -e .
+  - cd $TRAVIS_BUILD_DIR
     # Build z3
-    - git clone https://github.com/Z3Prover/z3.git
-    - cd z3
-    - python scripts/mk_make.py --python
-    - cd build
-    - make -j 2
-    - sudo make install
-    - cd $TRAVIS_BUILD_DIR
-    - pip install pygraphviz
+  - git clone https://github.com/Z3Prover/z3.git
+  - cd z3
+  - python scripts/mk_make.py --python
+  - cd build
+  - make -j 2
+  - sudo make install
+  - cd $TRAVIS_BUILD_DIR
+  - pip install pygraphviz
 
 script:
   # halide
