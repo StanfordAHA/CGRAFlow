@@ -25,7 +25,9 @@ before_install:
   - make -C coreir/src ../build/coreir.so
   - make -C coreir/tests
   - pip install pytest
+  - cd coreir
   - pip install -e bindings/python
+  - cd ..
 
 
   - git clone https://github.com/StanfordAHA/CGRAMapper.git
