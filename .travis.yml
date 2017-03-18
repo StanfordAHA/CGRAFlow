@@ -80,7 +80,12 @@ script:
   - cd ../../  
   
   # CGRA generate (generates connection matrix for pnr)
-  
+  - echo "BEGIN CGRA GENERATE"
+  - pwd; pushd ${TRAVIS_BUILD_DIR}; ls -l
+  - ./CGRAGenerator/travis-test.csh
+  # [steveri] What's this (below)?  It looks wrong!
+  - export PKG_CONFIG_PATH=/home/travis/build/StanfordAHA/CGRAGenerator/platform/verilator
+  - popd
 
   # pnr
   - cd smt-pnr/mothball/new/
@@ -88,7 +93,12 @@ script:
   - cd ../../../
   
   # CGRA program and run (uses output of pnr)
-
+  - echo "BEGIN CGRA PROGRAM/RUN"
+  - pwd; pushd ${TRAVIS_BUILD_DIR}/CGRAGenerator/verilator/generator_z_tb
+  - ./run.csh top_tb.cpp -config ../../hardware/generator_z/top_tb/tile_config.dat
+  # steveri: i don't trust these relative paths!
+  # - cd ../../../
+  - popd
 
 addons:
   apt:
