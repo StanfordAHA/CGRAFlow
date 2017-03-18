@@ -8,7 +8,7 @@ compiler:
   
 before_install:
   # Optionally bypass one or more installs, for e.g. quick debugging of CGRA-gen scripts.
-  - CGRA_QUICKTEST=true
+  # - CGRA_QUICKTEST=true
   - if [[ -v CGRA_QUICKTEST ]]; then BYPASS_COREIR=true; fi
   - if [[ -v CGRA_QUICKTEST ]]; then BYPASS_SMTPNR=true; fi
   # - if [[ -v BYPASS_COREIR ]]; then echo BYPASS_COREIR set; else echo BYPASS_COREIR unset; fi
@@ -98,7 +98,7 @@ script:
   # CGRA generate (generates connection matrix for pnr)
   - echo "BEGIN CGRA GENERATE"
   # - pwd; pushd ${TRAVIS_BUILD_DIR}; ls -l
-  - pushd CGRAGenerator
+  - pushd ${TRAVIS_BUILD_DIR}/CGRAGenerator
   - ./travis-test.csh
   # [steveri] What's this (below)?  It looks wrong!
   - export PKG_CONFIG_PATH=/home/travis/build/StanfordAHA/CGRAGenerator/platform/verilator
