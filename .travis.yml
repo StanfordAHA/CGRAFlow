@@ -9,8 +9,9 @@ compiler:
 before_install:
   # Optionally bypass one or more installs, for e.g. quick debugging of CGRA-gen scripts.
   - CGRA_QUICKTEST=true
-  - if [[ "$CGRA_QUICKTEST" == "true" ]]; then BYPASS_COREIR=true; fi
-  - if [[ -v BYPASS_COREIR ]]; then echo BYPASS_COREIR set; else echo BYPASS_COREIR unset; fi
+  - if [[ -v CGRA_QUICKTEST ]]; then BYPASS_COREIR=true; fi
+  - if [[ -v CGRA_QUICKTEST ]]; then BYPASS_SMTPNR=true; fi
+  # - if [[ -v BYPASS_COREIR ]]; then echo BYPASS_COREIR set; else echo BYPASS_COREIR unset; fi
 
 
   - git clone https://github.com/jeffsetter/Halide_CoreIR.git
@@ -48,7 +49,7 @@ install:
   -  pwd
   
   # Is this still set?
-  - if [[ -v BYPASS_COREIR ]]; then echo BYPASS_COREIR set; else echo BYPASS_COREIR unset; fi
+  - if [[ -v BYPASS_SMTPNR ]]; then echo BYPASS_SMTPNR set; else echo BYPASS_SMTPNR unset; fi
 
   # Halide
   - wget http://llvm.org/releases/${LLVM_VERSION}/clang+llvm-${LLVM_VERSION}-x86_64-linux-gnu-ubuntu-14.04.tar.xz
@@ -59,21 +60,21 @@ install:
     # Build monosat
   - git clone https://github.com/sambayless/monosat.git 
   - cd monosat
-  - cmake .
-  - make -j 2
-  - sudo make install
-  - cd src/monosat/api/python
-  - pip install -e .
-  - cd $TRAVIS_BUILD_DIR
+  - if [[ ! -v BYPASS_SMTPNR ]]; then cmake .; fi
+  - if [[ ! -v BYPASS_SMTPNR ]]; then make -j 2; fi
+  - if [[ ! -v BYPASS_SMTPNR ]]; then sudo make install; fi
+  - if [[ ! -v BYPASS_SMTPNR ]]; then cd src/monosat/api/python
+  - if [[ ! -v BYPASS_SMTPNR ]]; then pip install -e .; fi
+  - if [[ ! -v BYPASS_SMTPNR ]]; then cd $TRAVIS_BUILD_DIR; fi
     # Build z3
-  - git clone https://github.com/Z3Prover/z3.git
-  - cd z3
-  - python scripts/mk_make.py --python
-  - cd build
-  - make -j 2
-  - sudo make install
-  - cd $TRAVIS_BUILD_DIR
-  - pip install pygraphviz
+  - if [[ ! -v BYPASS_SMTPNR ]]; then git clone https://github.com/Z3Prover/z3.git; fi
+  - if [[ ! -v BYPASS_SMTPNR ]]; then cd z3; fi
+  - if [[ ! -v BYPASS_SMTPNR ]]; then python scripts/mk_make.py --python; fi
+  - if [[ ! -v BYPASS_SMTPNR ]]; then cd build; fi
+  - if [[ ! -v BYPASS_SMTPNR ]]; then make -j 2; fi
+  - if [[ ! -v BYPASS_SMTPNR ]]; then sudo make install; fi
+  - if [[ ! -v BYPASS_SMTPNR ]]; then cd $TRAVIS_BUILD_DIR; fi
+  - if [[ ! -v BYPASS_SMTPNR ]]; then pip install pygraphviz; fi
 
 script:
   # halide
