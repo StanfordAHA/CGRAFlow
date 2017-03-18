@@ -65,14 +65,31 @@ install:
   - pip install pygraphviz
 
 script:
+  # Temporarily doing CGRA-gen first for debugging purposes;
+  # I will remove as soon as I'm done I promise!  -steveri
+
+  # CGRA generate (generates connection matrix for pnr)
+  - echo "BEGIN CGRA GENERATE"
+  - pwd; pushd ${TRAVIS_BUILD_DIR}; ls -l
+  - ./CGRAGenerator/travis-test.csh
+  # [steveri] What's this (below)?  It looks wrong!
+  - export PKG_CONFIG_PATH=/home/travis/build/StanfordAHA/CGRAGenerator/platform/verilator
+  - popd
+
+  # CGRA program and run (uses output of pnr)
+  - echo "BEGIN CGRA PROGRAM/RUN"
+  - pwd; pushd ${TRAVIS_BUILD_DIR}/CGRAGenerator/verilator/generator_z_tb
+  - ./run.csh top_tb.cpp -config ../../hardware/generator_z/top_tb/tile_config.dat
+  # steveri: i don't trust these relative paths!
+  # - cd ../../../
+  - popd
+  - exit
+
+
   # halide
   - Halide_CoreIR/test/scripts/build_travis.sh
 
-  # Temporary coreir/rigel bypass for CGRAGen debug.
-  # Sorry!  It's taking too long.  I'll put it back soon, I promise.
-  # - if false; then
-
- # coreir
+   # coreir
   - cd coreir/tests
   - ./run
   - pytest  # Test python bindings
@@ -83,18 +100,7 @@ script:
   - make out/pointwise_wide_handshake.verilator.bmp
   - cd ../../  
   
-  # Temporary coreir/rigel bypass for CGRAGen debug.
-  # Sorry!  It's taking too long.  I'll put it back soon, I promise.
-  # - fi
-
-
   # CGRA generate (generates connection matrix for pnr)
-  - echo "BEGIN CGRA GENERATE"
-  - pwd; pushd ${TRAVIS_BUILD_DIR}; ls -l
-  - ./CGRAGenerator/travis-test.csh
-  # [steveri] What's this (below)?  It looks wrong!
-  - export PKG_CONFIG_PATH=/home/travis/build/StanfordAHA/CGRAGenerator/platform/verilator
-  - popd
   
 
   # pnr
@@ -103,12 +109,6 @@ script:
   - cd ../../../
   
   # CGRA program and run (uses output of pnr)
-  - echo "BEGIN CGRA PROGRAM/RUN"
-  - pwd; pushd ${TRAVIS_BUILD_DIR}/CGRAGenerator/verilator/generator_z_tb
-  - ./run.csh top_tb.cpp -config ../../hardware/generator_z/top_tb/tile_config.dat
-  # steveri: i don't trust these relative paths!
-  # - cd ../../../
-  - popd
 
 
 addons:
