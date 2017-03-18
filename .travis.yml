@@ -13,11 +13,13 @@ before_install:
   - if [[ "$CGRA_QUICKTEST" == "true" ]]; then USE_COREIR=false; fi
   # OR maybe
   - if [[ -v BYPASS_COREIR ]]; then echo set1; else echo unset1; fi
+  - if [[! -v BYPASS_COREIR ]]; then echo unset1a; else echo set1a; fi
   - if [[ "$CGRA_QUICKTEST" == "true" ]]; then BYPASS_COREIR=true; fi
   - if [[ -v BYPASS_COREIR ]]; then echo set2; else echo unset2; fi
-
-
+  - if [[! -v BYPASS_COREIR ]]; then echo unset3; else echo set3; fi
   - echo $USE_COREIR
+
+
   - git clone https://github.com/jeffsetter/Halide_CoreIR.git
   - export CXX=${CXX_}
   - export CC=${CC_}
