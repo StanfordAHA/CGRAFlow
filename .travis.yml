@@ -10,7 +10,7 @@ before_install:
   # Optionally bypass one or more installs, for e.g. quick debugging of CGRA-gen scripts.
   - CGRA_QUICKTEST=true
   - USE_COREIR=true
-  - if [[ "$CGRA_QUICKTEST" == "true" ]]; USE_COREIR=false; fi
+  - if [[ "$CGRA_QUICKTEST" == "true" ]]; then USE_COREIR=false; fi
 
   - echo $USE_COREIR
   - git clone https://github.com/jeffsetter/Halide_CoreIR.git
