@@ -1,11 +1,32 @@
 language: c
 dist: trusty
 
+cache: apt
+
+compiler:
+  - gcc
+
 before_install:
+  - git clone https://github.com/jeffsetter/Halide_CoreIR.git
+  - export CXX=${CXX_}
+  - export CC=${CC_}
+  - export LLVM_CONFIG=${TRAVIS_BUILD_DIR}/llvm/bin/llvm-config
+  - export CLANG=${TRAVIS_BUILD_DIR}/llvm/bin/clang
+  - export CORECONFIG="g++-4.9"
+  - export COREIR_DIR=${TRAVIS_BUILD_DIR}/coreir
+
   - git clone https://github.com/jameshegarty/rigel.git
-#  - ./rigel/.travis.trusty.sh
+  - wget https://github.com/zdevito/terra/releases/download/release-2016-02-26/terra-Linux-x86_64-2fa8d0a.zip
+  - unzip terra-Linux-x86_64-2fa8d0a.zip
 
   - git clone https://github.com/rdaly525/coreir.git
+  - export CORECONFIG="g++-4.9";
+  - make -C coreir/src
+  - make -C coreir/src ../build/coreir.so
+  - make -C coreir/tests
+  - pip install pytest
+  - pip install -e bindings/python
+
 
   - git clone https://github.com/StanfordAHA/CGRAMapper.git
 
@@ -13,11 +34,87 @@ before_install:
 
   - git clone https://github.com/cdonovick/smt-pnr
 
+install:
+  # Halide
+  - wget http://llvm.org/releases/${LLVM_VERSION}/clang+llvm-${LLVM_VERSION}-x86_64-linux-gnu-ubuntu-14.04.tar.xz
+  - tar xvf clang+llvm-${LLVM_VERSION}-x86_64-linux-gnu-ubuntu-14.04.tar.xz
+  - mv clang+llvm-${LLVM_VERSION}-x86_64-linux-gnu-ubuntu-14.04 ${TRAVIS_BUILD_DIR}/llvm
+
+  # pnr
+    # Build monosat
+    - git clone https://github.com/sambayless/monosat.git 
+    - cd monosat
+    - cmake .
+    - make -j 2
+    - sudo make install
+    - cd src/monosat/api/python
+    - pip install -e .
+    - cd $TRAVIS_BUILD_DIR
+    # Build z3
+    - git clone https://github.com/Z3Prover/z3.git
+    - cd z3
+    - python scripts/mk_make.py --python
+    - cd build
+    - make -j 2
+    - sudo make install
+    - cd $TRAVIS_BUILD_DIR
+    - pip install pygraphviz
+
 script:
-  - cd examples
+  # halide
+  - Halide_CoreIR/test/scripts/build_travis.sh
+
+  # coreir
+  - cd coreir/tests
+  - ./run
+  - pytest  # Test python bindings
+  - cd ../..
+
+  # rigel
+  - cd rigel/examples
+  - make out/pointwise_wide_handshake.verilator.bmp
+  - cd ../../  
+
+  # CGRAGen
+  - CGRAGenerator/travis-test.csh
+  - export PKG_CONFIG_PATH=/home/travis/build/StanfordAHA/CGRAGenerator/platform/verilator
+  - cd CGRAGenerator/verilator/generator_z_tb
+  - ./run.csh top_tb.cpp -config ../../hardware/generator_z/top_tb/tile_config.dat
+  - cd ../../../
+
+  # pnr
+  - cd ./mothball/new/
+  - ./demo.sh
 
 addons:
   apt:
+    sources:
+      - ubuntu-toolchain-r-test
     packages:
+      # rigel
       - verilator
       - luajit
+
+      # coreir
+      - build-essential
+      - clang
+
+      # halide
+      - g++-4.9
+      - libedit-dev
+      - libpng-dev
+
+      # CGRAGEN
+      - csh
+
+      # pnr
+      - libgmp3-dev
+      - git
+            - cmake
+            - zlib1g
+            - zlib1g-dev
+            - graphviz-dev
+
+env:
+  # halide
+  - LLVM_VERSION=3.7.1 BUILD_SYSTEM=MAKE CXX_=g++-4.9 CC_=gcc-4.9
