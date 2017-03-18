@@ -123,3 +123,6 @@ addons:
 env:
   # halide
   - LLVM_VERSION=3.7.1 BUILD_SYSTEM=MAKE CXX_=g++-4.9 CC_=gcc-4.9
+
+# pnr
+python: 3.5
