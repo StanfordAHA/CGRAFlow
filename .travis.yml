@@ -6,7 +6,14 @@ cache: apt
 compiler:
   - gcc
 
+# Optionally specify a list of environments, for e.g. quick debugging of CGRA-gen scripts.
+env:
+  - CGRA_QUICKTEST=true
+  - USE_COREIR=true
+  - if [[ "$CGRA_QUICKTEST" == "true" ]]; USE_COREIR=false; fi
+  
 before_install:
+  - echo $USE_COREIR
   - git clone https://github.com/jeffsetter/Halide_CoreIR.git
   - export CXX=${CXX_}
   - export CC=${CC_}
@@ -128,12 +135,10 @@ addons:
       - zlib1g
       - zlib1g-dev
       - graphviz-dev
-      - python-3.5
 
 env:
   # halide
   - LLVM_VERSION=3.7.1 BUILD_SYSTEM=MAKE CXX_=g++-4.9 CC_=gcc-4.9
 
 # pnr
-# doens't do anything
-#python: 3.5
+python: 3.5
