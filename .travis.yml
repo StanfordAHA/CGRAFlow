@@ -8,7 +8,7 @@ compiler:
   
 before_install:
   # Optionally bypass one or more installs, for e.g. quick debugging of CGRA-gen scripts.
-  - CGRA_QUICKTEST=false
+  - CGRA_QUICKTEST=true
   - if [[ "$CGRA_QUICKTEST" == "true" ]]; then BYPASS_COREIR=true; fi
   - if [[ -v BYPASS_COREIR ]]; then echo BYPASS_COREIR set; else echo BYPASS_COREIR unset; fi
 
@@ -46,6 +46,8 @@ before_install:
 
 install:
   -  pwd
+  
+  # Is this still set?
   - if [[ -v BYPASS_COREIR ]]; then echo BYPASS_COREIR set; else echo BYPASS_COREIR unset; fi
 
   # Halide
@@ -86,7 +88,11 @@ script:
     # rigel
   - cd rigel/examples
   - make out/pointwise_wide_handshake.verilator.bmp
-  - cd ../../  
+  - cd ../../
+  
+  # Is this still set?
+  - if [[ -v BYPASS_COREIR ]]; then echo BYPASS_COREIR set; else echo BYPASS_COREIR unset; fi
+
   
   # CGRA generate (generates connection matrix for pnr)
   - echo "BEGIN CGRA GENERATE"
