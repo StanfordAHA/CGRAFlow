@@ -68,9 +68,9 @@ script:
   # halide
   - Halide_CoreIR/test/scripts/build_travis.sh
 
- # Temporary coreir/rigel bypass for CGRAGen debug.
- # Sorry!  It's taking too long.  I'll put it back soon, I promise.
-  - if false; then
+  # Temporary coreir/rigel bypass for CGRAGen debug.
+  # Sorry!  It's taking too long.  I'll put it back soon, I promise.
+  # - if false; then
 
  # coreir
   - cd coreir/tests
@@ -83,9 +83,9 @@ script:
   - make out/pointwise_wide_handshake.verilator.bmp
   - cd ../../  
   
- # Temporary coreir/rigel bypass for CGRAGen debug.
- # Sorry!  It's taking too long.  I'll put it back soon, I promise.
- - fi
+  # Temporary coreir/rigel bypass for CGRAGen debug.
+  # Sorry!  It's taking too long.  I'll put it back soon, I promise.
+  # - fi
 
 
   # CGRA generate (generates connection matrix for pnr)
