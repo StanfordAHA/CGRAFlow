@@ -5,12 +5,6 @@ cache: apt
 
 compiler:
   - gcc
-
-# Optionally specify a list of environments, for e.g. quick debugging of CGRA-gen scripts.
-env:
-  - CGRA_QUICKTEST=true
-  - USE_COREIR=true
-  - if [[ "$CGRA_QUICKTEST" == "true" ]]; USE_COREIR=false; fi
   
 before_install:
   - echo $USE_COREIR
@@ -139,6 +133,12 @@ addons:
 env:
   # halide
   - LLVM_VERSION=3.7.1 BUILD_SYSTEM=MAKE CXX_=g++-4.9 CC_=gcc-4.9
+  
+  # Optionally specify a list of environments, for e.g. quick debugging of CGRA-gen scripts.
+  - CGRA_QUICKTEST=true
+  - USE_COREIR=true
+  - if [[ "$CGRA_QUICKTEST" == "true" ]]; USE_COREIR=false; fi
+
 
 # pnr
 python: 3.5
