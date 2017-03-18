@@ -7,12 +7,11 @@ compiler:
   - gcc
   
 before_install:
-  # Optionally bypass one or more installs, for e.g. quick debugging of CGRA-gen scripts.
+  # To bypass some of the slower parts of the script for debugging, you can set e.g. CGRA_QUICKTEST
+  # Remember to turn it off (comment-out) again when you're done debugging!
   # - CGRA_QUICKTEST=true
   - if [[ -v CGRA_QUICKTEST ]]; then BYPASS_COREIR=true; fi
   - if [[ -v CGRA_QUICKTEST ]]; then BYPASS_SMTPNR=true; fi
-  # - if [[ -v BYPASS_COREIR ]]; then echo BYPASS_COREIR set; else echo BYPASS_COREIR unset; fi
-
 
   - git clone https://github.com/jeffsetter/Halide_CoreIR.git
   - export CXX=${CXX_}
