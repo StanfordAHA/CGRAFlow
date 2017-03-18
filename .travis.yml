@@ -16,8 +16,8 @@ before_install:
   - export COREIR_DIR=${TRAVIS_BUILD_DIR}/coreir
 
   - git clone https://github.com/jameshegarty/rigel.git
-  - wget https://github.com/zdevito/terra/releases/download/release-2016-02-26/terra-Linux-x86_64-2fa8d0a.zip
-  - unzip terra-Linux-x86_64-2fa8d0a.zip
+ #- wget https://github.com/zdevito/terra/releases/download/release-2016-02-26/terra-Linux-x86_64-2fa8d0a.zip
+ # - unzip terra-Linux-x86_64-2fa8d0a.zip
 
   - git clone https://github.com/rdaly525/coreir.git
   - export CORECONFIG="g++-4.9";
@@ -87,8 +87,9 @@ script:
   - cd ../../../
 
   # pnr
-  - cd ./mothball/new/
+  - cd smt-pnr/mothball/new/
   - ./demo.sh
+  - cd ../../../
 
 addons:
   apt:
