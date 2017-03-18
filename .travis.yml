@@ -79,17 +79,21 @@ script:
   - make out/pointwise_wide_handshake.verilator.bmp
   - cd ../../  
 
-  # CGRAGen
+  # CGRA generate (generates connection matrix for pnr)
   - CGRAGenerator/travis-test.csh
   - export PKG_CONFIG_PATH=/home/travis/build/StanfordAHA/CGRAGenerator/platform/verilator
-  - cd CGRAGenerator/verilator/generator_z_tb
-  - ./run.csh top_tb.cpp -config ../../hardware/generator_z/top_tb/tile_config.dat
-  - cd ../../../
+  
 
   # pnr
   - cd smt-pnr/mothball/new/
   - ./demo.sh
   - cd ../../../
+  
+  # CGRA program and run (uses output of pnr)
+  - cd CGRAGenerator/verilator/generator_z_tb
+  - ./run.csh top_tb.cpp -config ../../hardware/generator_z/top_tb/tile_config.dat
+  - cd ../../../
+
 
 addons:
   apt:
