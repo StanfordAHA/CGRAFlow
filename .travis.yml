@@ -112,10 +112,10 @@ addons:
       # pnr
       - libgmp3-dev
       - git
-            - cmake
-            - zlib1g
-            - zlib1g-dev
-            - graphviz-dev
+      - cmake
+      - zlib1g
+      - zlib1g-dev
+      - graphviz-dev
 
 env:
   # halide
