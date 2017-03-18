@@ -68,28 +68,37 @@ script:
   # halide
   - Halide_CoreIR/test/scripts/build_travis.sh
 
-  # coreir
+   # coreir
   - cd coreir/tests
   - ./run
   - pytest  # Test python bindings
   - cd ../..
-
-  # rigel
+  
+    # rigel
   - cd rigel/examples
   - make out/pointwise_wide_handshake.verilator.bmp
   - cd ../../  
-
-  # CGRAGen
-  - CGRAGenerator/travis-test.csh
+  
+  # CGRA generate (generates connection matrix for pnr)
+  - echo "BEGIN CGRA GENERATE"
+  - pwd; pushd ${TRAVIS_BUILD_DIR}; ls -l
+  - ./CGRAGenerator/travis-test.csh
+  # [steveri] What's this (below)?  It looks wrong!
   - export PKG_CONFIG_PATH=/home/travis/build/StanfordAHA/CGRAGenerator/platform/verilator
-  - cd CGRAGenerator/verilator/generator_z_tb
-  - ./run.csh top_tb.cpp -config ../../hardware/generator_z/top_tb/tile_config.dat
-  - cd ../../../
+  - popd
 
   # pnr
   - cd smt-pnr/mothball/new/
   - ./demo.sh
   - cd ../../../
+  
+  # CGRA program and run (uses output of pnr)
+  - echo "BEGIN CGRA PROGRAM/RUN"
+  - pwd; pushd ${TRAVIS_BUILD_DIR}/CGRAGenerator/verilator/generator_z_tb
+  - ./run.csh top_tb.cpp -config ../../hardware/generator_z/top_tb/tile_config.dat
+  # steveri: i don't trust these relative paths!
+  # - cd ../../../
+  - popd
 
 addons:
   apt:
