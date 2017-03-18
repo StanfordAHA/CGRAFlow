@@ -5,8 +5,21 @@ cache: apt
 
 compiler:
   - gcc
-
+  
 before_install:
+  # Optionally bypass one or more installs, for e.g. quick debugging of CGRA-gen scripts.
+  - CGRA_QUICKTEST=true
+  - USE_COREIR=true
+  - if [[ "$CGRA_QUICKTEST" == "true" ]]; then USE_COREIR=false; fi
+  # OR maybe
+  - if [[ -v BYPASS_COREIR ]]; then echo set1; else echo unset1; fi
+  - if [[ ! -v BYPASS_COREIR ]]; then echo unset1a; else echo set1a; fi
+  - if [[ "$CGRA_QUICKTEST" == "true" ]]; then BYPASS_COREIR=true; fi
+  - if [[ -v BYPASS_COREIR ]]; then echo set2; else echo unset2; fi
+  - if [[ ! -v BYPASS_COREIR ]]; then echo unset3; else echo set3; fi
+  - echo $USE_COREIR
+
+
   - git clone https://github.com/jeffsetter/Halide_CoreIR.git
   - export CXX=${CXX_}
   - export CC=${CC_}
@@ -134,5 +147,4 @@ env:
   - LLVM_VERSION=3.7.1 BUILD_SYSTEM=MAKE CXX_=g++-4.9 CC_=gcc-4.9
 
 # pnr
-# doens't do anything
-#python: 3.5
+python: 3.5
