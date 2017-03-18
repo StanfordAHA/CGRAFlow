@@ -19,15 +19,16 @@ before_install:
  #- wget https://github.com/zdevito/terra/releases/download/release-2016-02-26/terra-Linux-x86_64-2fa8d0a.zip
  # - unzip terra-Linux-x86_64-2fa8d0a.zip
 
-  - git clone https://github.com/rdaly525/coreir.git
-  - export CORECONFIG="g++-4.9";
-  - make -C coreir/src
-  - make -C coreir/src ../build/coreir.so
-  - make -C coreir/tests
-  - pip install pytest
-  - cd coreir
-  - pip install -e bindings/python
-  - cd ..
+  # Temporary bypass for quick debug of CGRA portion of script.
+  # - git clone https://github.com/rdaly525/coreir.git
+  # - export CORECONFIG="g++-4.9";
+  # - make -C coreir/src
+  # - make -C coreir/src ../build/coreir.so
+  # - make -C coreir/tests
+  # - pip install pytest
+  # - cd coreir
+  # - pip install -e bindings/python
+  # - cd ..
 
 
   - git clone https://github.com/StanfordAHA/CGRAMapper.git
