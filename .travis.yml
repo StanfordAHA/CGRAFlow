@@ -8,7 +8,7 @@ compiler:
   
 before_install:
   # Optionally bypass one or more installs, for e.g. quick debugging of CGRA-gen scripts.
-  # - CGRA_QUICKTEST=true
+  - CGRA_QUICKTEST=true
   - if [[ -v CGRA_QUICKTEST ]]; then BYPASS_COREIR=true; fi
   - if [[ -v CGRA_QUICKTEST ]]; then BYPASS_SMTPNR=true; fi
   # - if [[ -v BYPASS_COREIR ]]; then echo BYPASS_COREIR set; else echo BYPASS_COREIR unset; fi
@@ -99,9 +99,9 @@ script:
   - echo "BEGIN CGRA GENERATE"
   # - pwd; pushd ${TRAVIS_BUILD_DIR}; ls -l
   - pushd CGRAGenerator
-    - ./travis-test.csh
-    # [steveri] What's this (below)?  It looks wrong!
-    - export PKG_CONFIG_PATH=/home/travis/build/StanfordAHA/CGRAGenerator/platform/verilator
+  - ./travis-test.csh
+  # [steveri] What's this (below)?  It looks wrong!
+  - export PKG_CONFIG_PATH=/home/travis/build/StanfordAHA/CGRAGenerator/platform/verilator
   - popd
 
   # pnr
@@ -112,9 +112,9 @@ script:
   # CGRA program and run (uses output of pnr)
   - echo "BEGIN CGRA PROGRAM/RUN"
   - pushd ${TRAVIS_BUILD_DIR}/CGRAGenerator/verilator/generator_z_tb
-    - ./run.csh top_tb.cpp -config ../../hardware/generator_z/top_tb/tile_config.dat
-    # steveri: i don't trust these relative paths!
-    # - cd ../../../
+  - ./run.csh top_tb.cpp -config ../../hardware/generator_z/top_tb/tile_config.dat
+  # steveri: i don't trust these relative paths!
+  # - cd ../../../
   - popd
 
 addons:
