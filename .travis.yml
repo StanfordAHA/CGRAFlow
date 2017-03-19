@@ -24,7 +24,12 @@ before_install:
   - export CORECONFIG="g++-4.9"
   - export COREIR_DIR=${TRAVIS_BUILD_DIR}/coreir
 
+  - echo "INSTALL RIGEL"
   - git clone https://github.com/jameshegarty/rigel.git
+  - export PKG_CONFIG_PATH=${TRAVIS_BUILD_DIR}/rigel/platform/verilator
+  - pkg-config --cflags verilator
+  - pkg-config --variable=includedir verilator
+
  #- wget https://github.com/zdevito/terra/releases/download/release-2016-02-26/terra-Linux-x86_64-2fa8d0a.zip
  # - unzip terra-Linux-x86_64-2fa8d0a.zip
 
@@ -104,7 +109,7 @@ script:
   - pushd ${TRAVIS_BUILD_DIR}/CGRAGenerator
   - ./travis-test.csh
   # [steveri] What's this (below)?  It looks wrong!
-  - export PKG_CONFIG_PATH=/home/travis/build/StanfordAHA/CGRAGenerator/platform/verilator
+  #- export PKG_CONFIG_PATH=/home/travis/build/StanfordAHA/CGRAGenerator/platform/verilator
   - popd
 
   # pnr
