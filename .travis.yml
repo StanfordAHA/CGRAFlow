@@ -12,6 +12,10 @@ before_install:
   # - CGRA_QUICKTEST=true
   - if [[ -v CGRA_QUICKTEST ]]; then BYPASS_COREIR=true; fi
   - if [[ -v CGRA_QUICKTEST ]]; then BYPASS_SMTPNR=true; fi
+  
+  - pip install virtualenv
+  - virtualenv -p /usr/bin/python3 CGRAFlowPy3Env
+  - source CGRAFlowPy3Env/bin/activate
 
   - git clone https://github.com/jeffsetter/Halide_CoreIR.git
   - export CXX=${CXX_}
@@ -102,8 +106,8 @@ script:
   - popd
 
   # pnr
-  - cd smt-pnr/mothball/new/
-  - python demo.py ../../test/examples/downCast_13_reduce.dot
+  - cd smt-pnr/mothball/new
+  - ./demo.sh
   - cd ../../../
   
   # CGRA program and run (uses output of pnr)
