@@ -86,6 +86,7 @@ script:
   - cp apps/coreir_examples/pointwise/design_top.json ../build
   - cd ..
   - ls -la build
+  - cat build/design_top.json
 
 
    # coreir
