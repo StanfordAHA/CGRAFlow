@@ -72,7 +72,9 @@ install:
 
 script:
   # halide
-  - Halide_CoreIR/test/scripts/build_travis.sh
+  - cd Halide_CoreIR
+  - test/scripts/build_travis.sh
+  - cd ..
 
    # coreir
   - cd coreir/tests
