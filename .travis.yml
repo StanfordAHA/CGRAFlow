@@ -102,8 +102,8 @@ script:
   - popd
 
   # pnr
-  - cd smt-pnr/mothball/new/
-  - ./demo.sh
+  - cd smt-pnr
+  - python3 demo.py test/examples/downCast_13_reduce.dot
   - cd ../../../
   
   # CGRA program and run (uses output of pnr)
