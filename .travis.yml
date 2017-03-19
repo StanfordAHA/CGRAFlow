@@ -72,9 +72,16 @@ install:
 
 script:
   # halide
+  - echo "Run Halide Tests"
   - cd Halide_CoreIR
   - test/scripts/build_travis.sh
+
+  - echo "Halide FLOW"
+  - make -C apps/coreir_examples/pointwise/
+  - cp apps/coreir_examples/pointwise/design_top.json ../build
   - cd ..
+  - ls -la build
+
 
    # coreir
   - cd coreir/tests
