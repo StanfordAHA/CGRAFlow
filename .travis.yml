@@ -65,14 +65,12 @@ install:
   - if [[ ! -v BYPASS_SMTPNR ]]; then cd src/monosat/api/python; fi
   - if [[ ! -v BYPASS_SMTPNR ]]; then pip install -e .; fi
   - if [[ ! -v BYPASS_SMTPNR ]]; then cd $TRAVIS_BUILD_DIR; fi
-    # Build z3
-  - if [[ ! -v BYPASS_SMTPNR ]]; then git clone https://github.com/Z3Prover/z3.git; fi
-  - if [[ ! -v BYPASS_SMTPNR ]]; then cd z3; fi
-  - if [[ ! -v BYPASS_SMTPNR ]]; then python scripts/mk_make.py --python; fi
-  - if [[ ! -v BYPASS_SMTPNR ]]; then cd build; fi
-  - if [[ ! -v BYPASS_SMTPNR ]]; then make -j 2; fi
-  - if [[ ! -v BYPASS_SMTPNR ]]; then sudo make install; fi
-  - if [[ ! -v BYPASS_SMTPNR ]]; then cd $TRAVIS_BUILD_DIR; fi
+    # Install z3 from release binary
+  - if [[ ! -v BYPASS_SMTPNR ]]; then wget https://github.com/Z3Prover/z3/releases/download/z3-4.5.0/z3-4.5.0-x64-ubuntu-14.04.zip; fi
+  - if [[ ! -v BYPASS_SMTPNR ]]; then unzip z3-4.5.0-x64-ubuntu-14.04.zip; fi
+  - if [[ ! -v BYPASS_SMTPNR ]]; then export PATH=$PATH:$PWD/z3-4.5.0-x64-ubuntu-14.04/bin/; fi
+  - if [[ ! -v BYPASS_SMTPNR ]]; then export PYTHONPATH=$PYTHONPATH:$PWD/z3-4.5.0-x64-ubuntu-14.04/bin/python/; fi
+  - if [[ ! -v BYPASS_SMTPNR ]]; then sudo ln -s $PWD/z3-4.5.0-x64-ubuntu-14.04/bin/libz3.so /usr/lib/libz3.so; fi
   - if [[ ! -v BYPASS_SMTPNR ]]; then pip install pygraphviz; fi
 
 script:
