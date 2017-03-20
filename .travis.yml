@@ -7,17 +7,11 @@ compiler:
   - gcc
   
 before_install:
-  # Test of multi-line script
-  - echo
-      foo
-      bar
-      baz  
-
   # Test of goto
-  - goto :BYPASS
-  - echo will it blend
-  - :BYPASS
-  - echo did it blend
+  # - goto :BYPASS
+  # - echo will it blend
+  # - :BYPASS
+  # - echo did it blend
 
   # To bypass some of the slower parts of the script for debugging, you can set e.g. CGRA_QUICKTEST
   # Remember to turn it off (comment-out) again when you're done debugging!
@@ -151,17 +145,19 @@ script:
 
   # Placeholder for Ankita script - assumes
   #   - script is in dir CGRAGenerator/bitstream
-  #   - sample input is CGRAGenerator/bitstream/example/connectivity_4x4.txt config
+  #   - sample input is CGRAGenerator/bitstream/example/connectivity_4x4.txt
   #   - sample output is CGRAGenerator/bitstream/example/config.dat
   # 
   # Bitstream build
-  # - echo "BEGIN BITSTREAM BUILD"
-  # - bs_dir=${TRAVIS_BUILD_DIR}/CGRAGenerator/bitstream
-  # - bs_in=${bs_dir}/example/connectivity_4x4.txt
-  # - bs_compare=${bs_dir}/example/config.dat
-  # - bs_out=${TRAVIS_BUILD_DIR}/build/config.dat
-  # - perl $bs_dir/bitstream_gen.pl $bs_in $bs_out
-  # - diff $bs_out $bs_compare $bs_out && echo PASS || echo FAIL
+  # - perl
+  #       ${TRAVIS_BUILD_DIR}/CGRAGenerator/bitstream/bitstream_gen.pl
+  #       ${TRAVIS_BUILD_DIR}/CGRAGenerator/bitstream/example/connectivity_4x4.txt
+  #       ${TRAVIS_BUILD_DIR}/build/config.dat
+  # - diff
+  #       ${TRAVIS_BUILD_DIR}/CGRAGenerator/bitstream/example/config.dat
+  #       ${TRAVIS_BUILD_DIR}/build/config.dat
+  #       && echo PASS || echo FAIL
+
 
 
 
