@@ -31,15 +31,15 @@ before_install:
   - pkg-config --cflags verilator
   - pkg-config --variable=includedir verilator
 
- #- wget https://github.com/zdevito/terra/releases/download/release-2016-02-26/terra-Linux-x86_64-2fa8d0a.zip
- # - unzip terra-Linux-x86_64-2fa8d0a.zip
+  #- wget https://github.com/zdevito/terra/releases/download/release-2016-02-26/terra-Linux-x86_64-2fa8d0a.zip
+  # - unzip terra-Linux-x86_64-2fa8d0a.zip
 
   # Hope this isn't too ugly for you; it solves problems for me (steveri);
   # also I'm sure there's a better way to do this but I didn't find it...
   - if [[ ! -v BYPASS_COREIR ]]; then
         git clone https://github.com/rdaly525/coreir.git;
         export CORECONFIG="g++-4.9";
-        make -C coreir/src
+        make -C coreir/src;
         make -C coreir/src ../build/coreir.so;
         make -C coreir/tests;
         pip install pytest;
@@ -48,10 +48,12 @@ before_install:
         cd ..;
     fi
 
-  - if [[ ! -v BYPASS_MAPPER ]]; then git clone https://github.com/StanfordAHA/CGRAMapper.git; fi
-  - if [[ ! -v BYPASS_MAPPER ]]; then cd CGRAMapper/mapper; fi
-  - if [[ ! -v BYPASS_MAPPER ]]; then make; fi
-  - if [[ ! -v BYPASS_MAPPER ]]; then cd ../../; fi
+  - if [[ ! -v BYPASS_MAPPER ]]; then
+        git clone https://github.com/StanfordAHA/CGRAMapper.git;
+        cd CGRAMapper/mapper;
+        make;
+        cd ../../;
+    fi
 
   - git clone https://github.com/StanfordAHA/CGRAGenerator.git
 
