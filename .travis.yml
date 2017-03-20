@@ -119,42 +119,41 @@ script:
   # Is this still set?
   # - if [[ -v BYPASS_COREIR ]]; then echo BYPASS_COREIR set; else echo BYPASS_COREIR unset; fi
 
-  
-  # CGRA generate (generates connection matrix for pnr)
-  - echo "BEGIN CGRA GENERATE"
-  - pushd ${TRAVIS_BUILD_DIR}/CGRAGenerator
-  -     ./travis-test.csh
-  #     [steveri] What's this (below)?  It looks wrong!
-  #-    export PKG_CONFIG_PATH=/home/travis/build/StanfordAHA/CGRAGenerator/platform/verilator
-  - popd
+  # CGRA setup
+  - echo "CGRAGenerator setup"
+  - if [ "${TRAVIS_BUILD_DIR}" == "/home/travis/build/StanfordAHA/CGRAFlow" ];
+    then
+        cgroot=${TRAVIS_BUILD_DIR}/CGRAGenerator;
+        cgbuild=${TRAVIS_BUILD_DIR}/build;
+    else
+        cgroot=${TRAVIS_BUILD_DIR};
+        cgbuild=$cgroot/build;
+        mkdir $cgbuild;
+    fi
+
+  # CGRA generate
+  - echo "CGRA generate (generates CGRA + connection matrix for pnr)"
+  - pushd $cgroot; ./travis-test.csh; popd
 
   # pnr
   - cd smt-pnr/mothball/new
   - ./demo.sh
   - cd ../../../
   
-  # Placeholder for Ankita script - assumes
-  #   - script is in dir CGRAGenerator/bitstream
-  #   - sample input is CGRAGenerator/bitstream/example/connectivity_4x4.txt
-  #   - sample output is CGRAGenerator/bitstream/example/config.dat
-  # 
   # Bitstream build
-  # - perl
-  #       ${TRAVIS_BUILD_DIR}/CGRAGenerator/bitstream/bitstream_gen.pl
-  #       ${TRAVIS_BUILD_DIR}/CGRAGenerator/bitstream/example/connectivity_4x4.txt
-  #       ${TRAVIS_BUILD_DIR}/build/config.dat
-  # - diff
-  #       ${TRAVIS_BUILD_DIR}/CGRAGenerator/bitstream/example/config.dat
-  #       ${TRAVIS_BUILD_DIR}/build/config.dat
-  #       && echo PASS || echo FAIL
-
-
-
+  - perl
+        $cgroot/bitstream/bitstream_gen.pl
+        $cgroot/bitstream/example/connectivity_4x4.xml
+        $cgbuild/config
+  - diff
+        $cgroot/bitstream/example/config.dat
+        $cgbuild/config.dat
+        && echo PASS || echo FAIL
 
   # CGRA program and run (uses output of pnr)
-  - echo "BEGIN CGRA PROGRAM/RUN"
-  - pushd ${TRAVIS_BUILD_DIR}/CGRAGenerator/verilator/generator_z_tb
-  -     ./run.csh top_tb.cpp -config ../../hardware/generator_z/top_tb/tile_config.dat
+  - echo "CGRA program and run (uses output of pnr)"
+  - pushd $cgroot/verilator/generator_z_tb
+  -   ./run.csh top_tb.cpp -config ../../hardware/generator_z/top_tb/tile_config.dat | tail -n 100
   - popd
 
 addons:
