@@ -7,10 +7,17 @@ compiler:
   - gcc
   
 before_install:
+  # Test of multi-line script
+  - echo
+      foo
+      bar
+      baz  
+
   # To bypass some of the slower parts of the script for debugging, you can set e.g. CGRA_QUICKTEST
   # Remember to turn it off (comment-out) again when you're done debugging!
-  # - CGRA_QUICKTEST=true
+  - CGRA_QUICKTEST=true
   - if [[ -v CGRA_QUICKTEST ]]; then BYPASS_COREIR=true; fi
+  - if [[ -v CGRA_QUICKTEST ]]; then BYPASS_MAPPER=true; fi
   
   - pip install virtualenv
   - virtualenv -p /usr/bin/python3 CGRAFlowPy3Env
@@ -45,11 +52,10 @@ before_install:
   - if [[ ! -v BYPASS_COREIR ]]; then pip install -e bindings/python; fi
   - if [[ ! -v BYPASS_COREIR ]]; then cd ..; fi
 
-
-  - git clone https://github.com/StanfordAHA/CGRAMapper.git
-  - cd CGRAMapper/mapper
-  - make
-  - cd ../../
+  - if [[ ! -v BYPASS_MAPPER ]]; then git clone https://github.com/StanfordAHA/CGRAMapper.git; fi
+  - if [[ ! -v BYPASS_MAPPER ]]; then cd CGRAMapper/mapper; fi
+  - if [[ ! -v BYPASS_MAPPER ]]; then make; fi
+  - if [[ ! -v BYPASS_MAPPER ]]; then cd ../../; fi
 
   - git clone https://github.com/StanfordAHA/CGRAGenerator.git
 
@@ -113,7 +119,7 @@ script:
   - cd ../../
   
   # Is this still set?
-  - if [[ -v BYPASS_COREIR ]]; then echo BYPASS_COREIR set; else echo BYPASS_COREIR unset; fi
+  # - if [[ -v BYPASS_COREIR ]]; then echo BYPASS_COREIR set; else echo BYPASS_COREIR unset; fi
 
   
   # CGRA generate (generates connection matrix for pnr)
