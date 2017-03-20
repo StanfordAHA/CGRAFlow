@@ -82,9 +82,9 @@ script:
   - export RUN_TESTS=false
 
   # halide
-  - if [[ -v RUN_TESTS ]]; then echo "Run Halide Tests"; fi
-  - if [[ -v RUN_TESTS ]]; then cd Halide_CoreIR; fi
-  - if [[ -v RUN_TESTS ]]; then test/scripts/build_travis.sh; fi
+  - if [[ ! -v RUN_TESTS ]]; then echo "Run Halide Tests"; fi
+  - if [[ ! -v RUN_TESTS ]]; then cd Halide_CoreIR; fi
+  - if [[ ! -v RUN_TESTS ]]; then test/scripts/build_travis.sh; fi
 
   - echo "Halide FLOW"
   - make -C apps/coreir_examples/pointwise/
