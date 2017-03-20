@@ -82,10 +82,11 @@ script:
   - export RUN_TESTS=false
 
   # halide
-  - if [[ ! -v RUN_TESTS ]]; then echo "Run Halide Tests"; fi
-  - if [[ ! -v RUN_TESTS ]]; then cd Halide_CoreIR; fi
-  - if [[ ! -v RUN_TESTS ]]; then test/scripts/build_travis.sh; fi
-  - if [[ ! -v RUN_TESTS ]]; then cd ..; fi
+  # I think this actually builds halide too?
+  - echo "Run Halide Tests"
+  - cd Halide_CoreIR
+  - test/scripts/build_travis.sh
+  - cd ..
 
   - echo "Halide FLOW"
   - cd Halide_CoreIR
