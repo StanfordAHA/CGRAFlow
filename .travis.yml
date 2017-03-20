@@ -19,6 +19,22 @@ before_install:
   - if [[ -v CGRA_QUICKTEST ]]; then BYPASS_COREIR=true; fi
   - if [[ -v CGRA_QUICKTEST ]]; then BYPASS_MAPPER=true; fi
   
+  # quick test of bypass
+  - if [[ ! -v BYPASS_COREIR ]]; then
+        echo nbypass1
+        echo nbypass2
+        echo nbypass3
+    fi
+
+
+  # quick test of bypass
+  - if [[ -v BYPASS_COREIR ]]; then
+        echo bypass1a
+        echo bypass2a
+        echo bypass3a
+    fi
+
+
   - pip install virtualenv
   - virtualenv -p /usr/bin/python3 CGRAFlowPy3Env
   - source CGRAFlowPy3Env/bin/activate
