@@ -118,11 +118,10 @@ script:
   
   # CGRA generate (generates connection matrix for pnr)
   - echo "BEGIN CGRA GENERATE"
-  # - pwd; pushd ${TRAVIS_BUILD_DIR}; ls -l
   - pushd ${TRAVIS_BUILD_DIR}/CGRAGenerator
-  - ./travis-test.csh
-  # [steveri] What's this (below)?  It looks wrong!
-  #- export PKG_CONFIG_PATH=/home/travis/build/StanfordAHA/CGRAGenerator/platform/verilator
+  -     ./travis-test.csh
+  #     [steveri] What's this (below)?  It looks wrong!
+  #-    export PKG_CONFIG_PATH=/home/travis/build/StanfordAHA/CGRAGenerator/platform/verilator
   - popd
 
   # pnr
@@ -130,12 +129,34 @@ script:
   - ./demo.sh
   - cd ../../../
   
+  # Test of multi-line script
+  - echo
+      foo
+      bar
+      baz  
+
+
+
+  # Placeholder for Ankita script - assumes
+  #   - script is in dir CGRAGenerator/bitstream
+  #   - sample input is CGRAGenerator/bitstream/example/connectivity_4x4.txt config
+  #   - sample output is CGRAGenerator/bitstream/example/config.dat
+  # 
+  # Bitstream build
+  # - echo "BEGIN BITSTREAM BUILD"
+  # - bs_dir=${TRAVIS_BUILD_DIR}/CGRAGenerator/bitstream
+  # - bs_in=${bs_dir}/example/connectivity_4x4.txt
+  # - bs_compare=${bs_dir}/example/config.dat
+  # - bs_out=${TRAVIS_BUILD_DIR}/build/config.dat
+  # - perl $bs_dir/bitstream_gen.pl $bs_in $bs_out
+  # - diff $bs_out $bs_compare $bs_out && echo PASS || echo FAIL
+
+
+
   # CGRA program and run (uses output of pnr)
   - echo "BEGIN CGRA PROGRAM/RUN"
   - pushd ${TRAVIS_BUILD_DIR}/CGRAGenerator/verilator/generator_z_tb
-  - ./run.csh top_tb.cpp -config ../../hardware/generator_z/top_tb/tile_config.dat
-  # steveri: i don't trust these relative paths!
-  # - cd ../../../
+  -     ./run.csh top_tb.cpp -config ../../hardware/generator_z/top_tb/tile_config.dat
   - popd
 
 addons:
