@@ -95,7 +95,6 @@ script:
   - cd ..
   - ls -la build
   - cat build/design_top.json
-  - cd ..
 
   - echo "MAPPER"
   - ./CGRAMapper/build/main build/design_top.json build/mapped.json
