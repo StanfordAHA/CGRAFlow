@@ -47,6 +47,9 @@ before_install:
 
 
   - git clone https://github.com/StanfordAHA/CGRAMapper.git
+  - cd CGRAMapper/mapper
+  - make
+  - cd ../../
 
   - git clone https://github.com/StanfordAHA/CGRAGenerator.git
 
@@ -88,6 +91,10 @@ script:
   - ls -la build
   - cat build/design_top.json
 
+  - echo "MAPPER"
+  - ./CGRAMapper/build/main build/design_top.json build/mapped.json
+  - ls -la build
+  - cat build/mapped.json
 
    # coreir
   - cd coreir/tests
