@@ -21,7 +21,7 @@ before_install:
 
   # To bypass some of the slower parts of the script for debugging, you can set e.g. CGRA_QUICKTEST
   # Remember to turn it off (comment-out) again when you're done debugging!
-  - CGRA_QUICKTEST=true
+  # - CGRA_QUICKTEST=true
   - if [[ -v CGRA_QUICKTEST ]]; then BYPASS_COREIR=true; fi
   - if [[ -v CGRA_QUICKTEST ]]; then BYPASS_MAPPER=true; fi
   
