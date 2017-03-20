@@ -21,17 +21,17 @@ before_install:
   
   # quick test of bypass
   - if [[ ! -v BYPASS_COREIR ]]; then
-        echo nbypass1
-        echo nbypass2
-        echo nbypass3
+        echo nbypass1;
+        echo nbypass2;
+        echo nbypass3;
     fi
 
 
   # quick test of bypass
   - if [[ -v BYPASS_COREIR ]]; then
-        echo bypass1a
-        echo bypass2a
-        echo bypass3a
+        echo bypass1a;
+        echo bypass2a;
+        echo bypass3a;
     fi
 
 
