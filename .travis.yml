@@ -79,10 +79,12 @@ install:
   - pip install pygraphviz
 
 script:
+  - export RUN_TESTS=false
+
   # halide
-  - echo "Run Halide Tests"
-  - cd Halide_CoreIR
-  - test/scripts/build_travis.sh
+  - if [[ RUN_TESTS ]]; then echo "Run Halide Tests"; fi
+  - if [[ RUN_TESTS ]]; then cd Halide_CoreIR; fi
+  - if [[ RUN_TESTS ]]; then test/scripts/build_travis.sh; fi
 
   - echo "Halide FLOW"
   - make -C apps/coreir_examples/pointwise/
