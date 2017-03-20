@@ -120,7 +120,7 @@ script:
   # - if [[ -v BYPASS_COREIR ]]; then echo BYPASS_COREIR set; else echo BYPASS_COREIR unset; fi
 
   # CGRA setup
-  - echo "CGRAGenerator setup"
+  - echo "CGRAGenerator setup" - `date`
   - if [ "${TRAVIS_BUILD_DIR}" == "/home/travis/build/StanfordAHA/CGRAFlow" ];
     then
         cgroot=${TRAVIS_BUILD_DIR}/CGRAGenerator;
@@ -132,7 +132,7 @@ script:
     fi
 
   # CGRA generate
-  - echo "CGRA generate (generates CGRA + connection matrix for pnr)"
+  - echo "CGRA generate (generates CGRA + connection matrix for pnr)" - `date`
   - pushd $cgroot; ./travis-test.csh; popd
 
   # pnr
@@ -141,6 +141,7 @@ script:
   - cd ../../../
   
   # Bitstream build
+  - echo "Build bitstream for programming CGRA" - `date`
   - perl
         $cgroot/bitstream/bitstream_gen.pl
         $cgroot/bitstream/example/connectivity_4x4.xml
@@ -151,7 +152,7 @@ script:
         && echo PASS || echo FAIL
 
   # CGRA program and run (uses output of pnr)
-  - echo "CGRA program and run (uses output of pnr)"
+  - echo "CGRA program and run (uses output of pnr)" - `date`
   - pushd $cgroot/verilator/generator_z_tb
   -   ./run.csh top_tb.cpp -config ../../hardware/generator_z/top_tb/tile_config.dat | tail -n 100
   - popd
