@@ -7,34 +7,12 @@ compiler:
   - gcc
   
 before_install:
-  # Test of goto
-  # - goto :BYPASS
-  # - echo will it blend
-  # - :BYPASS
-  # - echo did it blend
-
   # To bypass some of the slower parts of the script for debugging, you can set e.g. CGRA_QUICKTEST
   # Remember to turn it off (comment-out) again when you're done debugging!
   # - CGRA_QUICKTEST=true
   - if [[ -v CGRA_QUICKTEST ]]; then BYPASS_COREIR=true; fi
   - if [[ -v CGRA_QUICKTEST ]]; then BYPASS_MAPPER=true; fi
   
-  # quick test of bypass
-  - if [[ ! -v BYPASS_COREIR ]]; then
-        echo nbypass1;
-        echo nbypass2;
-        echo nbypass3;
-    fi
-
-
-  # quick test of bypass
-  - if [[ -v BYPASS_COREIR ]]; then
-        echo bypass1a;
-        echo bypass2a;
-        echo bypass3a;
-    fi
-
-
   - pip install virtualenv
   - virtualenv -p /usr/bin/python3 CGRAFlowPy3Env
   - source CGRAFlowPy3Env/bin/activate
@@ -56,35 +34,19 @@ before_install:
  #- wget https://github.com/zdevito/terra/releases/download/release-2016-02-26/terra-Linux-x86_64-2fa8d0a.zip
  # - unzip terra-Linux-x86_64-2fa8d0a.zip
 
-  # # Hope this isn't too ugly for you; it solves problems for me (steveri);
-  # # also I'm sure there's a better way to do this but I didn't find it...
-  # - if [[ ! -v BYPASS_COREIR ]]; then git clone https://github.com/rdaly525/coreir.git; fi
-  # - if [[ ! -v BYPASS_COREIR ]]; then export CORECONFIG="g++-4.9"; fi
-  # - if [[ ! -v BYPASS_COREIR ]]; then make -C coreir/src; fi
-  # - if [[ ! -v BYPASS_COREIR ]]; then make -C coreir/src ../build/coreir.so; fi
-  # - if [[ ! -v BYPASS_COREIR ]]; then make -C coreir/tests; fi
-  # - if [[ ! -v BYPASS_COREIR ]]; then pip install pytest; fi
-  # - if [[ ! -v BYPASS_COREIR ]]; then cd coreir; fi
-  # - if [[ ! -v BYPASS_COREIR ]]; then pip install -e bindings/python; fi
-  # - if [[ ! -v BYPASS_COREIR ]]; then cd ..; fi
-
   # Hope this isn't too ugly for you; it solves problems for me (steveri);
   # also I'm sure there's a better way to do this but I didn't find it...
   - if [[ ! -v BYPASS_COREIR ]]; then
-        git clone https://github.com/rdaly525/coreir.git
-        export CORECONFIG="g++-4.9"
+        git clone https://github.com/rdaly525/coreir.git;
+        export CORECONFIG="g++-4.9";
         make -C coreir/src
-        make -C coreir/src ../build/coreir.so
-        make -C coreir/tests
-        pip install pytest
-        cd coreir
-        pip install -e bindings/python
-        cd ..
+        make -C coreir/src ../build/coreir.so;
+        make -C coreir/tests;
+        pip install pytest;
+        cd coreir;
+        pip install -e bindings/python;
+        cd ..;
     fi
-
-
-
-
 
   - if [[ ! -v BYPASS_MAPPER ]]; then git clone https://github.com/StanfordAHA/CGRAMapper.git; fi
   - if [[ ! -v BYPASS_MAPPER ]]; then cd CGRAMapper/mapper; fi
