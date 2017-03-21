@@ -101,8 +101,12 @@ script:
   - cd ..
   - ls -la build
   - cat build/design_top.json
+  - stream build/input.png build/input.raw
+  - stream build/halide_out.png build/halide_out.raw
   - xxd build/input.png
+  - xxd build/input.raw
   - xxd build/halide_out.png
+  - xxd build/halide_out.raw
 
   - echo "MAPPER"
   - ./CGRAMapper/build/main build/design_top.json build/mapped.json
@@ -191,6 +195,8 @@ addons:
       - graphviz-dev
       - python3
 
+      # convert png to raw
+      - imagemagick
 env:
   # halide
   - LLVM_VERSION=3.7.1 BUILD_SYSTEM=MAKE CXX_=g++-4.9 CC_=gcc-4.9
