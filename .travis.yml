@@ -158,16 +158,18 @@ script:
   - ./demo.sh
   - cd ../../../
   
+
   # Bitstream build
   - echo "Build bitstream for programming CGRA" - `date`
-  - perl
-        $cgroot/bitstream/bitstream_gen.pl
-        $cgroot/bitstream/example/connectivity_4x4.xml
-        $cgbuild/config
-  - diff
-        $cgroot/bitstream/example/config.dat
-        $cgbuild/config.dat
-        && echo PASS || echo FAIL
+  - pushd $cgroot/bitstream/bitstream
+  -   perl
+          ./bitstream_gen.pl
+          connectivity_4x4.xml
+          $cgbuild/config
+  -   diff
+          ./example/config.dat
+          $cgbuild/config.dat
+  - popd
 
   # CGRA program and run (uses output of pnr)
   - echo "CGRA program and run (uses output of pnr)" - `date`
