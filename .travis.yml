@@ -17,8 +17,11 @@ before_install:
   
   # When CGRA_QUICKTEST true, bypass some of the slower parts of the script for quick debugging
   # With quicktest: 5 minutes.  Without quicktest: 45 minutes.
-  - if [[ -v CGRA_QUICKTEST ]]; then BYPASS_COREIR=true; fi
-  - if [[ -v CGRA_QUICKTEST ]]; then BYPASS_MAPPER=true; fi
+  - if [[ -v CGRA_QUICKTEST ]]; then
+      echo QUICKTEST ON
+      BYPASS_COREIR=true;
+      BYPASS_MAPPER=true;
+    fi
   
   - pip install virtualenv
   - virtualenv -p /usr/bin/python3 CGRAFlowPy3Env
@@ -41,8 +44,6 @@ before_install:
   #- wget https://github.com/zdevito/terra/releases/download/release-2016-02-26/terra-Linux-x86_64-2fa8d0a.zip
   # - unzip terra-Linux-x86_64-2fa8d0a.zip
 
-  # Hope this isn't too ugly for you; it solves problems for me (steveri);
-  # also I'm sure there's a better way to do this but I didn't find it...
   - if [[ ! -v BYPASS_COREIR ]]; then
         git clone https://github.com/rdaly525/coreir.git;
         export CORECONFIG="g++-4.9";
@@ -62,6 +63,7 @@ before_install:
         cd ../../;
     fi
 
+  - date
   - git clone https://github.com/StanfordAHA/CGRAGenerator.git
 
   - git clone https://github.com/cdonovick/smt-pnr

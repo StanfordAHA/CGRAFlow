@@ -10,7 +10,9 @@
 # In travis script .travis.yml:
 #  if [[ `.travistimer.csh` == "valid" ]]; then echo VALID; fi
 
+# 5m = 300s is NOT ENOUGH try fifteen minutes instead maybe
 set nsecs = 300
+set nsecs = 900
 
 # date format for e.g. "Tue 03/21 08:11am"
 set fmt = "%a %m/%d %R%P"
