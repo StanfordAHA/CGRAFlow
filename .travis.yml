@@ -8,8 +8,19 @@ compiler:
   
 before_install:
 
-  # Quick check of script; will restore immediately
+  # this block is EXTREMELY TEMPORARY
   - git clone https://github.com/StanfordAHA/CGRAGenerator.git
+  # CGRA setup
+  - echo "CGRAGenerator setup" - `date`
+  - if [ "${TRAVIS_BUILD_DIR}" == "/home/travis/build/StanfordAHA/CGRAFlow" ];
+    then
+        cgroot=${TRAVIS_BUILD_DIR}/CGRAGenerator;
+        cgbuild=${TRAVIS_BUILD_DIR}/build;
+    else
+        cgroot=${TRAVIS_BUILD_DIR};
+        cgbuild=$cgroot/build;
+        mkdir $cgbuild;
+    fi
   # Bitstream build
   - echo "Build bitstream for programming CGRA" - `date`
   - pushd $cgroot/bitstream
@@ -21,7 +32,6 @@ before_install:
           example/config.dat
           $cgbuild/config.dat
   - popd
-
 
 
 
@@ -86,7 +96,7 @@ before_install:
     fi
 
   - date
-#  - git clone https://github.com/StanfordAHA/CGRAGenerator.git
+  - git clone https://github.com/StanfordAHA/CGRAGenerator.git
 
   - git clone https://github.com/cdonovick/smt-pnr
 
