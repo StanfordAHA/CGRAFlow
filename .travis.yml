@@ -23,6 +23,29 @@ before_install:
       BYPASS_MAPPER=true;
     fi
   
+
+
+  # Just wanna chek this real quick then i'll delete it
+  - git clone https://github.com/StanfordAHA/CGRAGenerator.git
+  # CGRA program and run (uses output of pnr)
+  - echo "CGRA program and run (uses output of pnr)" - `date`
+  - pushd $cgroot/verilator/generator_z_tb
+  -   ./run.csh top_tb.cpp -config ../../hardware/generator_z/top_tb/tile_config.dat | tail -n 100
+  - popd
+
+  # Bitstream build
+  - echo "Build bitstream for programming CGRA" - `date`
+  - pushd $cgroot/bitstream
+  -   perl
+          ./bitstream_gen.pl
+          example/connectivity_4x4.xml
+          $cgbuild/config
+  -   diff
+          example/config.dat
+          $cgbuild/config.dat
+  - popd
+
+
   - pip install virtualenv
   - virtualenv -p /usr/bin/python3 CGRAFlowPy3Env
   - source CGRAFlowPy3Env/bin/activate
@@ -68,7 +91,7 @@ before_install:
     fi
 
   - date
-  - git clone https://github.com/StanfordAHA/CGRAGenerator.git
+  # - git clone https://github.com/StanfordAHA/CGRAGenerator.git
 
   - git clone https://github.com/cdonovick/smt-pnr
 
@@ -167,10 +190,10 @@ script:
   - pushd $cgroot/bitstream
   -   perl
           ./bitstream_gen.pl
-          connectivity_4x4.xml
+          example/connectivity_4x4.xml
           $cgbuild/config
   -   diff
-          ./example/config.dat
+          example/config.dat
           $cgbuild/config.dat
   - popd
 
