@@ -94,11 +94,15 @@ script:
 
   - echo "Halide FLOW"
   - cd Halide_CoreIR
-  - make -C apps/coreir_examples/pointwise/
+  - make -C apps/coreir_examples/pointwise/ out.png
   - cp apps/coreir_examples/pointwise/design_top.json ../build
+  - cp apps/images/gray.png ../build/input.png
+  - cp apps/coreir_examples/pointwise/out.png ../build/halide_out.png
   - cd ..
   - ls -la build
   - cat build/design_top.json
+  - xxd build/input.png
+  - xxd build/halide_out.png
 
   - echo "MAPPER"
   - ./CGRAMapper/build/main build/design_top.json build/mapped.json
