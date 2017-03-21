@@ -58,6 +58,9 @@ before_install:
         cd ..;
     fi
 
+  # I think it might be lost again...here's a quick reset.
+  - cd ${TRAVIS_BUILD_DIR};
+
   - if [[ -v BYPASS_MAPPER ]]; then
        echo "BYPASS MAPPER";
     else
@@ -176,7 +179,7 @@ script:
   # CGRA program and run (uses output of pnr)
   - echo "CGRA program and run (uses output of pnr)" - `date`
   - pushd $cgroot/verilator/generator_z_tb
-  -   ./run.csh top_tb.cpp -config ../../hardware/generator_z/top_tb/tile_config.dat | tail -n 100
+  -   ./run.csh top_tb.cpp -config ../../hardware/generator_z/top_tb/tile_config.dat
   - popd
 
 addons:
