@@ -7,9 +7,16 @@ compiler:
   - gcc
   
 before_install:
-  # To bypass some of the slower parts of the script for debugging, you can set e.g. CGRA_QUICKTEST
-  # Remember to turn it off (comment-out) again when you're done debugging!
-  # - CGRA_QUICKTEST=true
+
+  # If timer has been set on checkin, then turn on debugging for the next five minutes.
+  #   To set timer:   .travistimer.csh -set
+  #   To reset timer: .travistimer.csh -reset
+  #   To check timer: .travistimer.csh  (stdout = "valid" or "expired")
+  #   Verbose timer:  .travistimer.csh -v
+  - if [[ `./.travistimer.csh -v` == "valid" ]]; then CGRA_QUICKTEST=true; fi
+  
+  # When CGRA_QUICKTEST true, bypass some of the slower parts of the script for quick debugging
+  # With quicktest: 5 minutes.  Without quicktest: 45 minutes.
   - if [[ -v CGRA_QUICKTEST ]]; then BYPASS_COREIR=true; fi
   - if [[ -v CGRA_QUICKTEST ]]; then BYPASS_MAPPER=true; fi
   
