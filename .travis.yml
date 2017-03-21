@@ -18,7 +18,7 @@ before_install:
   # When CGRA_QUICKTEST true, bypass some of the slower parts of the script for quick debugging
   # With quicktest: 5 minutes.  Without quicktest: 45 minutes.
   - if [[ -v CGRA_QUICKTEST ]]; then
-      echo QUICKTEST ON
+      echo QUICKTEST ON;
       BYPASS_COREIR=true;
       BYPASS_MAPPER=true;
     fi
@@ -44,7 +44,9 @@ before_install:
   #- wget https://github.com/zdevito/terra/releases/download/release-2016-02-26/terra-Linux-x86_64-2fa8d0a.zip
   # - unzip terra-Linux-x86_64-2fa8d0a.zip
 
-  - if [[ ! -v BYPASS_COREIR ]]; then
+  - if [[ -v BYPASS_COREIR ]]; then
+       echo "BYPASS COREIR";
+    else
         git clone https://github.com/rdaly525/coreir.git;
         export CORECONFIG="g++-4.9";
         make -C coreir/src;
@@ -52,14 +54,16 @@ before_install:
         make -C coreir/tests;
         pip install pytest;
         cd coreir;
-        pip install -e bindings/python;
+          pip install -e bindings/python;
         cd ..;
     fi
 
-  - if [[ ! -v BYPASS_MAPPER ]]; then
+  - if [[ -v BYPASS_MAPPER ]]; then
+       echo "BYPASS MAPPER";
+    else
         git clone https://github.com/StanfordAHA/CGRAMapper.git;
         cd CGRAMapper/mapper;
-        make;
+          make;
         cd ../../;
     fi
 
@@ -133,9 +137,6 @@ script:
   - make out/pointwise_wide_handshake.verilator.bmp
   - cd ../../
   
-  # Is this still set?
-  # - if [[ -v BYPASS_COREIR ]]; then echo BYPASS_COREIR set; else echo BYPASS_COREIR unset; fi
-
   # CGRA setup
   - echo "CGRAGenerator setup" - `date`
   - if [ "${TRAVIS_BUILD_DIR}" == "/home/travis/build/StanfordAHA/CGRAFlow" ];
