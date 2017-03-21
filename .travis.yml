@@ -8,32 +8,30 @@ compiler:
   
 before_install:
 
-  # this block is EXTREMELY TEMPORARY
-  - git clone https://github.com/StanfordAHA/CGRAGenerator.git
-  # CGRA setup
-  - echo "CGRAGenerator setup" - `date`
-  - if [ "${TRAVIS_BUILD_DIR}" == "/home/travis/build/StanfordAHA/CGRAFlow" ];
-    then
-        cgroot=${TRAVIS_BUILD_DIR}/CGRAGenerator;
-        cgbuild=${TRAVIS_BUILD_DIR}/build;
-    else
-        cgroot=${TRAVIS_BUILD_DIR};
-        cgbuild=$cgroot/build;
-        mkdir $cgbuild;
-    fi
-  # Bitstream build
-  - echo "Build bitstream for programming CGRA" - `date`
-  - pushd $cgroot/bitstream
-  -   perl
-          ./bitstream_gen.pl
-          example/connectivity_4x4.xml
-          $cgbuild/config
-  -   diff
-          example/config.dat
-          $cgbuild/config.dat
-  - popd
-
-
+  # # this block is EXTREMELY TEMPORARY
+  # - git clone https://github.com/StanfordAHA/CGRAGenerator.git
+  # # CGRA setup
+  # - echo "CGRAGenerator setup" - `date`
+  # - if [ "${TRAVIS_BUILD_DIR}" == "/home/travis/build/StanfordAHA/CGRAFlow" ];
+  #   then
+  #       cgroot=${TRAVIS_BUILD_DIR}/CGRAGenerator;
+  #       cgbuild=${TRAVIS_BUILD_DIR}/build;
+  #   else
+  #       cgroot=${TRAVIS_BUILD_DIR};
+  #       cgbuild=$cgroot/build;
+  #       mkdir $cgbuild;
+  #   fi
+  # # Bitstream build
+  # - echo "Build bitstream for programming CGRA" - `date`
+  # - pushd $cgroot/bitstream
+  # -   perl
+  #         ./bitstream_gen.pl
+  #         example/connectivity_4x4.xml
+  #         $cgbuild/config
+  # -   diff
+  #         example/config.dat
+  #         $cgbuild/config.dat
+  # - popd
 
 
   # If timer has been set on checkin, then turn on debugging for the next five minutes.
