@@ -103,7 +103,7 @@ script:
   - cat build/design_top.json
   - stream build/input.png build/input.raw
   - stream build/halide_out.png build/halide_out.raw
-  - xxd build/input.png
+#  - xxd build/input.png
 #  - xxd build/input.raw
 #  - xxd build/halide_out.png
 #  - xxd build/halide_out.raw
