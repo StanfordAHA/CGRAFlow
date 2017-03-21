@@ -99,10 +99,10 @@ script:
   - cp apps/images/gray.png ../build/input.png
   - cp apps/coreir_examples/pointwise/out.png ../build/halide_out.png
   - cd ..
-  - ls -la build
-  - cat build/design_top.json
   - stream build/input.png build/input.raw
   - stream build/halide_out.png build/halide_out.raw
+  - ls -la build
+  - cat build/design_top.json
 #  - xxd build/input.png
 #  - xxd build/input.raw
 #  - xxd build/halide_out.png
