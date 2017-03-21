@@ -1,15 +1,20 @@
 #!/bin/csh -f
 
-# How to use it:
-# On clone side:
-#    .travistimer.csh -set
-#    git add .travistimer_begin; git commit; git push
-#    OR:
-#    git commit -am 'commit-message'; git push
+# If timer has been set on checkin, then turn on debugging for the next five minutes.
+#   To set timer:   .travistimer.csh -set
+#   To reset timer: .travistimer.csh -reset
+#   To check timer: .travistimer.csh  (stdout = "valid" or "expired")
+#   Verbose timer:  .travistimer.csh -v
+
+# Example:
+#    .travistimer.csh -set            # modifies .travistimer_begin file
+#    git commit -am 'commit-message'
+#    git push
 #
 # In travis script .travis.yml:
-#  if [[ `.travistimer.csh` == "valid" ]]; then echo VALID; fi
+#     - if [[ `.travistimer.csh` == "valid" ]]; then echo VALID; fi
 
+# TODO/FIXME: This could be a command-line argument e.g. "-set 15"
 # 5m = 300s is NOT ENOUGH try fifteen minutes instead maybe
 set nsecs = 300
 set nsecs = 900

@@ -153,6 +153,9 @@ script:
   - echo "CGRA generate (generates CGRA + connection matrix for pnr)" - `date`
   - pushd $cgroot; ./travis-test.csh; popd
 
+  # In case we're lost (and I think we are!)
+  - cd ${TRAVIS_BUILD_DIR};
+
   # pnr
   - cd smt-pnr/mothball/new
   - ./demo.sh
@@ -161,7 +164,7 @@ script:
 
   # Bitstream build
   - echo "Build bitstream for programming CGRA" - `date`
-  - pushd $cgroot/bitstream/bitstream
+  - pushd $cgroot/bitstream
   -   perl
           ./bitstream_gen.pl
           connectivity_4x4.xml
