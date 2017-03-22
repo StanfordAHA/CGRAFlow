@@ -115,14 +115,22 @@ script:
   - cp apps/images/gray.png ../build/input.png
   - cp apps/coreir_examples/pointwise/out.png ../build/halide_out.png
   - cd ..
-  - stream build/input.png build/input.raw
-  - stream build/halide_out.png build/halide_out.raw
-  - ls -la build
 
-  # [steveri] When I tried these "stream" commands, the output file was all zeroes.
-  # Let's see what you're getting...?
-  - od build/input.raw | head
-  - od build/halide_out.raw | head
+  # "stream" command appears to be broken, emitting huge output files filled with zeroes(?)
+  # - stream build/input.png build/input.raw
+  # - stream build/halide_out.png build/halide_out.raw
+
+  # Using my (steveri) hacky convert script instead...
+  - convert=${TRAVIS_BUILD_DIR}/CGRAGenerator/verilator/generator_z_tb/io/myconvert.csh
+  - $convert build/input.png build/input.raw
+  - $convert build/halide_out.png build/halide_out.raw
+
+  # Just to prove that they aren't zero anymore...
+  # Also, I guess we should be able to see the bytes in halide_out == 2*input
+  - od -t u1 build/input.raw | head
+  - od -t u1 build/halide_out.raw | head
+
+  - ls -la build
 
   - cat build/design_top.json
 #  - xxd build/input.png
