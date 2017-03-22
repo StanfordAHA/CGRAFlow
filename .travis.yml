@@ -118,6 +118,12 @@ script:
   - stream build/input.png build/input.raw
   - stream build/halide_out.png build/halide_out.raw
   - ls -la build
+
+  # [steveri] When I tried these "stream" commands, the output file was all zeroes.
+  # Let's see what you're getting...?
+  - od build/input.raw | head
+  - od build/halide_out.raw | head
+
   - cat build/design_top.json
 #  - xxd build/input.png
 #  - xxd build/input.raw
