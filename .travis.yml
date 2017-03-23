@@ -189,17 +189,25 @@ script:
   -   diff  example/config.dat $cgbuild/config.dat
   - popd
 
-  ##############################################################
   # CGRA program and run ((theoretically) uses output of pnr)
   - echo "CGRA program and run (uses output of pnr)" - `date`
+
+#  - $convert build/input.png build/input.raw
+#  - $convert build/halide_out.png build/halide_out.raw
+
+#        -input io/gray_small.png 
 
   - pushd $cgroot/verilator/generator_z_tb
   - ./run.csh top_tb.cpp -input io/gray_small.png
         -config ../../hardware/generator_z/top_tb/tile_config.dat
-        -input io/gray_small.png 
-        -output /tmp/output.raw
+        -input ${TRAVIS_BUILD_DIR}/build/input.png
+        -output ${TRAVIS_BUILD_DIR}/build/CGRA_out.raw
         -nclocks 1M
   - popd
+
+  - ls -l ${TRAVIS_BUILD_DIR}/build/*.{raw,png}
+  - cmp ${TRAVIS_BUILD_DIR}/build/{halide,CGRA}_out.raw
+
 
 
 
