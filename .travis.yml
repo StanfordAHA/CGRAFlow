@@ -198,11 +198,11 @@ script:
 #        -input io/gray_small.png 
 
   - pushd $cgroot/verilator/generator_z_tb
-  - ./run.csh top_tb.cpp -input io/gray_small.png
+  - ./run.csh top_tb.cpp
         -config ../../hardware/generator_z/top_tb/tile_config.dat
         -input ${TRAVIS_BUILD_DIR}/build/input.png
         -output ${TRAVIS_BUILD_DIR}/build/CGRA_out.raw
-        -nclocks 1M
+        -nclocks 3M
   - popd
 
   - ls -l ${TRAVIS_BUILD_DIR}/build/*.{raw,png}
