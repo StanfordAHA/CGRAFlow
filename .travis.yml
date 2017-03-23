@@ -176,7 +176,7 @@ script:
 
   # pnr
   - cd smt-pnr/src/
-  - ./test.py ../../build/mapped.json ../../CGRAGenerator/hardware/generator_z/top_tb/cgra_info.txt ../../build/mapped.xml ../../build/io.xml
+  - ./test.py ../../build/mapped.json ../../CGRAGenerator/hardware/generator_z/top/cgra_info.txt ../../build/mapped.xml ../../build/io.xml
 
   # Bitstream build
   - echo "Build bitstream for programming CGRA" - `date`
