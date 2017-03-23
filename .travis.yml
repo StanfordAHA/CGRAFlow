@@ -198,7 +198,7 @@ script:
         -config ../../hardware/generator_z/top_tb/tile_config.dat
         -input io/gray_small.png 
         -output /tmp/output.raw
-        -nclocks 1M | & less
+        -nclocks 1M
   - popd
 
 
