@@ -97,6 +97,7 @@ install:
   - export PYTHONPATH=$PYTHONPATH:$PWD/z3-4.5.0-x64-ubuntu-14.04/bin/python/
   - sudo ln -s $PWD/z3-4.5.0-x64-ubuntu-14.04/bin/libz3.so /usr/lib/libz3.so
   - pip install pygraphviz
+  - pip install lxml
 
 script:
   - export RUN_TESTS=false
@@ -174,10 +175,8 @@ script:
   - cd ${TRAVIS_BUILD_DIR};
 
   # pnr
-  - cd smt-pnr/mothball/new
-  - ./demo.sh
-  - cd ../../../
-  
+  - cd smt-pnr/src/
+  - ./test.py ../../build/mapped.json ../../build/demo_cgra4x4.xml ../../build/mapped.xml ../../build/io.xml
 
   # Bitstream build
   - echo "Build bitstream for programming CGRA" - `date`
