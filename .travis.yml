@@ -185,33 +185,35 @@ script:
   # I want these (steveri)!
   - cat ../../build/mapped.xml
   - cat ../../build/io.xml
+  - diff ../../build/mapped.xml $cgroot/bitstream/example3/PNRguys_mapped.xml
+  - diff ../../build/io.xml $cgroot/bitstream/example3/PNRguys_io.xml
+
 
   # Bitstream build
   - echo "Build bitstream for programming CGRA" - `date`
-  - pushd $cgroot/bitstream
+  # - pushd $cgroot/bitstream
   #        
-
-  - PNRMAP=../../build/mapped.xml
-  - PNRMAP=example/connectivity_4x4.xml
-  -   perl
-          ./bitstream_gen.pl
-          $PNRMAP
-          $cgbuild/config
-  -   ls -l example/config.dat $cgbuild/config.dat
-  -   diff  example/config.dat $cgbuild/config.dat
-  - popd
+  # - PNRMAP=example/connectivity_4x4.xml
+  # - PNRMAP=$cgroot/bitstream/example3/PNRguys_mapped.xml
+  - PNRMAP=$cgbuild/mapped.xml
+  -   perl $BS_SCRIPT $PNRMAP $cgbuild/config
+  -   ls -l $cgroot/bitstream/example3/PNRguys_config.dat $cgbuild/config.dat
+  -   wc -l $cgroot/bitstream/example3/PNRguys_config.dat $cgbuild/config.dat
+  -   diff  $cgroot/bitstream/example3/PNRguys_config.dat $cgbuild/config.dat
 
   # CGRA program and run ((theoretically) uses output of pnr)
   - echo "CGRA program and run (uses output of pnr)" - `date`
 
 #  - $convert build/input.png build/input.raw
 #  - $convert build/halide_out.png build/halide_out.raw
-
 #        -input io/gray_small.png 
 
+  # - CGRA_CONFIG=examples/config_mul2_nikhil_170323.dat
+  - CGRA_CONFIG=$cgbuild/config.dat
+  - diff $cgbuild/config.dat $cgroot/verilator/generator_z/PNRCONFIG.dat
   - pushd $cgroot/verilator/generator_z_tb
   - ./run.csh top_tb.cpp
-        -config examples/config_mul2_nikhil_170323.dat
+        -config $CGRA_CONFIG
         -input  ${TRAVIS_BUILD_DIR}/build/input.png
         -output ${TRAVIS_BUILD_DIR}/build/CGRA_out.raw
         -nclocks 5M
