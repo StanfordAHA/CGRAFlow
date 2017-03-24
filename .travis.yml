@@ -199,8 +199,8 @@ script:
 
   - pushd $cgroot/verilator/generator_z_tb
   - ./run.csh top_tb.cpp
-        -config ../../hardware/generator_z/top_tb/tile_config.dat
-        -input ${TRAVIS_BUILD_DIR}/build/input.png
+        -config examples/config_mul2_nikhil_170323.dat
+        -input  ${TRAVIS_BUILD_DIR}/build/input.png
         -output ${TRAVIS_BUILD_DIR}/build/CGRA_out.raw
         -nclocks 5M
   - popd
@@ -209,7 +209,7 @@ script:
   - od -t u1 ${TRAVIS_BUILD_DIR}/build/halide_out.raw > /tmp/halide_out.od
   - od -t u1 ${TRAVIS_BUILD_DIR}/build/CGRA_out.raw   > /tmp/CGRA_out.od
   - cmp ${TRAVIS_BUILD_DIR}/build/{halide_out.raw,CGRA_out.raw}
-  - diff /tmp/halide_out.od /tmp/CGRA_out.od |& head -100
+  - diff /tmp/halide_out.od /tmp/CGRA_out.od |& head -10
 
 
 
