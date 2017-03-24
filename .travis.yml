@@ -201,7 +201,7 @@ script:
   -   perl $BS_SCRIPT $PNRMAP $cgbuild/config
   -   ls -l $cgroot/bitstream/example3/PNRguys_config.dat $cgbuild/config.dat
   -   wc -l $cgroot/bitstream/example3/PNRguys_config.dat $cgbuild/config.dat
-  -   diff  $cgroot/bitstream/example3/PNRguys_config.dat $cgbuild/config.dat
+  # -   diff  $cgroot/bitstream/example3/PNRguys_config.dat $cgbuild/config.dat
 
   # CGRA program and run ((theoretically) uses output of pnr)
   - echo "CGRA program and run (uses output of pnr)" - `date`
