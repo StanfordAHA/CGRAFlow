@@ -182,12 +182,18 @@ script:
     ../../build/mapped.xml
     ../../build/io.xml
 
+  # I want these (steveri)!
+  - cat ../../build/mapped.xml
+  - cat ../../build/io.xml
+
   # Bitstream build
   - echo "Build bitstream for programming CGRA" - `date`
   - pushd $cgroot/bitstream
+  #        example/connectivity_4x4.xml
+
   -   perl
           ./bitstream_gen.pl
-          example/connectivity_4x4.xml
+          ../../build/mapped.xml
           $cgbuild/config
   -   ls -l example/config.dat $cgbuild/config.dat
   -   diff  example/config.dat $cgbuild/config.dat
