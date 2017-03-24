@@ -193,6 +193,7 @@ script:
   - echo "Build bitstream for programming CGRA" - `date`
   # - pushd $cgroot/bitstream
   #        
+  - BS_SCRIPT=$cgroot/bitstream/example3/gen_bitstream.pl
   # - PNRMAP=example/connectivity_4x4.xml
   # - PNRMAP=$cgroot/bitstream/example3/PNRguys_mapped.xml
   - PNRMAP=$cgbuild/mapped.xml
