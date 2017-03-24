@@ -189,11 +189,13 @@ script:
   # Bitstream build
   - echo "Build bitstream for programming CGRA" - `date`
   - pushd $cgroot/bitstream
-  #        example/connectivity_4x4.xml
+  #        
 
+  - PNRMAP=../../build/mapped.xml
+  - PNRMAP=example/connectivity_4x4.xml
   -   perl
           ./bitstream_gen.pl
-          ../../build/mapped.xml
+          $PNRMAP
           $cgbuild/config
   -   ls -l example/config.dat $cgbuild/config.dat
   -   diff  example/config.dat $cgbuild/config.dat
@@ -215,7 +217,8 @@ script:
         -nclocks 5M
   - popd
 
-  - ls -l ${TRAVIS_BUILD_DIR}/build/*.{raw,png}
+  # - ls -l ${TRAVIS_BUILD_DIR}/build/*.{raw,png}
+  - ls -l ${TRAVIS_BUILD_DIR}/build/*.raw
   - od -t u1 -w1 -v -A none ${TRAVIS_BUILD_DIR}/build/input.raw      > /tmp/input.od
   - od -t u1 -w1 -v -A none ${TRAVIS_BUILD_DIR}/build/halide_out.raw > /tmp/halide_out.od
   - od -t u1 -w1 -v -A none ${TRAVIS_BUILD_DIR}/build/CGRA_out.raw   > /tmp/CGRA_out.od
