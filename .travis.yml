@@ -206,11 +206,15 @@ script:
   - popd
 
   - ls -l ${TRAVIS_BUILD_DIR}/build/*.{raw,png}
+  - od -t u1 ${TRAVIS_BUILD_DIR}/build/input.raw      > /tmp/input.od
   - od -t u1 ${TRAVIS_BUILD_DIR}/build/halide_out.raw > /tmp/halide_out.od
   - od -t u1 ${TRAVIS_BUILD_DIR}/build/CGRA_out.raw   > /tmp/CGRA_out.od
   - cmp ${TRAVIS_BUILD_DIR}/build/{halide_out.raw,CGRA_out.raw}
   - diff /tmp/halide_out.od /tmp/CGRA_out.od |& head -10
 
+  - sed -n '90,110p' /tmp/input.od
+  - sed -n '90,110p' /tmp/halide_out.od
+  - sed -n '90,110p' /tmp/CGRA_out.od
 
 
 
