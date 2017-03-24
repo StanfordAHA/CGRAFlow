@@ -202,7 +202,7 @@ script:
         -config ../../hardware/generator_z/top_tb/tile_config.dat
         -input ${TRAVIS_BUILD_DIR}/build/input.png
         -output ${TRAVIS_BUILD_DIR}/build/CGRA_out.raw
-        -nclocks 3M
+        -nclocks 5M
   - popd
 
   - ls -l ${TRAVIS_BUILD_DIR}/build/*.{raw,png}
