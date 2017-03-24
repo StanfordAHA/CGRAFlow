@@ -185,8 +185,8 @@ script:
   # I want these (steveri)!
   - cat ../../build/mapped.xml
   - cat ../../build/io.xml
-  - diff ../../build/mapped.xml $cgroot/bitstream/example3/PNRguys_mapped.xml
-  - diff ../../build/io.xml $cgroot/bitstream/example3/PNRguys_io.xml
+  # - diff ../../build/mapped.xml $cgroot/bitstream/example3/PNRguys_mapped.xml
+  # - diff ../../build/io.xml $cgroot/bitstream/example3/PNRguys_io.xml
   - grep wire_name ../../build/io.xml
 
 
