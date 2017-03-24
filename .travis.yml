@@ -187,6 +187,7 @@ script:
   - cat ../../build/io.xml
   - diff ../../build/mapped.xml $cgroot/bitstream/example3/PNRguys_mapped.xml
   - diff ../../build/io.xml $cgroot/bitstream/example3/PNRguys_io.xml
+  - grep wire_name ../../build/io.xml
 
 
   # Bitstream build
@@ -211,12 +212,13 @@ script:
 
   # - CGRA_CONFIG=examples/config_mul2_nikhil_170323.dat
   - CGRA_CONFIG=$cgbuild/config.dat
-  - diff $cgbuild/config.dat $cgroot/verilator/generator_z/PNRCONFIG.dat
+  # - diff $cgbuild/config.dat $cgroot/verilator/generator_z/PNRCONFIG.dat
   - pushd $cgroot/verilator/generator_z_tb
   - ./run.csh top_tb.cpp
         -config $CGRA_CONFIG
         -input  ${TRAVIS_BUILD_DIR}/build/input.png
         -output ${TRAVIS_BUILD_DIR}/build/CGRA_out.raw
+        -io $cgbuild/io.xml
         -nclocks 5M
   - popd
 
