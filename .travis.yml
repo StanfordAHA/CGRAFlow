@@ -205,10 +205,12 @@ script:
         -nclocks 3M
   - popd
 
-  - od -t u1 ${TRAVIS_BUILD_DIR}/build/halide_out.raw
-
   - ls -l ${TRAVIS_BUILD_DIR}/build/*.{raw,png}
-  - cmp ${TRAVIS_BUILD_DIR}/build/{halide,CGRA}_out.raw
+  - od -t u1 ${TRAVIS_BUILD_DIR}/build/halide_out.raw > /tmp/halide_out.od
+  - od -t u1 ${TRAVIS_BUILD_DIR}/build/CGRA_out.raw   > /tmp/CGRA_out.od
+  - cmp ${TRAVIS_BUILD_DIR}/build/{halide_out.raw,CGRA_out.raw}
+  - diff /tmp/halide_out.od /tmp/CGRA_out.od |& head -100
+
 
 
 
