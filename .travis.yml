@@ -155,6 +155,9 @@ script:
   - make out/pointwise_wide_handshake.verilator.bmp
   - cd ../../
   
+  # Deleteme (added this line to get a new build using new run script
+  # in CGRAGenerator repository)
+
   # CGRA setup
   - echo "CGRAGenerator setup" - `date`
   - if [ "${TRAVIS_BUILD_DIR}" == "/home/travis/build/StanfordAHA/CGRAFlow" ];
