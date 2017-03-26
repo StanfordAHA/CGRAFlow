@@ -155,27 +155,19 @@ script:
   - make out/pointwise_wide_handshake.verilator.bmp
   - cd ../../
   
-  # Deleteme (added this line to get a new build using new run script
-  # in CGRAGenerator repository)
+
 
   # CGRA setup
-  - echo "CGRAGenerator setup" - `date`
-  - if [ "${TRAVIS_BUILD_DIR}" == "/home/travis/build/StanfordAHA/CGRAFlow" ];
-    then
-        cgroot=${TRAVIS_BUILD_DIR}/CGRAGenerator;
-        cgbuild=${TRAVIS_BUILD_DIR}/build;
-    else
-        cgroot=${TRAVIS_BUILD_DIR};
-        cgbuild=$cgroot/build;
-        mkdir $cgbuild;
-    fi
+  - echo CGRA setup for CGRAFLOW travis script
+  - cgroot=${TRAVIS_BUILD_DIR}/CGRAGenerator;
+  - cgbuild=${TRAVIS_BUILD_DIR}/build;
+
+  # In case we're lost (and I think we are!)
+  - cd ${TRAVIS_BUILD_DIR};
 
   # CGRA generate
   - echo "CGRA generate (generates CGRA + connection matrix for pnr)" - `date`
   - pushd $cgroot; ./travis-test.csh; popd
-
-  # In case we're lost (and I think we are!)
-  - cd ${TRAVIS_BUILD_DIR};
 
   # pnr
   - cd smt-pnr/src/
@@ -185,20 +177,8 @@ script:
     ../../build/mapped.xml
     ../../build/io.xml
 
-  # I want these (steveri)!
-  - cat ../../build/mapped.xml
-  - cat ../../build/io.xml
-  # - diff ../../build/mapped.xml $cgroot/bitstream/example3/PNRguys_mapped.xml
-  # - diff ../../build/io.xml $cgroot/bitstream/example3/PNRguys_io.xml
-  - grep wire_name ../../build/io.xml
-
-
   # Bitstream build
   - echo "Build bitstream for programming CGRA" - `date`
-
-  # - BS_SCRIPT=$cgroot/bitstream/example3/gen_bitstream.pl
-  # - PNRMAP=$cgbuild/mapped.xml
-  # -   perl $BS_SCRIPT $PNRMAP $cgbuild/config
 
   - perl $cgroot/bitstream/example3/gen_bitstream.pl
        $cgbuild/mapped.xml
@@ -215,8 +195,8 @@ script:
         -output ${TRAVIS_BUILD_DIR}/build/CGRA_out.raw
         -nclocks 5M
   - popd
-  #
 
+  # Check to see that output is correct.
   # - ls -l ${TRAVIS_BUILD_DIR}/build/*.{raw,png}
   - ls -l ${TRAVIS_BUILD_DIR}/build/*.raw
   - od -t u1 -w1 -v -A none ${TRAVIS_BUILD_DIR}/build/input.raw      > /tmp/input.od
