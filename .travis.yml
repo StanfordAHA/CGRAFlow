@@ -207,20 +207,12 @@ script:
 
   # CGRA program and run ((theoretically) uses output of pnr)
   - echo "CGRA program and run (uses output of pnr)" - `date`
-
-#  - $convert build/input.png build/input.raw
-#  - $convert build/halide_out.png build/halide_out.raw
-#        -input io/gray_small.png 
-
-  # - CGRA_CONFIG=examples/config_mul2_nikhil_170323.dat
-  - CGRA_CONFIG=$cgbuild/config.dat
-  # - diff $cgbuild/config.dat $cgroot/verilator/generator_z/PNRCONFIG.dat
   - pushd $cgroot/verilator/generator_z_tb
   - ./run.csh top_tb.cpp
-        -config $CGRA_CONFIG
+        -config $cgbuild/config.dat
+        -io     $cgbuild/io.xml
         -input  ${TRAVIS_BUILD_DIR}/build/input.png
         -output ${TRAVIS_BUILD_DIR}/build/CGRA_out.raw
-        -io $cgbuild/io.xml
         -nclocks 5M
   - popd
   #
