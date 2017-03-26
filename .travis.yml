@@ -162,15 +162,12 @@ script:
   - cgroot=${TRAVIS_BUILD_DIR}/CGRAGenerator;
   - cgbuild=${TRAVIS_BUILD_DIR}/build;
 
-  # In case we're lost (and I think we are!)
-  - cd ${TRAVIS_BUILD_DIR};
-
   # CGRA generate
   - echo "CGRA generate (generates CGRA + connection matrix for pnr)" - `date`
   - pushd $cgroot; ./travis-test.csh; popd
 
   # pnr
-  - cd smt-pnr/src/
+  - cd ${TRAVIS_BUILD_DIR}/smt-pnr/src/
   - ./test.py
     ../../build/mapped.json
     ../../CGRAGenerator/hardware/generator_z/top/cgra_info.txt
@@ -179,7 +176,7 @@ script:
 
   # Bitstream build
   - echo "Build bitstream for programming CGRA" - `date`
-
+  - cd $cgbuild
   - perl $cgroot/bitstream/example3/gen_bitstream.pl
        $cgbuild/mapped.xml
        $cgbuild/config
