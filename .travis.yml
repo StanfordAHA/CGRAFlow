@@ -106,9 +106,16 @@ script:
   # I think this actually builds halide too?
   - echo "Run Halide Tests"
   - cd Halide_CoreIR
+  - echo "This is a bottleneck.  Is it necessary?"
+  - echo "Takes ten minutes and generates 2000 lines of output..."
   - test/scripts/build_travis.sh
   - cd ..
 
+  # SR: I guess this is where Halide actually compiles our 2x app
+  # and runs it to build our comparison output parrot "halide_out.png"
+  # as well as I guess the DAG "design_top.json"(?) for the mapper.  Yes?
+  # (Note I think the "make" was already done as part of the tests just above.)
+  #
   - echo "Halide FLOW"
   - cd Halide_CoreIR
   - make -C apps/coreir_examples/pointwise/ out.png
@@ -121,6 +128,7 @@ script:
   # - stream build/input.png build/input.raw
   # - stream build/halide_out.png build/halide_out.raw
 
+  # This uncompresses the input and output parrots to make them more useful...
   # Using my (steveri) hacky convert script instead...
   - convert=${TRAVIS_BUILD_DIR}/CGRAGenerator/verilator/generator_z_tb/io/myconvert.csh
   - $convert build/input.png build/input.raw
@@ -139,6 +147,9 @@ script:
 #  - xxd build/halide_out.png
 #  - xxd build/halide_out.raw
 
+  # Mapper uses DAG output "design_top.json" from Halide compiler
+  # to produce a mapped version "mapped.json" for the PNR folks.  Right?
+  #
   - echo "MAPPER"
   - ./CGRAMapper/build/main build/design_top.json build/mapped.json
   - ls -la build
@@ -167,6 +178,9 @@ script:
   - pushd $cgroot; ./travis-test.csh; popd
 
   # pnr
+  # Uses mapper oupru "mapped.json" plus CGRA connection matrix "cgra_info"
+  # to produce placed and routed "mapped.xml" and "io.xml"
+  # (note name collision mapped.json vs. mapped.xml)
   - cd ${TRAVIS_BUILD_DIR}/smt-pnr/src/
   - ./test.py
     ../../build/mapped.json
@@ -175,6 +189,7 @@ script:
     ../../build/io.xml
 
   # Bitstream build
+  # translates PNR output "mapped.xml" into a bitstream "config.dat" for programming the CGRA
   - echo "Build bitstream for programming CGRA" - `date`
   - cd $cgbuild
   - perl $cgroot/bitstream/example3/gen_bitstream.pl
