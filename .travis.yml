@@ -119,11 +119,9 @@ script:
   #
   - echo "Halide FLOW"
   - cd Halide_CoreIR
-  # remake the json and cpu implementation (run) for our test app
-  - make -C apps/coreir_examples/pointwise/ clean design_top.json run
-
-  # run the cpu implementation, and copy over all pertinent files
-  ./apps/coreir_examples/pointwise/run apps/images/gray.png
+  # remake the json and cpu output image for our test app
+  - make -C apps/coreir_examples/pointwise/ clean design_top.json out.png
+  # copy over all pertinent files
   - cp apps/coreir_examples/pointwise/design_top.json ../build
   - cp apps/images/gray.png ../build/input.png
   - cp apps/coreir_examples/pointwise/out.png ../build/halide_out.png
