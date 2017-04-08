@@ -141,6 +141,10 @@ script:
 #  - xxd build/halide_out.png
 #  - xxd build/halide_out.raw
 
+  - mv build/design_top.json /tmp/design_top.json
+  - sed 's/const_186/const//' /tmp/design_top.json > build/design_top.json
+  - grep const build/design_top.json /tmp/design_top.json
+
   # Mapper uses DAG output "design_top.json" from Halide compiler
   # to produce a mapped version "mapped.json" for the PNR folks.  Right?
   #
