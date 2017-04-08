@@ -181,6 +181,12 @@ script:
     ../../CGRAGenerator/hardware/generator_z/top/cgra_info.txt
     ../../build/mapped.xml
     ../../build/io.xml
+    
+  # FIXME/TODO SR:Adding this temporary hack so that Jeff's stuff will work (I hope)
+  # until I can get around to fixing what's wrong with the way I handle PNR output...
+  - cp $cgroot/bitstream/example3/PNRguys_mapped.xml $cgbuild/mapped.xml
+  - cp $cgroot/bitstream/example3/PNRguys_io.xml     $cgbuild/io.xml
+
 
   # Bitstream build
   # translates PNR output "mapped.xml" into a bitstream "config.dat" for programming the CGRA
