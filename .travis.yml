@@ -120,9 +120,9 @@ script:
   # FIXME/TODO oops Jeff's recent change broke the flow.
   # This temporary hack lets it pass, but it must be fixed!
   # sr 4/10 I turned off the hack so script will fail until flow is fixed...
-  - mv build/design_top.json /tmp/design_top.json
-  - sed 's/const_186/const/' /tmp/design_top.json > build/design_top.json
-  - grep const build/design_top.json /tmp/design_top.json
+  # - mv build/design_top.json /tmp/design_top.json
+  # - sed 's/const_186/const/' /tmp/design_top.json > build/design_top.json
+  # - grep const build/design_top.json /tmp/design_top.json
 
   # Mapper uses DAG output "design_top.json" from Halide compiler
   # to produce a mapped version "mapped.json" for the PNR folks.  Right?
