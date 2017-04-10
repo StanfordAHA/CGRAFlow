@@ -8,21 +8,6 @@ compiler:
   
 before_install:
 
-  # If timer has been set on checkin, then turn on debugging for the next five minutes.
-  #   To set timer:   .travistimer.csh -set
-  #   To reset timer: .travistimer.csh -reset
-  #   To check timer: .travistimer.csh  (stdout = "valid" or "expired")
-  #   Verbose timer:  .travistimer.csh -v
-  - if [[ `./.travistimer.csh -v` == "valid" ]]; then CGRA_QUICKTEST=true; fi
-  
-  # When CGRA_QUICKTEST true, bypass some of the slower parts of the script for quick debugging
-  # With quicktest: 5 minutes.  Without quicktest: 45 minutes.
-  - if [[ -v CGRA_QUICKTEST ]]; then
-      echo QUICKTEST ON;
-      BYPASS_COREIR=true;
-      BYPASS_MAPPER=true;
-    fi
-  
   - pip install virtualenv
   - virtualenv -p /usr/bin/python3 CGRAFlowPy3Env
   - source CGRAFlowPy3Env/bin/activate
@@ -44,9 +29,6 @@ before_install:
   #- wget https://github.com/zdevito/terra/releases/download/release-2016-02-26/terra-Linux-x86_64-2fa8d0a.zip
   # - unzip terra-Linux-x86_64-2fa8d0a.zip
 
-  - if [[ -v BYPASS_COREIR ]]; then
-       echo "BYPASS COREIR";
-    else
         git clone https://github.com/rdaly525/coreir.git;
         export CORECONFIG="g++-4.9";
         make -C coreir/src;
@@ -56,19 +38,14 @@ before_install:
         cd coreir;
           pip install -e bindings/python;
         cd ..;
-    fi
 
   # I think it might be lost again...here's a quick reset.
   - cd ${TRAVIS_BUILD_DIR};
 
-  - if [[ -v BYPASS_MAPPER ]]; then
-       echo "BYPASS MAPPER";
-    else
         git clone https://github.com/StanfordAHA/CGRAMapper.git;
         cd CGRAMapper/mapper;
           make;
         cd ../../;
-    fi
 
   - date
   - git clone https://github.com/StanfordAHA/CGRAGenerator.git
@@ -144,9 +121,9 @@ script:
   # FIXME/TODO oops Jeff's recent change broke the flow.
   # This temporary hack lets it pass, but it must be fixed!
   # sr 4/10 I turned off the hack so script will fail until flow is fixed...
-  # - mv build/design_top.json /tmp/design_top.json
-  # - sed 's/const_186/const/' /tmp/design_top.json > build/design_top.json
-  # - grep const build/design_top.json /tmp/design_top.json
+  - mv build/design_top.json /tmp/design_top.json
+  - sed 's/const_186/const/' /tmp/design_top.json > build/design_top.json
+  - grep const build/design_top.json /tmp/design_top.json
 
   # Mapper uses DAG output "design_top.json" from Halide compiler
   # to produce a mapped version "mapped.json" for the PNR folks.  Right?
@@ -179,7 +156,7 @@ script:
   - pushd $cgroot; ./travis-test.csh; popd
 
   # pnr
-  # Uses mapper oupru "mapped.json" plus CGRA connection matrix "cgra_info"
+  # Uses mapper output "mapped.json" plus CGRA connection matrix "cgra_info"
   # to produce placed and routed "mapped.xml" and "io.xml"
   # (note name collision mapped.json vs. mapped.xml)
   - cd ${TRAVIS_BUILD_DIR}/smt-pnr/src/
