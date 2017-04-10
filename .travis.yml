@@ -7,7 +7,6 @@ compiler:
   - gcc
   
 before_install:
-
   - pip install virtualenv
   - virtualenv -p /usr/bin/python3 CGRAFlowPy3Env
   - source CGRAFlowPy3Env/bin/activate
