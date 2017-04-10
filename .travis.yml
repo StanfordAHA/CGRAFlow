@@ -28,23 +28,23 @@ before_install:
   #- wget https://github.com/zdevito/terra/releases/download/release-2016-02-26/terra-Linux-x86_64-2fa8d0a.zip
   # - unzip terra-Linux-x86_64-2fa8d0a.zip
 
-        git clone https://github.com/rdaly525/coreir.git;
-        export CORECONFIG="g++-4.9";
-        make -C coreir/src;
-        make -C coreir/src ../build/coreir.so;
-        make -C coreir/tests;
-        pip install pytest;
-        cd coreir;
-          pip install -e bindings/python;
-        cd ..;
+  - git clone https://github.com/rdaly525/coreir.git;
+  - export CORECONFIG="g++-4.9";
+  - make -C coreir/src;
+  - make -C coreir/src ../build/coreir.so;
+  - make -C coreir/tests;
+  - pip install pytest;
+  - cd coreir;
+  -   pip install -e bindings/python;
+  - cd ..;
 
   # I think it might be lost again...here's a quick reset.
   - cd ${TRAVIS_BUILD_DIR};
 
-        git clone https://github.com/StanfordAHA/CGRAMapper.git;
-        cd CGRAMapper/mapper;
-          make;
-        cd ../../;
+  - git clone https://github.com/StanfordAHA/CGRAMapper.git;
+  - cd CGRAMapper/mapper;
+  -   make;
+  - cd ../../;
 
   - date
   - git clone https://github.com/StanfordAHA/CGRAGenerator.git
