@@ -97,6 +97,24 @@ script:
 
   - ls -la build
 
+
+
+
+  # Prep input and output-comparison files
+  # Halide app reads/writes PNG; must convert to RAW to be useful...
+  # Could not get "stream" command to work, so using my (steveri) hacky convert script instead...
+  - convert=${TRAVIS_BUILD_DIR}/CGRAGenerator/verilator/generator_z_tb/io/myconvert.csh
+  - $convert build/input.png build/input.raw
+  - $convert build/halide_out.png build/halide_out.raw
+
+  # Just to prove that they aren't zero anymore...
+  # Also, I guess we should be able to see the bytes in halide_out == 2*input
+  - od -t u1 build/input.raw | head
+  - od -t u1 build/halide_out.raw | head
+
+  - ls -la build
+
+
   - cat build/design_top.json
 #  - xxd build/input.png
 #  - xxd build/input.raw
@@ -106,9 +124,9 @@ script:
   # FIXME/TODO oops Jeff's recent change broke the flow.
   # This temporary hack lets it pass, but it must be fixed!
   # sr 4/10 I turned off the hack so script will fail until flow is fixed...
-  - mv build/design_top.json /tmp/design_top.json
-  - sed 's/const_186/const/' /tmp/design_top.json > build/design_top.json
-  - grep const build/design_top.json /tmp/design_top.json
+  # - mv build/design_top.json /tmp/design_top.json
+  # - sed 's/const_186/const/' /tmp/design_top.json > build/design_top.json
+  # - grep const build/design_top.json /tmp/design_top.json
 
   # Mapper uses DAG output "design_top.json" from Halide compiler
   # to produce a mapped version "mapped.json" for the PNR folks.  Right?
@@ -129,6 +147,10 @@ script:
   - make out/pointwise_wide_handshake.verilator.bmp
   - cd ../../
   
+
+
+
+
 
 
 
@@ -171,29 +193,6 @@ script:
         -output ${TRAVIS_BUILD_DIR}/build/CGRA_out.raw
         -nclocks 5M
   - popd
-
-
-
-
-  # Prep input and output-comparison files
-  # Halide app reads/writes PNG; must convert to RAW to be useful...
-  # Could not get "stream" command to work, so using my (steveri) hacky convert script instead...
-  - convert=${TRAVIS_BUILD_DIR}/CGRAGenerator/verilator/generator_z_tb/io/myconvert.csh
-  - $convert build/input.png build/input.raw
-  - $convert build/halide_out.png build/halide_out.raw
-
-  # Also, I guess we should be able to see the bytes in halide_out == 2*input
-  - od -t u1 build/input.raw | head
-  - od -t u1 build/halide_out.raw | head
-
-  - ls -la build
-
-
-
-
-
-
-
 
   # Check to see that output is correct.
   # - ls -l ${TRAVIS_BUILD_DIR}/build/*.{raw,png}
