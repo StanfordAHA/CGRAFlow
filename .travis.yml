@@ -87,20 +87,18 @@ script:
   #
   - echo "Halide FLOW"
   - cd Halide_CoreIR
-      # remake the json and cpu output image for our test app
-      - make -C apps/coreir_examples/pointwise/ clean design_top.json out.png
-      # copy over all pertinent files
-      - cp apps/coreir_examples/pointwise/design_top.json ../build
-      - cp apps/images/gray.png                           ../build/input.png
-      - cp apps/coreir_examples/pointwise/out.png         ../build/halide_out.png
+  # remake the json and cpu output image for our test app
+  - make -C apps/coreir_examples/pointwise/ clean design_top.json out.png
+  # copy over all pertinent files
+  - cp apps/coreir_examples/pointwise/design_top.json ../build
+  - cp apps/images/gray.png                           ../build/input.png
+  - cp apps/coreir_examples/pointwise/out.png         ../build/halide_out.png
   - cd ..
 
-  # "stream" command appears to be broken, emitting huge output files filled with zeroes(?)
-  # - stream build/input.png build/input.raw
-  # - stream build/halide_out.png build/halide_out.raw
+  - ls -la build
 
-  # This uncompresses the input and output parrots to make them more useful...
-  # Using my (steveri) hacky convert script instead...
+  # Halide app reads/writes PNG; must convert to RAW to be useful...
+  # Could not get "stream" command to work, so using my (steveri) hacky convert script instead...
   - convert=${TRAVIS_BUILD_DIR}/CGRAGenerator/verilator/generator_z_tb/io/myconvert.csh
   - $convert build/input.png build/input.raw
   - $convert build/halide_out.png build/halide_out.raw
