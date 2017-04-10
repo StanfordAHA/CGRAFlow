@@ -124,9 +124,9 @@ script:
   # FIXME/TODO oops Jeff's recent change broke the flow.
   # This temporary hack lets it pass, but it must be fixed!
   # sr 4/10 I turned off the hack so script will fail until flow is fixed...
-  # - mv build/design_top.json /tmp/design_top.json
-  # - sed 's/const_186/const/' /tmp/design_top.json > build/design_top.json
-  # - grep const build/design_top.json /tmp/design_top.json
+  - mv build/design_top.json /tmp/design_top.json
+  - sed 's/const_186/const/' /tmp/design_top.json > build/design_top.json
+  - grep const build/design_top.json /tmp/design_top.json
 
   # Mapper uses DAG output "design_top.json" from Halide compiler
   # to produce a mapped version "mapped.json" for the PNR folks.  Right?
@@ -154,14 +154,13 @@ script:
 
 
 
-  # CGRA setup
-  - echo CGRA setup for CGRAFLOW travis script
-  - cgroot=${TRAVIS_BUILD_DIR}/CGRAGenerator;
-  - cgbuild=${TRAVIS_BUILD_DIR}/build;
+  - cd ${TRAVIS_BUILD_DIR}
 
   # CGRA generate
   - echo "CGRA generate (generates CGRA + connection matrix for pnr)" - `date`
-  - pushd $cgroot; ./travis-test.csh; popd
+  - pushd CGRAGenerator; ./travis-test.csh; popd
+
+  - cd ${TRAVIS_BUILD_DIR}
 
   # pnr
   # Uses mapper output "mapped.json" plus CGRA connection matrix "cgra_info"
@@ -174,25 +173,37 @@ script:
     ../../build/mapped.xml
     ../../build/io.xml
     
+  - cd ${TRAVIS_BUILD_DIR}
+
+  # CGRA setup
+  - echo CGRA setup for CGRAFLOW travis script
+  - cgroot=${TRAVIS_BUILD_DIR}/CGRAGenerator;
+  - cgbuild=${TRAVIS_BUILD_DIR}/build;
+
   # Bitstream build
   # translates PNR output "mapped.xml" into a bitstream "config.dat" for programming the CGRA
   - echo "Build bitstream for programming CGRA" - `date`
-  - cd $cgbuild
+  - cd build
   - perl $cgroot/bitstream/example3/gen_bitstream.pl
-       $cgbuild/mapped.xml
-       $cgbuild/config
+       ./mapped.xml
+       ./config
+
+  - cd ${TRAVIS_BUILD_DIR}
 
 
   # CGRA program and run ((theoretically) uses output of pnr)
   - echo "CGRA program and run (uses output of pnr)" - `date`
-  - pushd $cgroot/verilator/generator_z_tb
+  - cd $cgroot/verilator/generator_z_tb
   - ./run.csh top_tb.cpp
         -config $cgbuild/config.dat
         -io     $cgbuild/io.xml
         -input  ${TRAVIS_BUILD_DIR}/build/input.png
         -output ${TRAVIS_BUILD_DIR}/build/CGRA_out.raw
         -nclocks 5M
-  - popd
+
+  - cd ${TRAVIS_BUILD_DIR}
+
+
 
   # Check to see that output is correct.
   # - ls -l ${TRAVIS_BUILD_DIR}/build/*.{raw,png}
