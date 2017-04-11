@@ -176,15 +176,10 @@ script:
 
   ##############################################################################
   # Little temporary hack to get around instabilities above when/if needed.
-  - NEEDHACK=false
-  - if test $NEEDHACK = "true"; then
-       EXAMPLE3=${TRAVIS_BUILD_DIR}/CGRAGenerator/bitstream/example3;
-       cp ${EXAMPLE3}/PNRguys_config.dat ${TRAVIS_BUILD_DIR}/build/config.dat;
-       cp ${EXAMPLE3}/PNRguys_io.xml     ${TRAVIS_BUILD_DIR}/build/io.xml;
-    fi
+  # - EXAMPLE3=${TRAVIS_BUILD_DIR}/CGRAGenerator/bitstream/example3;
+  # - cp ${EXAMPLE3}/PNRguys_config.dat ${TRAVIS_BUILD_DIR}/build/config.dat;
+  # - cp ${EXAMPLE3}/PNRguys_io.xml     ${TRAVIS_BUILD_DIR}/build/io.xml;
   ##############################################################################
-
-
 
   # cgra program and run
   # IN:  config.dat    (Bitstream for programming CGRA)
