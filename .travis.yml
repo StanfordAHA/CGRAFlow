@@ -13,7 +13,7 @@ before_install:
 
   - # pull our modified halide repo and setup halide env vars
   - git clone https://github.com/jeffsetter/Halide_CoreIR.git
-  - Halide_CoreIR/test/scripts/before_install_travis.sh
+  - source Halide_CoreIR/test/scripts/before_install_travis.sh
 
   - echo "INSTALL RIGEL"
   - git clone https://github.com/jameshegarty/rigel.git
