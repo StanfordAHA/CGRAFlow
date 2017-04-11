@@ -70,7 +70,12 @@ install:
   - pip install lxml
 
 script:
-  # I think this is supposed to prevent Halide from running extensive tests during install
+  # "set -e" means "die at first error" - seems like a good idea!
+  - set -e
+
+  # FIXME Is this still used (RUN_TESTS env var)?
+  # I think Jeff added it to prevent Halide from running
+  # extensive tests during install?
   - export RUN_TESTS=false
 
   # Halide files needed are already in the repo
@@ -91,21 +96,18 @@ script:
 
   - ls -la build
 
-
-  # Prep input and output-comparison files
-  # Halide app reads/writes PNG; must convert to RAW to be useful...
+  - echo "CONVERT PNG IMAGES TO RAW for visual inspection"
   # Could not get "stream" command to work, so using my (steveri) hacky convert script instead...
+  - cd ${TRAVIS_BUILD_DIR}
   - convert=${TRAVIS_BUILD_DIR}/CGRAGenerator/verilator/generator_z_tb/io/myconvert.csh
-  - $convert build/input.png build/input.raw
+  - $convert build/input.png      build/input.raw
   - $convert build/halide_out.png build/halide_out.raw
 
-  # Just to prove that they aren't zero anymore...
-  # Also, I guess we should be able to see the bytes in halide_out == 2*input
-  - od -t u1 build/input.raw | head
+  - echo "VISUALLY CONFIRM THAT OUT = 2*IN"
+  - od -t u1 build/input.raw      | head
   - od -t u1 build/halide_out.raw | head
 
   - ls -la build
-
 
   - cat build/design_top.json
 #  - xxd build/input.png
@@ -122,7 +124,11 @@ script:
   - ls -la build
   - cat build/mapped.json
 
-   # coreir
+
+
+  ##############################################################################
+  # FIXME I think these two passes (coreir, rigel) are not used in the flow...?
+  # coreir
   - cd coreir/tests
   - ./run
   - pytest  # Test python bindings
@@ -132,73 +138,83 @@ script:
   - cd rigel/examples
   - make out/pointwise_wide_handshake.verilator.bmp
   - cd ../../
-  
-
-
-  - cd ${TRAVIS_BUILD_DIR}
+  ##############################################################################
 
   # CGRA generate
   - echo "CGRA generate (generates CGRA + connection matrix for pnr)" - `date`
-  - pushd CGRAGenerator; ./travis-test.csh; popd
-
-  - cd ${TRAVIS_BUILD_DIR}
+  - pushd ${TRAVIS_BUILD_DIR}/CGRAGenerator; ./travis-test.csh; popd
 
   # pnr
-  # Uses mapper output "mapped.json" plus CGRA connection matrix "cgra_info"
-  # to produce placed and routed "mapped.xml" and "io.xml"
-  # (note name collision mapped.json vs. mapped.xml)
+  # IN:  mapped.json      # Output from mapper
+  #      cgra_info.txt    # Fully-populated connection matrix from CGRA generator
+  # OUT: mapped.xml       # Sparse connection matrix map for CGRA
+  #      io.xml           # I/O pin information for CGRA
+  #
   - cd ${TRAVIS_BUILD_DIR}/smt-pnr/src/
   - ./test.py
     ../../build/mapped.json
     ../../CGRAGenerator/hardware/generator_z/top/cgra_info.txt
     ../../build/mapped.xml
     ../../build/io.xml
-    
-  - cd ${TRAVIS_BUILD_DIR}
 
-  # CGRA setup
-  - echo CGRA setup for CGRAFLOW travis script
-  - cgroot=${TRAVIS_BUILD_DIR}/CGRAGenerator;
-  - cgbuild=${TRAVIS_BUILD_DIR}/build;
 
-  # Bitstream build
-  # translates PNR output "mapped.xml" into a bitstream "config.dat" for programming the CGRA
+
+  # bitstream build
+  # IN:  mapped.xml    (Sparse connection matrix map from PNR)
+  # OUT: config.dat    (Bitstream for programming CGRA)
+  # 
+  # FIXME this is a terrible place for the perl script to live
+  # FIXME don't worry soon it will be replaced by Caleb's script
+  #
   - echo "Build bitstream for programming CGRA" - `date`
-  - cd build
-  - perl $cgroot/bitstream/example3/gen_bitstream.pl
-       ./mapped.xml
-       ./config
+  - EXAMPLE3=${TRAVIS_BUILD_DIR}/CGRAGenerator/bitstream/example3
+  - perl ${EXAMPLE3}/gen_bitstream.pl
+       ${TRAVIS_BUILD_DIR}/build/mapped.xml
+       ${TRAVIS_BUILD_DIR}/build/config
+       || exit -1
 
-  - cd ${TRAVIS_BUILD_DIR}
+
+  ##############################################################################
+  # Little temporary hack to get around instabilities above when/if needed.
+  - NEEDHACK=false
+  - if test $NEEDHACK = "true"; then
+       EXAMPLE3=${TRAVIS_BUILD_DIR}/CGRAGenerator/bitstream/example3;
+       cp ${EXAMPLE3}/PNRguys_config.dat ${TRAVIS_BUILD_DIR}/build/config.dat;
+       cp ${EXAMPLE3}/PNRguys_io.xml     ${TRAVIS_BUILD_DIR}/build/io.xml;
+    fi
+  ##############################################################################
 
 
-  # CGRA program and run ((theoretically) uses output of pnr)
+
+  # cgra program and run
+  # IN:  config.dat    (Bitstream for programming CGRA)
+  #      io.xml        (I/O pin information for CGRA)
+  #      input.png     (Input image)
+  # OUT: CGRA_out.raw  (Output image)
+  #
   - echo "CGRA program and run (uses output of pnr)" - `date`
-  - cd $cgroot/verilator/generator_z_tb
+  - cd ${TRAVIS_BUILD_DIR}/CGRAGenerator/verilator/generator_z_tb
   - ./run.csh top_tb.cpp
-        -config $cgbuild/config.dat
-        -io     $cgbuild/io.xml
+        -config ${TRAVIS_BUILD_DIR}/build/config.dat
+        -io     ${TRAVIS_BUILD_DIR}/build/io.xml
         -input  ${TRAVIS_BUILD_DIR}/build/input.png
         -output ${TRAVIS_BUILD_DIR}/build/CGRA_out.raw
         -nclocks 5M
 
-  - cd ${TRAVIS_BUILD_DIR}
 
+  # check to see that output is correct.
 
-
-  # Check to see that output is correct.
-  # - ls -l ${TRAVIS_BUILD_DIR}/build/*.{raw,png}
+  - echo "BYTE-BY-BYTE COMPARE OF CGRA VS. HALIDE OUTPUT IMAGES"
   - ls -l ${TRAVIS_BUILD_DIR}/build/*.raw
-  - od -t u1 -w1 -v -A none ${TRAVIS_BUILD_DIR}/build/input.raw      > /tmp/input.od
+  - cmp   ${TRAVIS_BUILD_DIR}/build/halide_out.raw
+          ${TRAVIS_BUILD_DIR}/build/CGRA_out.raw
+
+  - echo "VISUAL COMPARE OF CGRA VS. HALIDE OUTPUT BYTES (should be null)"
   - od -t u1 -w1 -v -A none ${TRAVIS_BUILD_DIR}/build/halide_out.raw > /tmp/halide_out.od
   - od -t u1 -w1 -v -A none ${TRAVIS_BUILD_DIR}/build/CGRA_out.raw   > /tmp/CGRA_out.od
-  - cmp ${TRAVIS_BUILD_DIR}/build/{halide_out.raw,CGRA_out.raw}
-  - diff /tmp/halide_out.od /tmp/CGRA_out.od |& head -500
-
-  # - sed -n '/90,110p' /tmp/input.od
-  # - sed -n '90,110p' /tmp/halide_out.od
-  # - sed -n '90,110p' /tmp/CGRA_out.od
-
+  - diff /tmp/halide_out.od
+         /tmp/CGRA_out.od
+         |& head -500
 
 
 
@@ -237,5 +253,3 @@ addons:
 env:
   # halide
   - LLVM_VERSION=3.7.1 BUILD_SYSTEM=MAKE CXX_=g++-4.9 CC_=gcc-4.9
-
-
