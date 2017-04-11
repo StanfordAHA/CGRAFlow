@@ -11,13 +11,9 @@ before_install:
   - virtualenv -p /usr/bin/python3 CGRAFlowPy3Env
   - source CGRAFlowPy3Env/bin/activate
 
+  - # pull our modified halide repo and setup halide env vars
   - git clone https://github.com/jeffsetter/Halide_CoreIR.git
-  - export CXX=${CXX_}
-  - export CC=${CC_}
-  - export LLVM_CONFIG=${TRAVIS_BUILD_DIR}/llvm/bin/llvm-config
-  - export CLANG=${TRAVIS_BUILD_DIR}/llvm/bin/clang
-  - export CORECONFIG="g++-4.9"
-  - export COREIR_DIR=${TRAVIS_BUILD_DIR}/coreir
+  - Halide_CoreIR/test/scripts/before_install_travis.sh
 
   - echo "INSTALL RIGEL"
   - git clone https://github.com/jameshegarty/rigel.git
@@ -54,10 +50,8 @@ before_install:
 install:
   -  pwd
   
-  # Halide
-  - wget http://llvm.org/releases/${LLVM_VERSION}/clang+llvm-${LLVM_VERSION}-x86_64-linux-gnu-ubuntu-14.04.tar.xz
-  - tar xvf clang+llvm-${LLVM_VERSION}-x86_64-linux-gnu-ubuntu-14.04.tar.xz
-  - mv clang+llvm-${LLVM_VERSION}-x86_64-linux-gnu-ubuntu-14.04 ${TRAVIS_BUILD_DIR}/llvm
+  # Halide installation (llvm, etc.)
+  - ${TRAVIS_BUILD_DIR}/Halide_CoreIR/test/scripts/install_travis.sh
 
   # pnr
     # Install monosat from Lenny's binary (ping him to rebuild it if newer features are needed)
@@ -83,7 +77,7 @@ script:
 
   # This is where Halide actually compiles our app and runs
   # it to build our comparison output parrot "halide_out.png"
-  # as well as the DAG "design_top.json"(?) for the mapper.
+  # as well as the DAG "design_top.json" for the mapper.
   #
   - echo "Halide FLOW"
   - cd Halide_CoreIR
@@ -96,8 +90,6 @@ script:
   - cd ..
 
   - ls -la build
-
-
 
 
   # Prep input and output-comparison files
@@ -121,12 +113,6 @@ script:
 #  - xxd build/halide_out.png
 #  - xxd build/halide_out.raw
 
-  # FIXME/TODO oops Jeff's recent change broke the flow.
-  # This temporary hack lets it pass, but it must be fixed!
-  # sr 4/10 I turned off the hack so script will fail until flow is fixed...
-  # - mv build/design_top.json /tmp/design_top.json
-  # - sed 's/const_186/const/' /tmp/design_top.json > build/design_top.json
-  # - grep const build/design_top.json /tmp/design_top.json
 
   # Mapper uses DAG output "design_top.json" from Halide compiler
   # to produce a mapped version "mapped.json" for the PNR folks.  Right?
@@ -147,11 +133,6 @@ script:
   - make out/pointwise_wide_handshake.verilator.bmp
   - cd ../../
   
-
-
-
-
-
 
 
   - cd ${TRAVIS_BUILD_DIR}
