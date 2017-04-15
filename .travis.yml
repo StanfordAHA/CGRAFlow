@@ -15,15 +15,6 @@ before_install:
   - git clone https://github.com/jeffsetter/Halide_CoreIR.git
   - source Halide_CoreIR/test/scripts/before_install_travis.sh
 
-  - echo "INSTALL RIGEL"
-  - git clone https://github.com/jameshegarty/rigel.git
-  - export PKG_CONFIG_PATH=${TRAVIS_BUILD_DIR}/rigel/platform/verilator
-  - pkg-config --cflags verilator
-  - pkg-config --variable=includedir verilator
-
-  #- wget https://github.com/zdevito/terra/releases/download/release-2016-02-26/terra-Linux-x86_64-2fa8d0a.zip
-  # - unzip terra-Linux-x86_64-2fa8d0a.zip
-
   - git clone https://github.com/rdaly525/coreir.git;
   - export CORECONFIG="g++-4.9";
   - make -C coreir/src;
@@ -126,18 +117,6 @@ script:
 
 
 
-  ##############################################################################
-  # FIXME I think these two passes (coreir, rigel) are not used in the flow...?
-  # coreir
-  - cd coreir/tests
-  - ./run
-  - pytest  # Test python bindings
-  - cd ../..
-  
-    # rigel
-  - cd rigel/examples
-  - make out/pointwise_wide_handshake.verilator.bmp
-  - cd ../../
   ##############################################################################
 
   # CGRA generate
