@@ -16,8 +16,8 @@ before_install:
   - source Halide_CoreIR/test/scripts/before_install_travis.sh
 
   - git clone -b libreorg https://github.com/rdaly525/coreir.git;
-  - export CORECONFIG="g++-4.9";
   - cd coreir;
+  - export CORECONFIG="g++-4.9";
   - export LD_LIBRARY_PATH=`pwd`/bin:$LD_LIBRARY_PATH
   - make install
   - pip install pytest;
