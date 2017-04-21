@@ -19,8 +19,7 @@ before_install:
   - export CORECONFIG="g++-4.9";
   - cd coreir;
   - export LD_LIBRARY_PATH=`pwd`/bin:$LD_LIBRARY_PATH
-  - make -C src build/coreir.so;
-  - make -C lib so #Build all the .so for lib
+  - make install
   - pip install pytest;
   - pip install -e bindings/python;
   - cd ..;
