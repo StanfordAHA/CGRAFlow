@@ -15,14 +15,14 @@ before_install:
   - git clone https://github.com/jeffsetter/Halide_CoreIR.git
   - source Halide_CoreIR/test/scripts/before_install_travis.sh
 
-  - git clone https://github.com/rdaly525/coreir.git;
+  - git clone -b libreorg https://github.com/rdaly525/coreir.git;
   - export CORECONFIG="g++-4.9";
-  - make -C coreir/src;
-  - make -C coreir/src ../build/coreir.so;
-  - make -C coreir/tests;
-  - pip install pytest;
   - cd coreir;
-  -   pip install -e bindings/python;
+  - export LD_LIBRARY_PATH=`pwd`/bin:$LD_LIBRARY_PATH
+  - make -C src build/coreir.so;
+  - make -C lib so #Build all the .so for lib
+  - pip install pytest;
+  - pip install -e bindings/python;
   - cd ..;
 
   # I think the script might be lost...here's a quick reset.
