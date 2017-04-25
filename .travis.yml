@@ -18,7 +18,8 @@ before_install:
   - git clone -b libreorg https://github.com/rdaly525/coreir.git;
   - cd coreir;
   - export COREIRCONFIG="g++-4.9";
-  - export LD_LIBRARY_PATH=`pwd`/bin:$LD_LIBRARY_PATH
+  - export COREIRHOME=$PWD
+  - export LD_LIBRARY_PATH=$COREIRHOME/bin:$LD_LIBRARY_PATH
   - make install
   - pip install pytest;
   - pip install -e bindings/python;
