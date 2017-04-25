@@ -27,7 +27,7 @@ before_install:
   # I think the script might be lost...here's a quick reset.
   - cd ${TRAVIS_BUILD_DIR};
 
-  - git clone https://github.com/StanfordAHA/CGRAMapper.git;
+  - git clone -b mapperfix https://github.com/StanfordAHA/CGRAMapper.git;
   - cd CGRAMapper/mapper;
   -   make;
   - cd ../../;
