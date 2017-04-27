@@ -12,7 +12,7 @@ before_install:
   - source CGRAFlowPy3Env/bin/activate
 
   - # pull our modified halide repo and setup halide env vars
-  - git clone https://github.com/jeffsetter/Halide_CoreIR.git
+  - git clone -b libreorg https://github.com/jeffsetter/Halide_CoreIR.git
   - source Halide_CoreIR/test/scripts/before_install_travis.sh
 
   - git clone -b libreorg https://github.com/rdaly525/coreir.git;
