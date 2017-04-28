@@ -19,7 +19,6 @@ before_install:
   - cd coreir;
   - export COREIRCONFIG="g++-4.9";
   - export COREIRHOME=$PWD
-  - export LD_LIBRARY_PATH=$COREIRHOME/bin:$LD_LIBRARY_PATH
   - make install
   - pip install pytest;
   - pip install -e bindings/python;
