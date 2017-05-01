@@ -147,29 +147,22 @@ script:
   # FIXME this is a terrible place for the perl script to live
   # FIXME don't worry soon it will be replaced by Caleb's script
   #
-
-  # WARNING! WARNING! WARNING! WARNING! WARNING! WARNING! WARNING!
-  # TEMPORARILY BYPASSING THIS STEP FOR DEBUGGING PURPOSES!
-  # CHANGE THIS BACK SOON OR YOU GET FALSE POSITIVES!!!
-  # - echo "Build bitstream for programming CGRA" - `date`
-  # - EXAMPLE3=${TRAVIS_BUILD_DIR}/CGRAGenerator/bitstream/example3
-  # - ls -l ${EXAMPLE3}/gen_bitstream.pl
-  #      ${TRAVIS_BUILD_DIR}/build/mapped.xml
-  #      ${TRAVIS_BUILD_DIR}/build/config
-  # - perl ${EXAMPLE3}/gen_bitstream.pl
-  #      ${TRAVIS_BUILD_DIR}/build/mapped.xml
-  #      ${TRAVIS_BUILD_DIR}/build/config
-  #      || exit -1
+  - echo "Build bitstream for programming CGRA" - `date`
+  - EXAMPLE3=${TRAVIS_BUILD_DIR}/CGRAGenerator/bitstream/example3
+  - ls -l ${EXAMPLE3}/gen_bitstream.pl
+       ${TRAVIS_BUILD_DIR}/build/mapped.xml
+       ${TRAVIS_BUILD_DIR}/build/config
+  - perl ${EXAMPLE3}/gen_bitstream.pl
+       ${TRAVIS_BUILD_DIR}/build/mapped.xml
+       ${TRAVIS_BUILD_DIR}/build/config
+       || exit -1
 
 
-  # WARNING! WARNING! WARNING! WARNING! WARNING! WARNING! WARNING!
-  # TEMPORARILY BYPASSING THIS STEP FOR DEBUGGING PURPOSES!
-  # CHANGE THIS BACK SOON OR YOU GET FALSE POSITIVES!!!
   ##############################################################################
   # Little temporary hack to get around instabilities above when/if needed.
-  - EXAMPLE3=${TRAVIS_BUILD_DIR}/CGRAGenerator/bitstream/example3;
-  - cp ${EXAMPLE3}/PNRguys_config.dat ${TRAVIS_BUILD_DIR}/build/config.dat;
-  - cp ${EXAMPLE3}/PNRguys_io.xml     ${TRAVIS_BUILD_DIR}/build/io.xml;
+  # - EXAMPLE3=${TRAVIS_BUILD_DIR}/CGRAGenerator/bitstream/example3;
+  # - cp ${EXAMPLE3}/PNRguys_config.dat ${TRAVIS_BUILD_DIR}/build/config.dat;
+  # - cp ${EXAMPLE3}/PNRguys_io.xml     ${TRAVIS_BUILD_DIR}/build/io.xml;
   ##############################################################################
 
   # cgra program and run
