@@ -147,6 +147,8 @@ script:
   #
   - echo "Build bitstream for programming CGRA" - `date`
   - EXAMPLE3=${TRAVIS_BUILD_DIR}/CGRAGenerator/bitstream/example3
+  - ls -l ${EXAMPLE3}/gen_bitstream.pl
+       ${TRAVIS_BUILD_DIR}/build/mapped.xml
   - perl ${EXAMPLE3}/gen_bitstream.pl
        ${TRAVIS_BUILD_DIR}/build/mapped.xml
        ${TRAVIS_BUILD_DIR}/build/config
@@ -227,3 +229,5 @@ addons:
 env:
   # halide
   - LLVM_VERSION=3.7.1 BUILD_SYSTEM=MAKE CXX_=g++-4.9 CC_=gcc-4.9
+
+# SR: forcing a build
