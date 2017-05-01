@@ -12,10 +12,10 @@ before_install:
   - source CGRAFlowPy3Env/bin/activate
 
   - # pull our modified halide repo and setup halide env vars
-  - git clone -b libreorg https://github.com/jeffsetter/Halide_CoreIR.git
+  - git clone https://github.com/jeffsetter/Halide_CoreIR.git
   - source Halide_CoreIR/test/scripts/before_install_travis.sh
 
-  - git clone -b libreorg https://github.com/rdaly525/coreir.git;
+  - git clone https://github.com/rdaly525/coreir.git;
   - cd coreir;
   - export COREIRCONFIG="g++-4.9";
   - export COREIRHOME=$PWD
@@ -28,7 +28,7 @@ before_install:
   # I think the script might be lost...here's a quick reset.
   - cd ${TRAVIS_BUILD_DIR};
 
-  - git clone -b mapperfix https://github.com/StanfordAHA/CGRAMapper.git;
+  - git clone https://github.com/StanfordAHA/CGRAMapper.git;
   - cd CGRAMapper/mapper;
   -   make;
   - cd ../../;
