@@ -149,6 +149,9 @@ script:
   #
   - echo "Build bitstream for programming CGRA" - `date`
   - EXAMPLE3=${TRAVIS_BUILD_DIR}/CGRAGenerator/bitstream/example3
+  - ls -l ${EXAMPLE3}/gen_bitstream.pl
+       ${TRAVIS_BUILD_DIR}/build/mapped.xml
+       ${TRAVIS_BUILD_DIR}/build/config
   - perl ${EXAMPLE3}/gen_bitstream.pl
        ${TRAVIS_BUILD_DIR}/build/mapped.xml
        ${TRAVIS_BUILD_DIR}/build/config
