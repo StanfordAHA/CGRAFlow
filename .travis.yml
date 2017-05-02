@@ -126,15 +126,17 @@ script:
   # pnr
   # IN:  mapped.json      # Output from mapper
   #      cgra_info.txt    # Fully-populated connection matrix from CGRA generator
+  #
   # OUT: mapped.xml       # Sparse connection matrix map for CGRA
   #      io.xml           # I/O pin information for CGRA
+  #      pnr_bitstream    # bitstream file
   #
   - cd ${TRAVIS_BUILD_DIR}/smt-pnr/src/
-  - ./test.py
+  - ./test.py 
     ../../build/mapped.json
-    ../../CGRAGenerator/hardware/generator_z/top/cgra_info.txt
-    ../../build/mapped.xml
-    ../../build/io.xml
+    ../../CGRAGenerator/hardware/generator_z/top/cgra_info.txt 
+    --xml ../../build/mapped.xml ../../build/io.xml
+    --bitstream ../../pnr_bitstream
 
 
 
