@@ -123,7 +123,7 @@ script:
   - echo "CGRA generate (generates CGRA + connection matrix for pnr)" - `date`
   - pushd ${TRAVIS_BUILD_DIR}/CGRAGenerator; ./travis-test.csh; popd
 
-  # pnr
+  # pnr place and route
   # IN:  mapped.json      # Output from mapper
   #      cgra_info.txt    # Fully-populated connection matrix from CGRA generator
   #
@@ -138,7 +138,8 @@ script:
     --xml ../../build/mapped.xml ../../build/io.xml
     --bitstream ../../pnr_bitstream
 
-
+  - ls -l ../../pnr_bitstream
+  - cat ../../pnr_bitstream
 
   # bitstream build
   # IN:  mapped.xml    (Sparse connection matrix map from PNR)
@@ -155,6 +156,11 @@ script:
        ${TRAVIS_BUILD_DIR}/build/mapped.xml
        ${TRAVIS_BUILD_DIR}/build/config
        || exit -1
+
+  - ls -l ${TRAVIS_BUILD_DIR}/build/config
+  - cat ${TRAVIS_BUILD_DIR}/build/config
+  - diff ${TRAVIS_BUILD_DIR}/build/config ../../pnr_bitstream
+
 
 
   ##############################################################################
