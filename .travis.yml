@@ -138,7 +138,8 @@ script:
     --xml ../../build/mapped.xml ../../build/io.xml
     --bitstream ../../pnr_bitstream
 
-  - ls -l ../../pnr_bitstream
+  - ls -l ../../pnr_bitstream ../../build/mapped.xml
+  - cat ../../build/mapped.xml
   - cat ../../pnr_bitstream
 
   # bitstream build
@@ -150,8 +151,7 @@ script:
   #
   - echo "Build bitstream for programming CGRA" - `date`
   - EXAMPLE3=${TRAVIS_BUILD_DIR}/CGRAGenerator/bitstream/example3
-  - ls -l ${EXAMPLE3}/gen_bitstream.pl
-       ${TRAVIS_BUILD_DIR}/build/mapped.xml
+  - ls -l ${TRAVIS_BUILD_DIR}/build/mapped.xml
   - perl ${EXAMPLE3}/gen_bitstream.pl
        ${TRAVIS_BUILD_DIR}/build/mapped.xml
        ${TRAVIS_BUILD_DIR}/build/config
