@@ -157,9 +157,9 @@ script:
        ${TRAVIS_BUILD_DIR}/build/config
        || exit -1
 
-  - ls -l ${TRAVIS_BUILD_DIR}/build/config
-  - cat ${TRAVIS_BUILD_DIR}/build/config
-  - diff ${TRAVIS_BUILD_DIR}/build/config ../../pnr_bitstream
+  - ls -l ${TRAVIS_BUILD_DIR}/build/config.dat
+  - cat ${TRAVIS_BUILD_DIR}/build/config.dat
+  - diff ${TRAVIS_BUILD_DIR}/build/config.dat ../../pnr_bitstream
 
 
 
