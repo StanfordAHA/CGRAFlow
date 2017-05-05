@@ -132,11 +132,17 @@ script:
   #      pnr_bitstream    # bitstream file
   #
   - cd ${TRAVIS_BUILD_DIR}/smt-pnr/src/
-  - ./test.py 
+
+  - ./test.py --help
+
+  - ./test.py --print
     ../../build/mapped.json
     ../../CGRAGenerator/hardware/generator_z/top/cgra_info.txt 
     --xml ../../build/mapped.xml ../../build/io.xml
     --bitstream ../../pnr_bitstream
+
+
+
 
   - ls -l ../../pnr_bitstream ../../build/mapped.xml
   - cat ../../build/mapped.xml
