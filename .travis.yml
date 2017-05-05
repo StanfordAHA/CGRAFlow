@@ -133,7 +133,8 @@ script:
   #
   - cd ${TRAVIS_BUILD_DIR}/smt-pnr/src/
 
-#   - ./test.py --help
+  - pip install smt_switch
+  - ./test.py --help
 
   - ./test.py --print
     ../../build/mapped.json
