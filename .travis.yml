@@ -1,7 +1,11 @@
 language: c
 dist: trusty
 
-cache: apt
+cache:
+  apt: true
+  directories:
+    # cache smt solvers to speed up build
+    ./smt_solvers
 
 compiler:
   - gcc
@@ -38,6 +42,10 @@ before_install:
 
   - git clone https://github.com/cdonovick/smt-pnr
 
+  # API for SMT solving with different solvers
+  - git clone https://github.com/makaimann/smt-switch
+  - export PYTHONPATH=$PYTHONPATH:$PWD/smt-switch
+
 install:
   -  pwd
   
@@ -45,18 +53,10 @@ install:
   - ${TRAVIS_BUILD_DIR}/Halide_CoreIR/test/scripts/install_travis.sh
 
   # pnr
-    # Install monosat from Makai's binary (ping him to rebuild it if newer features are needed)
-  - wget http://web.stanford.edu/~makaim/files/monosat_bin.tar.gz
-  - tar -xvf monosat_bin.tar.gz
-  - export PATH=$PATH:$PWD/monosat_bin
-  - export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$PWD/monosat_bin
-  - pip install -e monosat_bin/python
-    # Install z3 from release binary
-  - wget https://github.com/Z3Prover/z3/releases/download/z3-4.5.0/z3-4.5.0-x64-ubuntu-14.04.zip
-  - unzip z3-4.5.0-x64-ubuntu-14.04.zip
-  - export PATH=$PATH:$PWD/z3-4.5.0-x64-ubuntu-14.04/bin/
-  - export PYTHONPATH=$PYTHONPATH:$PWD/z3-4.5.0-x64-ubuntu-14.04/bin/python/
-  - sudo ln -s $PWD/z3-4.5.0-x64-ubuntu-14.04/bin/libz3.so /usr/lib/libz3.so
+  # run script that installs solvers and adds necessary environment variables
+  # if all the solvers are already cached it doesn't need to download
+  # if there are any missing solvers, downloads from Makai's AFS
+  - . ./smt-pnr/util/get_smt_solvers.sh
   - pip install pygraphviz
   - pip install lxml
 
@@ -123,7 +123,7 @@ script:
   - echo "CGRA generate (generates CGRA + connection matrix for pnr)" - `date`
   - pushd ${TRAVIS_BUILD_DIR}/CGRAGenerator; ./travis-test.csh; popd
 
-  # pnr place and route
+  # pnr
   # IN:  mapped.json      # Output from mapper
   #      cgra_info.txt    # Fully-populated connection matrix from CGRA generator
   #
@@ -132,22 +132,13 @@ script:
   #      pnr_bitstream    # bitstream file
   #
   - cd ${TRAVIS_BUILD_DIR}/smt-pnr/src/
-
-  - pip install smt_switch
-  - ./test.py --help
-
-  - ./test.py --print
+  - ./test.py 
     ../../build/mapped.json
     ../../CGRAGenerator/hardware/generator_z/top/cgra_info.txt 
     --xml ../../build/mapped.xml ../../build/io.xml
     --bitstream ../../pnr_bitstream
 
 
-
-
-  - ls -l ../../pnr_bitstream ../../build/mapped.xml
-  - cat ../../build/mapped.xml
-  - cat ../../pnr_bitstream
 
   # bitstream build
   # IN:  mapped.xml    (Sparse connection matrix map from PNR)
@@ -158,16 +149,12 @@ script:
   #
   - echo "Build bitstream for programming CGRA" - `date`
   - EXAMPLE3=${TRAVIS_BUILD_DIR}/CGRAGenerator/bitstream/example3
-  - ls -l ${TRAVIS_BUILD_DIR}/build/mapped.xml
+  - ls -l ${EXAMPLE3}/gen_bitstream.pl
+       ${TRAVIS_BUILD_DIR}/build/mapped.xml
   - perl ${EXAMPLE3}/gen_bitstream.pl
        ${TRAVIS_BUILD_DIR}/build/mapped.xml
        ${TRAVIS_BUILD_DIR}/build/config
        || exit -1
-
-  - ls -l ${TRAVIS_BUILD_DIR}/build/config.dat
-  - cat ${TRAVIS_BUILD_DIR}/build/config.dat
-  - diff ${TRAVIS_BUILD_DIR}/build/config.dat ../../pnr_bitstream
-
 
 
   ##############################################################################
@@ -238,6 +225,8 @@ addons:
       - zlib1g-dev
       - graphviz-dev
       - python3
+      - swig2.0
+      - libcln-dev
 
       # convert png to raw
       - imagemagick
