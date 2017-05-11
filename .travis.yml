@@ -1,6 +1,28 @@
 language: c
 dist: trusty
 
+env:
+  global:
+    - halide_git="https://github.com/jeffsetter/Halide_CoreIR.git"
+    - coreir_git="https://github.com/rdaly525/coreir.git"
+    - mapper_git="https://github.com/StanfordAHA/CGRAMapper.git"
+    - cgra_git  ="https://github.com/StanfordAHA/CGRAGenerator.git"
+    - pnr_git   ="https://github.com/cdonovick/smt-pnr"
+    - smt_git   ="https://github.com/makaimann/smt-switch"
+    
+    - coreir_b  ="master"
+    - halide_b  ="master"
+    - mapper_b  ="master"
+    - cgra_b    ="master"
+    - pnr_b     ="master"
+    - smt_b     ="master"
+    
+    #halide
+    - LLVM_VERSION=3.7.1
+    - BUILD_SYSTEM=MAKE
+    - CXX_=g++-4.9 
+    - CC_=gcc-4.9
+
 cache:
   apt: true
   directories:
@@ -15,11 +37,18 @@ before_install:
   - virtualenv -p /usr/bin/python3 CGRAFlowPy3Env
   - source CGRAFlowPy3Env/bin/activate
 
-  - # pull our modified halide repo and setup halide env vars
-  - git clone https://github.com/jeffsetter/Halide_CoreIR.git
+  #pull all repos
+  - git clone ${halide_b} ${halide_git}
+  - git clone ${coreir_b} ${coreir_git}
+  - git clone ${mapper_b} ${mapper_git}
+  - git clone ${cgra_b}   ${cgra_git}
+  - git clone ${pnr_b}    ${pnr_git}
+  - git clone ${smt_b}    ${smt_git}
+
+  # setup halide env vars
   - source Halide_CoreIR/test/scripts/before_install_travis.sh
 
-  - git clone https://github.com/rdaly525/coreir.git;
+  # build coreir
   - cd coreir;
   - export COREIRCONFIG="g++-4.9";
   - export COREIRHOME=$PWD
@@ -32,18 +61,13 @@ before_install:
   # I think the script might be lost...here's a quick reset.
   - cd ${TRAVIS_BUILD_DIR};
 
-  - git clone https://github.com/StanfordAHA/CGRAMapper.git;
   - cd CGRAMapper/mapper;
   -   make;
   - cd ../../;
 
   - date
-  - git clone https://github.com/StanfordAHA/CGRAGenerator.git
-
-  - git clone https://github.com/cdonovick/smt-pnr
 
   # API for SMT solving with different solvers
-  - git clone https://github.com/makaimann/smt-switch
   - export PYTHONPATH=$PYTHONPATH:$PWD/smt-switch
 
 install:
@@ -230,6 +254,3 @@ addons:
 
       # convert png to raw
       - imagemagick
-env:
-  # halide
-  - LLVM_VERSION=3.7.1 BUILD_SYSTEM=MAKE CXX_=g++-4.9 CC_=gcc-4.9
