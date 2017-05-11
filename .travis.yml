@@ -6,17 +6,15 @@ env:
     - halide_git="https://github.com/jeffsetter/Halide_CoreIR.git"
     - coreir_git="https://github.com/rdaly525/coreir.git"
     - mapper_git="https://github.com/StanfordAHA/CGRAMapper.git"
-    - cgra_git  ="https://github.com/StanfordAHA/CGRAGenerator.git"
-    - pnr_git   ="https://github.com/cdonovick/smt-pnr"
-    - smt_git   ="https://github.com/makaimann/smt-switch"
-    
-    - coreir_b  ="master"
-    - halide_b  ="master"
-    - mapper_b  ="master"
-    - cgra_b    ="master"
-    - pnr_b     ="master"
-    - smt_b     ="master"
-    
+    - cgra_git="https://github.com/StanfordAHA/CGRAGenerator.git"
+    - pnr_git="https://github.com/cdonovick/smt-pnr"
+    - smt_git="https://github.com/makaimann/smt-switch" 
+    - coreir_b="master"
+    - halide_b="master"
+    - mapper_b="master"
+    - cgra_b="master"
+    - pnr_b="master"
+    - smt_b="master"
     #halide
     - LLVM_VERSION=3.7.1
     - BUILD_SYSTEM=MAKE
