@@ -1,5 +1,6 @@
 #!/bin/bash
 REPOS=(halide coreir mapper cgra pnr smt)  
+TRAVIS="$(dirname $0)/../.travis.yml"
 
 function usage() {
     echo "(<${REPOS[*]}> <BRANCH_NAME>)+"
@@ -60,11 +61,11 @@ for i in $(seq 0 $(( $# -1 )) ); do
     else
         b="${argv[$i]}"
         echo $sp $b
-        sed -r "s/(${sp}_branch)=.+/\1=\"${b}\"/" -i .travis.yml
+        sed -r "s/(${sp}_branch)=.+/\1=\"${b}\"/" -i $TRAVIS
     fi
 done
 
-git add .travis.yml
+git add $TRAVIS
 git commit -m "Auto generated branch"
 git push --set-upstream origin "$s"
 git checkout $current_branch
