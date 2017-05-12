@@ -1,5 +1,13 @@
 #!/bin/bash
 REPOS=(halide coreir mapper cgra pnr smt)  
+DIR="$(dirname $0)/../"
+
+if [ ! -d $DIR ] ; then
+    echo "Could not locate CGRAFlow directory"
+    exit 1
+else
+    cd $DIR
+fi
 
 function usage() {
     echo "(<${REPOS[*]}> <BRANCH_NAME>)+"

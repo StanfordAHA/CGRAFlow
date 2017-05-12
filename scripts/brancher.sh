@@ -1,6 +1,14 @@
 #!/bin/bash
 REPOS=(halide coreir mapper cgra pnr smt)  
-TRAVIS="$(dirname $0)/../.travis.yml"
+DIR="$(dirname $0)/../"
+TRAVIS=".travis.yml"
+
+if [ ! -d $DIR ] ; then
+    echo "Could not locate CGRAFlow directory"
+    exit 1
+else
+    cd $DIR
+fi
 
 if [ ! -f $TRAVIS ]; then
     echo "Could not locate .travis.yml"
