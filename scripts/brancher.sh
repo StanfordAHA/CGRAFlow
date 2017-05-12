@@ -2,6 +2,11 @@
 REPOS=(halide coreir mapper cgra pnr smt)  
 TRAVIS="$(dirname $0)/../.travis.yml"
 
+if [ ! -f $TRAVIS ]; then
+    echo "Could not locate .travis.yml"
+    exit 1
+fi
+
 function usage() {
     echo "(<${REPOS[*]}> <BRANCH_NAME>)+"
 }
