@@ -162,19 +162,14 @@ script:
     --xml ../../build/mapped.xml ../../build/io.xml
     --bitstream ../../pnr_bitstream
 
-
-
-
-
-
   # Look at Caleb's bitstream
   - ls -l ../../pnr_bitstream ../../build/mapped.xml
   - cat ../../build/mapped.xml
   - cat ../../pnr_bitstream
 
   # Decode Caleb's bitstream
-  BS=${TRAVIS_BUILD_DIR}/CGRAGenerator/
-  ${BS}/decoder/decode.py ../../pnr_bitstream
+  - BS=${TRAVIS_BUILD_DIR}/CGRAGenerator/
+  - ${BS}/decoder/decode.py ../../pnr_bitstream
 
 
   # Build Ankita bitstream for comparison
@@ -196,8 +191,8 @@ script:
        || exit -1
 
   # Decode Ankita's bitstream
-  BS=${TRAVIS_BUILD_DIR}/CGRAGenerator/
-  ${BS}/decoder/decode.py ${TRAVIS_BUILD_DIR}/build/config.dat
+  - BS=${TRAVIS_BUILD_DIR}/CGRAGenerator/
+  - ${BS}/decoder/decode.py ${TRAVIS_BUILD_DIR}/build/config.dat
 
 
 
