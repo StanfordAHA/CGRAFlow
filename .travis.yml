@@ -164,6 +164,21 @@ script:
 
 
 
+
+
+
+  # Look at Caleb's bitstream
+  - ls -l ../../pnr_bitstream ../../build/mapped.xml
+  - cat ../../build/mapped.xml
+  - cat ../../pnr_bitstream
+
+  # Decode Caleb's bitstream
+  BS=${TRAVIS_BUILD_DIR}/CGRAGenerator/
+  ${BS}/decoder/decode.py ../../pnr_bitstream
+
+
+  # Build Ankita bitstream for comparison
+
   # bitstream build
   # IN:  mapped.xml    (Sparse connection matrix map from PNR)
   # OUT: config.dat    (Bitstream for programming CGRA)
@@ -179,6 +194,11 @@ script:
        ${TRAVIS_BUILD_DIR}/build/mapped.xml
        ${TRAVIS_BUILD_DIR}/build/config
        || exit -1
+
+  # Decode Ankita's bitstream
+  BS=${TRAVIS_BUILD_DIR}/CGRAGenerator/
+  ${BS}/decoder/decode.py ${TRAVIS_BUILD_DIR}/build/config.dat
+
 
 
   ##############################################################################
