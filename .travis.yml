@@ -169,6 +169,7 @@ script:
 
   # Decode Caleb's bitstream
   - BS=${TRAVIS_BUILD_DIR}/CGRAGenerator/bitstream
+  - export PYTHONPATH=${BS}/decoder/:${PYTHONPATH}
   - ${BS}/decoder/decode.py ../../pnr_bitstream
 
 
@@ -192,6 +193,7 @@ script:
 
   # Decode Ankita's bitstream
   - BS=${TRAVIS_BUILD_DIR}/CGRAGenerator/bitstream
+  - export PYTHONPATH=${BS}/decoder/:${PYTHONPATH}
   - ${BS}/decoder/decode.py ${TRAVIS_BUILD_DIR}/build/config.dat
 
 
