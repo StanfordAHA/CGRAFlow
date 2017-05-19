@@ -37,6 +37,24 @@ before_install:
   - virtualenv -p /usr/bin/python3 CGRAFlowPy3Env
   - source CGRAFlowPy3Env/bin/activate
 
+
+
+
+
+  # Debugging the decoder
+  - git clone -b ${cgra_branch} -- ${cgra_git}
+  - BS=${TRAVIS_BUILD_DIR}/CGRAGenerator/bitstream
+  - ls -l ${BS}/decoder/lib
+  - export PYTHONPATH=${BS}/decoder/:${PYTHONPATH}
+  - ${BS}/decoder/decode.py ${BS}/example3/PNRguys_config.dat
+
+  # DIE!
+  - grep foo bar
+
+
+
+
+
   #pull all repos
   - git clone -b ${halide_branch} -- ${halide_git}
   - git clone -b ${coreir_branch} -- ${coreir_git}
