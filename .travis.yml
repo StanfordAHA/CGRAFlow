@@ -50,8 +50,6 @@ before_install:
   - export PYTHONPATH=${BS}/decoder/:${PYTHONPATH}
   - ${BS}/decoder/decode.py ${BS}/example3/PNRguys_config.dat
 
-  # DIE!
-  - grep foo bar
 
 
 
