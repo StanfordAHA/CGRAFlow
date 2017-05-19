@@ -168,13 +168,13 @@ script:
   - cat ../../pnr_bitstream
 
   # Decode Caleb's bitstream
-  - BS=${TRAVIS_BUILD_DIR}/CGRAGenerator/
+  - BS=${TRAVIS_BUILD_DIR}/CGRAGenerator/bitstream
   - ${BS}/decoder/decode.py ../../pnr_bitstream
 
 
   # Build Ankita bitstream for comparison
 
-  # bitstream build
+  # bitstream build (ankita perl script)
   # IN:  mapped.xml    (Sparse connection matrix map from PNR)
   # OUT: config.dat    (Bitstream for programming CGRA)
   # 
@@ -182,16 +182,16 @@ script:
   # FIXME don't worry soon it will be replaced by Caleb's script
   #
   - echo "Build bitstream for programming CGRA" - `date`
-  - EXAMPLE3=${TRAVIS_BUILD_DIR}/CGRAGenerator/bitstream/example3
-  - ls -l ${EXAMPLE3}/gen_bitstream.pl
+  - GENBS=${TRAVIS_BUILD_DIR}/CGRAGenerator/bitstream/example3/
+  - ls -l ${GENBS}/gen_bitstream.pl
        ${TRAVIS_BUILD_DIR}/build/mapped.xml
-  - perl ${EXAMPLE3}/gen_bitstream.pl
+  - perl ${GENBS}/gen_bitstream.pl
        ${TRAVIS_BUILD_DIR}/build/mapped.xml
        ${TRAVIS_BUILD_DIR}/build/config
        || exit -1
 
   # Decode Ankita's bitstream
-  - BS=${TRAVIS_BUILD_DIR}/CGRAGenerator/
+  - BS=${TRAVIS_BUILD_DIR}/CGRAGenerator/bitstream
   - ${BS}/decoder/decode.py ${TRAVIS_BUILD_DIR}/build/config.dat
 
 
