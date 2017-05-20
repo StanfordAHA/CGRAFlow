@@ -180,6 +180,8 @@ script:
     --xml ../../build/mapped.xml ../../build/io.xml
     --bitstream ../../pnr_bitstream
 
+  # FIXME note caleb's script puts output in ../../ instead of ../../build/
+
   # Look at Caleb's bitstream
   - ls -l ../../pnr_bitstream ../../build/mapped.xml
   - cat ../../build/mapped.xml
@@ -234,6 +236,15 @@ script:
   - cd ${TRAVIS_BUILD_DIR}/CGRAGenerator/verilator/generator_z_tb
   - ./run.csh top_tb.cpp
         -config ${TRAVIS_BUILD_DIR}/build/config.dat
+        -io     ${TRAVIS_BUILD_DIR}/build/io.xml
+        -input  ${TRAVIS_BUILD_DIR}/build/input.png
+        -output ${TRAVIS_BUILD_DIR}/build/CGRA_out.raw
+        -nclocks 5M
+
+
+  # Try again using caleb bitstream?
+  - ./run.csh top_tb.cpp
+        -config ${TRAVIS_BUILD_DIR}/pnr_bitstream
         -io     ${TRAVIS_BUILD_DIR}/build/io.xml
         -input  ${TRAVIS_BUILD_DIR}/build/input.png
         -output ${TRAVIS_BUILD_DIR}/build/CGRA_out.raw
