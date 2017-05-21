@@ -151,8 +151,8 @@ script:
   # IN:  mapped.json      # Output from mapper
   #      cgra_info.txt    # Fully-populated connection matrix from CGRA generator
   #
-  # OUT: mapped.xml       # Sparse connection matrix map for CGRA
-  #      io.xml           # I/O pin information for CGRA
+  # OUT: mapped.xml       # [DEPRECATED] Sparse connection matrix map for CGRA
+  #      io.xml           # [DEPRECATED] I/O pin information for CGRA
   #      pnr_bitstream    # bitstream file
   #
   - cd ${TRAVIS_BUILD_DIR}/smt-pnr/src/
@@ -162,43 +162,42 @@ script:
     --xml ../../build/mapped.xml ../../build/io.xml
     --bitstream ../../pnr_bitstream
 
-  # FIXME note caleb's script puts output in ../../ instead of ../../build/
-
-  # Look at Caleb's bitstream
-  - ls -l ../../pnr_bitstream ../../build/mapped.xml
-  - cat ../../build/mapped.xml
-  - cat ../../pnr_bitstream
-
-  # Decode Caleb's bitstream
-  - BS=${TRAVIS_BUILD_DIR}/CGRAGenerator/bitstream
-  - ls -l ${BS}/decoder/lib
-  - export PYTHONPATH=${BS}/decoder/:${PYTHONPATH}
-  - ${BS}/decoder/decode.py ../../pnr_bitstream
-
-
-  # Build Ankita bitstream for comparison
-
-  # bitstream build (ankita perl script)
-  # IN:  mapped.xml    (Sparse connection matrix map from PNR)
-  # OUT: config.dat    (Bitstream for programming CGRA)
-  # 
-  # FIXME this is a terrible place for the perl script to live
-  # FIXME don't worry soon it will be replaced by Caleb's script
-  #
-  - echo "Build bitstream for programming CGRA" - `date`
-  - GENBS=${TRAVIS_BUILD_DIR}/CGRAGenerator/bitstream/example3/
-  - ls -l ${GENBS}/gen_bitstream.pl
-       ${TRAVIS_BUILD_DIR}/build/mapped.xml
-  - perl ${GENBS}/gen_bitstream.pl
-       ${TRAVIS_BUILD_DIR}/build/mapped.xml
-       ${TRAVIS_BUILD_DIR}/build/config
-       || exit -1
-
-  # Decode Ankita's bitstream
-  - BS=${TRAVIS_BUILD_DIR}/CGRAGenerator/bitstream
-  - export PYTHONPATH=${BS}/decoder/:${PYTHONPATH}
-  - ${BS}/decoder/decode.py ${TRAVIS_BUILD_DIR}/build/config.dat
-
+#   # FIXME note caleb's script puts output in ../../ instead of ../../build/ (above)
+# 
+#   # Look at Caleb's bitstream
+#   - ls -l ../../pnr_bitstream ../../build/mapped.xml
+#   - cat ../../build/mapped.xml
+#   - cat ../../pnr_bitstream
+# 
+#   # Decode Caleb's bitstream
+#   - BS=${TRAVIS_BUILD_DIR}/CGRAGenerator/bitstream
+#   - ls -l ${BS}/decoder/lib
+#   - export PYTHONPATH=${BS}/decoder/:${PYTHONPATH}
+#   - ${BS}/decoder/decode.py ../../pnr_bitstream
+# 
+# 
+#   # Build Ankita bitstream for comparison
+# 
+#   # bitstream build (ankita perl script)
+#   # IN:  mapped.xml    (Sparse connection matrix map from PNR)
+#   # OUT: config.dat    (Bitstream for programming CGRA)
+#   # 
+#   # FIXME this is a terrible place for the perl script to live
+#   # FIXME don't worry soon it will be replaced by Caleb's script
+#   #
+#   - echo "Build bitstream for programming CGRA" - `date`
+#   - GENBS=${TRAVIS_BUILD_DIR}/CGRAGenerator/bitstream/example3/
+#   - ls -l ${GENBS}/gen_bitstream.pl
+#        ${TRAVIS_BUILD_DIR}/build/mapped.xml
+#   - perl ${GENBS}/gen_bitstream.pl
+#        ${TRAVIS_BUILD_DIR}/build/mapped.xml
+#        ${TRAVIS_BUILD_DIR}/build/config
+#        || exit -1
+# 
+#   # Decode Ankita's bitstream
+#   - BS=${TRAVIS_BUILD_DIR}/CGRAGenerator/bitstream
+#   - export PYTHONPATH=${BS}/decoder/:${PYTHONPATH}
+#   - ${BS}/decoder/decode.py ${TRAVIS_BUILD_DIR}/build/config.dat
 
 
   ##############################################################################
