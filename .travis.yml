@@ -162,7 +162,7 @@ script:
     --xml ../../build/mapped.xml ../../build/io.xml
     --bitstream ../../pnr_bitstream
 
-#   # FIXME note caleb's script puts output in ../../ instead of ../../build/ (above)
+#   # FIXME note caleb's script (above) puts output in ../../ instead of ../../build/
 
   ##############################################################################
   # Little temporary hack to get around instabilities above when/if needed.
@@ -171,7 +171,6 @@ script:
   # - cp ${EXAMPLE3}/PNRguys_io.xml     ${TRAVIS_BUILD_DIR}/build/io.xml;
   ##############################################################################
 
-  # Try again using caleb bitstream?
   # cgra program and run (caleb bitstream)
   # IN:  pnr_bitstream (Bitstream for programming CGRA)
   #      input.png     (Input image)
