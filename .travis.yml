@@ -207,7 +207,7 @@ script:
   # - cp ${EXAMPLE3}/PNRguys_io.xml     ${TRAVIS_BUILD_DIR}/build/io.xml;
   ##############################################################################
 
-  # cgra program and run
+  # cgra program and run (ankita)
   # IN:  config.dat    (Bitstream for programming CGRA)
   #      io.xml        (I/O pin information for CGRA)
   #      input.png     (Input image)
@@ -222,11 +222,16 @@ script:
         -output ${TRAVIS_BUILD_DIR}/build/CGRA_out.raw
         -nclocks 5M
 
-
   # Try again using caleb bitstream?
+  # cgra program and run (caleb)
+  # IN:  pnr_bitstream (Bitstream for programming CGRA)
+  #      input.png     (Input image)
+  # OUT: CGRA_out.raw  (Output image)
+  #
+  - echo "CGRA program and run (uses output of pnr)" - `date`
+  - cd ${TRAVIS_BUILD_DIR}/CGRAGenerator/verilator/generator_z_tb
   - ./run.csh top_tb.cpp
         -config ${TRAVIS_BUILD_DIR}/pnr_bitstream
-        -io     ${TRAVIS_BUILD_DIR}/build/io.xml
         -input  ${TRAVIS_BUILD_DIR}/build/input.png
         -output ${TRAVIS_BUILD_DIR}/build/CGRA_out.raw
         -nclocks 5M
