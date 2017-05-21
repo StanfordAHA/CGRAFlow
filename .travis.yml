@@ -163,42 +163,6 @@ script:
     --bitstream ../../pnr_bitstream
 
 #   # FIXME note caleb's script puts output in ../../ instead of ../../build/ (above)
-# 
-#   # Look at Caleb's bitstream
-#   - ls -l ../../pnr_bitstream ../../build/mapped.xml
-#   - cat ../../build/mapped.xml
-#   - cat ../../pnr_bitstream
-# 
-#   # Decode Caleb's bitstream
-#   - BS=${TRAVIS_BUILD_DIR}/CGRAGenerator/bitstream
-#   - ls -l ${BS}/decoder/lib
-#   - export PYTHONPATH=${BS}/decoder/:${PYTHONPATH}
-#   - ${BS}/decoder/decode.py ../../pnr_bitstream
-# 
-# 
-#   # Build Ankita bitstream for comparison
-# 
-#   # bitstream build (ankita perl script)
-#   # IN:  mapped.xml    (Sparse connection matrix map from PNR)
-#   # OUT: config.dat    (Bitstream for programming CGRA)
-#   # 
-#   # FIXME this is a terrible place for the perl script to live
-#   # FIXME don't worry soon it will be replaced by Caleb's script
-#   #
-#   - echo "Build bitstream for programming CGRA" - `date`
-#   - GENBS=${TRAVIS_BUILD_DIR}/CGRAGenerator/bitstream/example3/
-#   - ls -l ${GENBS}/gen_bitstream.pl
-#        ${TRAVIS_BUILD_DIR}/build/mapped.xml
-#   - perl ${GENBS}/gen_bitstream.pl
-#        ${TRAVIS_BUILD_DIR}/build/mapped.xml
-#        ${TRAVIS_BUILD_DIR}/build/config
-#        || exit -1
-# 
-#   # Decode Ankita's bitstream
-#   - BS=${TRAVIS_BUILD_DIR}/CGRAGenerator/bitstream
-#   - export PYTHONPATH=${BS}/decoder/:${PYTHONPATH}
-#   - ${BS}/decoder/decode.py ${TRAVIS_BUILD_DIR}/build/config.dat
-
 
   ##############################################################################
   # Little temporary hack to get around instabilities above when/if needed.
@@ -207,24 +171,8 @@ script:
   # - cp ${EXAMPLE3}/PNRguys_io.xml     ${TRAVIS_BUILD_DIR}/build/io.xml;
   ##############################################################################
 
-
-#   # cgra program and run (ankita)
-#   # IN:  config.dat    (Bitstream for programming CGRA)
-#   #      io.xml        (I/O pin information for CGRA)
-#   #      input.png     (Input image)
-#   # OUT: CGRA_out.raw  (Output image)
-#   #
-#   - echo "CGRA program and run (uses output of pnr)" - `date`
-#   - cd ${TRAVIS_BUILD_DIR}/CGRAGenerator/verilator/generator_z_tb
-#   - ./run.csh top_tb.cpp
-#         -config ${TRAVIS_BUILD_DIR}/build/config.dat
-#         -io     ${TRAVIS_BUILD_DIR}/build/io.xml
-#         -input  ${TRAVIS_BUILD_DIR}/build/input.png
-#         -output ${TRAVIS_BUILD_DIR}/build/CGRA_out.raw
-#         -nclocks 5M
-
   # Try again using caleb bitstream?
-  # cgra program and run (caleb)
+  # cgra program and run (caleb bitstream)
   # IN:  pnr_bitstream (Bitstream for programming CGRA)
   #      input.png     (Input image)
   # OUT: CGRA_out.raw  (Output image)
