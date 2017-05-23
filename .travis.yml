@@ -133,7 +133,7 @@ script:
   # to produce a mapped version "mapped.json" for the PNR folks.  Right?
   #
   - echo "MAPPER"
-  - ./CGRAMapper/build/main build/design_top.json build/mapped.json
+  - ./CGRAMapper/build/map build/design_top.json build/mapped.json
   - ls -la build
   - cat build/mapped.json
 
