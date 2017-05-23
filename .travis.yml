@@ -53,7 +53,8 @@ before_install:
   - export COREIRCONFIG="g++-4.9";
   - export COREIR=$PWD
   - export LD_LIBRARY_PATH=$PWD/lib:$LD_LIBRARY_PATH
-  - make
+  - make install
+  - make py
   - cd ..;
 
   # I think the script might be lost...here's a quick reset.
