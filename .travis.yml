@@ -10,11 +10,11 @@ env:
     - pnr_git="https://github.com/cdonovick/smt-pnr"
     - smt_git="https://github.com/makaimann/smt-switch" 
 
-    - halide_branch="coreir"
-    - coreir_branch="master"
-    - mapper_branch="master"
+    - halide_branch="dev-coreir"
+    - coreir_branch="dev"
+    - mapper_branch="cgralib"
     - cgra_branch="master"
-    - pnr_branch="master"
+    - pnr_branch="newcore"
     - smt_branch="master"
 
     #halide
@@ -161,6 +161,8 @@ script:
     ../../CGRAGenerator/hardware/generator_z/top/cgra_info.txt 
     --xml ../../build/mapped.xml ../../build/io.xml
     --bitstream ../../pnr_bitstream
+    --print --print-route
+    --coreir-libs stdlib cgralib
 
 #   # FIXME note caleb's script (above) puts output in ../../ instead of ../../build/
 
