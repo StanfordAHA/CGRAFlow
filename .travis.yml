@@ -61,7 +61,7 @@ before_install:
   - cd ${TRAVIS_BUILD_DIR};
 
   - cd CGRAMapper
-  - make
+  - make install
   - cd ../;
 
   - date
