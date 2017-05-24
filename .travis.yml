@@ -10,11 +10,11 @@ env:
     - pnr_git="https://github.com/cdonovick/smt-pnr"
     - smt_git="https://github.com/makaimann/smt-switch"
 
-    - halide_branch="dev-coreir"
-    - coreir_branch="dev"
-    - mapper_branch="cgralib"
+    - halide_branch="coreir"
+    - coreir_branch="master"
+    - mapper_branch="master"
     - cgra_branch="master"
-    - pnr_branch="newcore"
+    - pnr_branch="master"
     - smt_branch="master"
 
     #halide
