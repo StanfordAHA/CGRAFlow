@@ -8,7 +8,7 @@ env:
     - mapper_git="https://github.com/StanfordAHA/CGRAMapper.git"
     - cgra_git="https://github.com/StanfordAHA/CGRAGenerator.git"
     - pnr_git="https://github.com/cdonovick/smt-pnr"
-    - smt_git="https://github.com/makaimann/smt-switch" 
+    - smt_git="https://github.com/makaimann/smt-switch"
 
     - halide_branch="coreir"
     - coreir_branch="master"
@@ -20,7 +20,7 @@ env:
     #halide
     - LLVM_VERSION=3.7.1
     - BUILD_SYSTEM=MAKE
-    - CXX_=g++-4.9 
+    - CXX_=g++-4.9
     - CC_=gcc-4.9
 
 cache:
@@ -31,7 +31,7 @@ cache:
 
 compiler:
   - gcc
-  
+
 before_install:
   - pip install virtualenv
   - virtualenv -p /usr/bin/python3 CGRAFlowPy3Env
@@ -51,19 +51,18 @@ before_install:
   # build coreir
   - cd coreir;
   - export COREIRCONFIG="g++-4.9";
-  - export COREIRHOME=$PWD
-  - export LD_LIBRARY_PATH=$PWD/bin:$LD_LIBRARY_PATH
+  - export COREIR=$PWD
+  - export LD_LIBRARY_PATH=$PWD/lib:$LD_LIBRARY_PATH
   - make install
-  - pip install pytest;
-  - pip install -e bindings/python;
+  - make py
   - cd ..;
 
   # I think the script might be lost...here's a quick reset.
   - cd ${TRAVIS_BUILD_DIR};
 
-  - cd CGRAMapper/mapper;
-  -   make;
-  - cd ../../;
+  - cd CGRAMapper
+  - make install
+  - cd ../;
 
   - date
 
@@ -72,7 +71,7 @@ before_install:
 
 install:
   -  pwd
-  
+
   # Halide installation (llvm, etc.)
   - ${TRAVIS_BUILD_DIR}/Halide_CoreIR/test/scripts/install_travis.sh
 
@@ -81,7 +80,6 @@ install:
   # if all the solvers are already cached it doesn't need to download
   # if there are any missing solvers, downloads from Makai's AFS
   - . ./smt-pnr/util/get_smt_solvers.sh
-  - pip install pygraphviz
   - pip install lxml
 
 script:
@@ -135,7 +133,7 @@ script:
   # to produce a mapped version "mapped.json" for the PNR folks.  Right?
   #
   - echo "MAPPER"
-  - ./CGRAMapper/build/main build/design_top.json build/mapped.json
+  - ./CGRAMapper/bin/map build/design_top.json build/mapped.json
   - ls -la build
   - cat build/mapped.json
 
@@ -151,18 +149,18 @@ script:
   # IN:  mapped.json      # Output from mapper
   #      cgra_info.txt    # Fully-populated connection matrix from CGRA generator
   #
-  # OUT: mapped.xml       # [DEPRECATED] Sparse connection matrix map for CGRA
-  #      io.xml           # [DEPRECATED] I/O pin information for CGRA
-  #      pnr_bitstream    # bitstream file
-  #
+  # OUT: pnr_bitstream    # bitstream file
+  #      annotated        # annotated bitstream file
   - cd ${TRAVIS_BUILD_DIR}/smt-pnr/src/
-  - ./test.py 
+  - ./test.py
     ../../build/mapped.json
-    ../../CGRAGenerator/hardware/generator_z/top/cgra_info.txt 
-    --xml ../../build/mapped.xml ../../build/io.xml
-    --bitstream ../../pnr_bitstream
+    ../../CGRAGenerator/hardware/generator_z/top/cgra_info.txt
+    --bitstream ../../build/pnr_bitstream
+    --annotate  ../../build/annotated
+    --print  --coreir-libs stdlib cgralib
 
-#   # FIXME note caleb's script (above) puts output in ../../ instead of ../../build/
+  - cat ../../build/annotated
+
 
   ##############################################################################
   # Little temporary hack to get around instabilities above when/if needed.
@@ -179,7 +177,7 @@ script:
   - echo "CGRA program and run (uses output of pnr)" - `date`
   - cd ${TRAVIS_BUILD_DIR}/CGRAGenerator/verilator/generator_z_tb
   - ./run.csh top_tb.cpp
-        -config ${TRAVIS_BUILD_DIR}/pnr_bitstream
+        -config ${TRAVIS_BUILD_DIR}/build/pnr_bitstream
         -input  ${TRAVIS_BUILD_DIR}/build/input.png
         -output ${TRAVIS_BUILD_DIR}/build/CGRA_out.raw
         -nclocks 5M
