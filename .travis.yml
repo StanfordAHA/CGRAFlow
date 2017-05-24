@@ -8,7 +8,7 @@ env:
     - mapper_git="https://github.com/StanfordAHA/CGRAMapper.git"
     - cgra_git="https://github.com/StanfordAHA/CGRAGenerator.git"
     - pnr_git="https://github.com/cdonovick/smt-pnr"
-    - smt_git="https://github.com/makaimann/smt-switch" 
+    - smt_git="https://github.com/makaimann/smt-switch"
 
     - halide_branch="dev-coreir"
     - coreir_branch="dev"
@@ -20,7 +20,7 @@ env:
     #halide
     - LLVM_VERSION=3.7.1
     - BUILD_SYSTEM=MAKE
-    - CXX_=g++-4.9 
+    - CXX_=g++-4.9
     - CC_=gcc-4.9
 
 cache:
@@ -31,7 +31,7 @@ cache:
 
 compiler:
   - gcc
-  
+
 before_install:
   - pip install virtualenv
   - virtualenv -p /usr/bin/python3 CGRAFlowPy3Env
@@ -71,7 +71,7 @@ before_install:
 
 install:
   -  pwd
-  
+
   # Halide installation (llvm, etc.)
   - ${TRAVIS_BUILD_DIR}/Halide_CoreIR/test/scripts/install_travis.sh
 
@@ -150,19 +150,18 @@ script:
   # IN:  mapped.json      # Output from mapper
   #      cgra_info.txt    # Fully-populated connection matrix from CGRA generator
   #
-  # OUT: mapped.xml       # [DEPRECATED] Sparse connection matrix map for CGRA
-  #      io.xml           # [DEPRECATED] I/O pin information for CGRA
-  #      pnr_bitstream    # bitstream file
-  #
+  # OUT: pnr_bitstream    # bitstream file
+  #      annotated        # annotated bitstream file
   - cd ${TRAVIS_BUILD_DIR}/smt-pnr/src/
-  - ./test.py 
+  - ./test.py
     ../../build/mapped.json
-    ../../CGRAGenerator/hardware/generator_z/top/cgra_info.txt 
+    ../../CGRAGenerator/hardware/generator_z/top/cgra_info.txt
     --bitstream ../../build/pnr_bitstream
-    --print --print-route
-    --coreir-libs stdlib cgralib
+    --annotate  ../../build/annotated
+    --print  --coreir-libs stdlib cgralib
 
-#   # FIXME note caleb's script (above) puts output in ../../ instead of ../../build/
+  - cat ../../build/annotated
+
 
   ##############################################################################
   # Little temporary hack to get around instabilities above when/if needed.
