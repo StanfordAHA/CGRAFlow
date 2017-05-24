@@ -151,8 +151,8 @@ script:
   # IN:  mapped.json      # Output from mapper
   #      cgra_info.txt    # Fully-populated connection matrix from CGRA generator
   #
-  # OUT: mapped.xml       # Sparse connection matrix map for CGRA
-  #      io.xml           # I/O pin information for CGRA
+  # OUT: mapped.xml       # [DEPRECATED] Sparse connection matrix map for CGRA
+  #      io.xml           # [DEPRECATED] I/O pin information for CGRA
   #      pnr_bitstream    # bitstream file
   #
   - cd ${TRAVIS_BUILD_DIR}/smt-pnr/src/
@@ -162,24 +162,7 @@ script:
     --xml ../../build/mapped.xml ../../build/io.xml
     --bitstream ../../pnr_bitstream
 
-
-
-  # bitstream build
-  # IN:  mapped.xml    (Sparse connection matrix map from PNR)
-  # OUT: config.dat    (Bitstream for programming CGRA)
-  # 
-  # FIXME this is a terrible place for the perl script to live
-  # FIXME don't worry soon it will be replaced by Caleb's script
-  #
-  - echo "Build bitstream for programming CGRA" - `date`
-  - EXAMPLE3=${TRAVIS_BUILD_DIR}/CGRAGenerator/bitstream/example3
-  - ls -l ${EXAMPLE3}/gen_bitstream.pl
-       ${TRAVIS_BUILD_DIR}/build/mapped.xml
-  - perl ${EXAMPLE3}/gen_bitstream.pl
-       ${TRAVIS_BUILD_DIR}/build/mapped.xml
-       ${TRAVIS_BUILD_DIR}/build/config
-       || exit -1
-
+#   # FIXME note caleb's script (above) puts output in ../../ instead of ../../build/
 
   ##############################################################################
   # Little temporary hack to get around instabilities above when/if needed.
@@ -188,17 +171,15 @@ script:
   # - cp ${EXAMPLE3}/PNRguys_io.xml     ${TRAVIS_BUILD_DIR}/build/io.xml;
   ##############################################################################
 
-  # cgra program and run
-  # IN:  config.dat    (Bitstream for programming CGRA)
-  #      io.xml        (I/O pin information for CGRA)
+  # cgra program and run (caleb bitstream)
+  # IN:  pnr_bitstream (Bitstream for programming CGRA)
   #      input.png     (Input image)
   # OUT: CGRA_out.raw  (Output image)
   #
   - echo "CGRA program and run (uses output of pnr)" - `date`
   - cd ${TRAVIS_BUILD_DIR}/CGRAGenerator/verilator/generator_z_tb
   - ./run.csh top_tb.cpp
-        -config ${TRAVIS_BUILD_DIR}/build/config.dat
-        -io     ${TRAVIS_BUILD_DIR}/build/io.xml
+        -config ${TRAVIS_BUILD_DIR}/pnr_bitstream
         -input  ${TRAVIS_BUILD_DIR}/build/input.png
         -output ${TRAVIS_BUILD_DIR}/build/CGRA_out.raw
         -nclocks 5M
