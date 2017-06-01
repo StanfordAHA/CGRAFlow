@@ -33,6 +33,7 @@ compiler:
   - gcc
 
 before_install:
+  - pip install -U pip setuptools  # Install latest pip and setuptools
   - pip install virtualenv
   - virtualenv -p /usr/bin/python3 CGRAFlowPy3Env
   - source CGRAFlowPy3Env/bin/activate
