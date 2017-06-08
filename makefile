@@ -1,6 +1,6 @@
 CONVERT = CGRAGenerator/verilator/generator_z_tb/io/myconvert.csh
 
-all: build/pointwise.correct.txt
+all: build/pointwise.correct.txt build/conv_bw_mapped.json build/cascade_mapped.json
 
 build/%_design_top.json: Halide_CoreIR/apps/coreir_examples/%
 	echo "Halide FLOW"
@@ -16,7 +16,7 @@ build/%_design_top.json: Halide_CoreIR/apps/coreir_examples/%
 	make -C Halide_CoreIR/apps/coreir_examples/$*/ clean design_top.json out.png
 	# copy over all pertinent files
 	cp Halide_CoreIR/apps/coreir_examples/$*/design_top.json build/$*_design_top.json
-	cp Halide_CoreIR/apps/images/gray.png                    build/$*_input.png
+	cp Halide_CoreIR/apps/coreir_examples/$*/input.png       build/$*_input.png
 	cp Halide_CoreIR/apps/coreir_examples/$*/out.png         build/$*_halide_out.png
 	cd ..
 
@@ -25,7 +25,7 @@ build/%_design_top.json: Halide_CoreIR/apps/coreir_examples/%
 	echo "CONVERT PNG IMAGES TO RAW for visual inspection"
 	# Could not get "stream" command to work, so using my (steveri) hacky convert script instead...
 	#cd ${TRAVIS_BUILD_DIR}
-	
+
 	$(CONVERT) build/$*_input.png      build/$*_input.raw
 	$(CONVERT) build/$*_halide_out.png build/$*_halide_out.raw
 

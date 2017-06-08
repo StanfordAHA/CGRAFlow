@@ -87,11 +87,6 @@ script:
   # "set -e" means "die at first error" - seems like a good idea!
   - set -e
 
-  # FIXME Is this still used (RUN_TESTS env var)?
-  # I think Jeff added it to prevent Halide from running
-  # extensive tests during install?
-  - export RUN_TESTS=false
-
   # Uncomment one or both of these next two lines when ready for mem tiles
   # - export CGRA_GEN_USE_MEM=1
   # - export CGRA_GEN_ALL_REG=1
