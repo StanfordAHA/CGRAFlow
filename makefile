@@ -56,7 +56,8 @@ build/%_pnr_bitstream: build/%_mapped.json
 
   # CGRA generate
 	echo "CGRA generate (generates CGRA + connection matrix for pnr)"
-	cd CGRAGenerator; ./travis-test.csh;
+        # cd CGRAGenerator; ./travis-test.csh;
+	cd CGRAGenerator; ./bin/generate.csh || exit -1
 
   # pnr
   # IN:  mapped.json      # Output from mapper
