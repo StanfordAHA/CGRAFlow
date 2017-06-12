@@ -12,6 +12,8 @@ build/%_design_top.json: Halide_CoreIR/apps/coreir_examples/%
   # as well as the DAG "design_top.json" for the mapper.
   #
 
+        # I think e.g. $* == "pointwise" when building e.g. "build/pointwise/correct.txt"
+	@echo Making $@ because of $?
 	# remake the json and cpu output image for our test app
 	make -C Halide_CoreIR/apps/coreir_examples/$*/ clean design_top.json out.png
 	# copy over all pertinent files
