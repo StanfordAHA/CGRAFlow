@@ -1,5 +1,16 @@
 CONVERT = CGRAGenerator/verilator/generator_z_tb/io/myconvert.csh
 
+# For 8x8 CGRA grid, change CGRA_SIZE from "4x4" to "8x8"
+CGRA_SIZE := "4x4"
+MEM_SWITCH = "-oldmem"
+ifeq ($(CGRA_SIZE),"8x8")
+  MEM_SWITCH = "-newmem"
+endif
+
+$(warning CGRA_SIZE = $(CGRA_SIZE))
+$(warning MEM_SWITCH = $(MEM_SWITCH))
+
+
 all: build/pointwise.correct.txt build/conv_bw_mapped.json build/cascade_mapped.json
 
 build/%_design_top.json: Halide_CoreIR/apps/coreir_examples/%
@@ -63,7 +74,7 @@ build/cgra_info_4x4.txt:
 build/cgra_info_8x8.txt:
 	@echo Making $@ because of $?
 	@echo "CGRA generate (generates 8x8 CGRA + connection matrix for pnr)"
-	cd CGRAGenerator; ./bin/generate.csh || exit -1
+	cd CGRAGenerator; export CGRA_GEN_USE_MEM=1; ./bin/generate.csh || exit -1
 	cp CGRAGenerator/hardware/generator_z/top/cgra_info.txt build/cgra_info_8x8.txt
 
 build/%_pnr_bitstream: build/%_mapped.json build/cgra_info_4x4.txt
