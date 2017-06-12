@@ -66,7 +66,6 @@ build/cgra_info_8x8.txt:
 	cd CGRAGenerator; ./bin/generate.csh || exit -1
 	cp CGRAGenerator/hardware/generator_z/top/cgra_info.txt build/cgra_info_8x8.txt
 
-
 build/%_pnr_bitstream: build/%_mapped.json build/cgra_info_4x4.txt
         # 
         # pnr
@@ -78,10 +77,14 @@ build/%_pnr_bitstream: build/%_mapped.json build/cgra_info_4x4.txt
         #- cd ${TRAVIS_BUILD_DIR}/smt-pnr/src/
         # 
 # 	smt-pnr/src/test.py  build/$*_mapped.json CGRAGenerator/hardware/generator_z/top/cgra_info.txt --bitstream build/$*_pnr_bitstream --annotate build/$*_annotated --print  --coreir-libs stdlib cgralib
-	echo $(filter %.txt,$?)
+        # filter (below) auto-extracts cgra_info file from dependency list maybe
+        # I think $(word 2,$?) will return second dependence thingy
+	@echo Making $@ because of $?
+	\
 	set config=$(filter %.txt,$?); \
+	set graph=$(filter %.json,$?); \
 	smt-pnr/src/test.py  \
-	    build/$*_mapped.json \
+	    $${graph}  \
 	    $${config} \
 	    --bitstream build/$*_pnr_bitstream \
 	    --annotate build/$*_annotated \
