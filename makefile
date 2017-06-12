@@ -79,9 +79,10 @@ build/%_pnr_bitstream: build/%_mapped.json build/cgra_info_4x4.txt
         # 
 # 	smt-pnr/src/test.py  build/$*_mapped.json CGRAGenerator/hardware/generator_z/top/cgra_info.txt --bitstream build/$*_pnr_bitstream --annotate build/$*_annotated --print  --coreir-libs stdlib cgralib
 	echo $(filter %.txt,$?)
+	set config=$(filter %.txt,$?); \
 	smt-pnr/src/test.py  \
 	    build/$*_mapped.json \
-	    build/cgra_info_4x4.txt \
+	    $${config} \
 	    --bitstream build/$*_pnr_bitstream \
 	    --annotate build/$*_annotated \
 	    --print --coreir-libs stdlib cgralib
@@ -95,7 +96,7 @@ build/%_pnr_bitstream: build/%_mapped.json build/cgra_info_4x4.txt
   # - cp ${EXAMPLE3}/PNRguys_io.xml     ${TRAVIS_BUILD_DIR}/build/io.xml;
   ##############################################################################
 
-VERILATOR_TOP := CGRAGenerator/verilator/generator_z_tb;
+VERILATOR_TOP := CGRAGenerator/verilator/generator_z_tb
 build/%_CGRA_out.raw: build/%_pnr_bitstream
   # cgra program and run (caleb bitstream)
   # IN:  pnr_bitstream (Bitstream for programming CGRA)
