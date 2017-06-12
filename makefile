@@ -78,6 +78,7 @@ build/%_pnr_bitstream: build/%_mapped.json build/cgra_info_4x4.txt
         #- cd ${TRAVIS_BUILD_DIR}/smt-pnr/src/
         # 
 # 	smt-pnr/src/test.py  build/$*_mapped.json CGRAGenerator/hardware/generator_z/top/cgra_info.txt --bitstream build/$*_pnr_bitstream --annotate build/$*_annotated --print  --coreir-libs stdlib cgralib
+	echo $(filter %.txt,$?)
 	smt-pnr/src/test.py  \
 	    build/$*_mapped.json \
 	    build/cgra_info_4x4.txt \
