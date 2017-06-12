@@ -90,7 +90,7 @@ script:
   # Uncomment one or both of these next two lines when ready for mem tiles
   # - export CGRA_GEN_USE_MEM=1
   # - export CGRA_GEN_ALL_REG=1
-  - make
+  - make -n
 
 addons:
   apt:

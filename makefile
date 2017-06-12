@@ -12,11 +12,11 @@ build/%_design_top.json: Halide_CoreIR/apps/coreir_examples/%
   # as well as the DAG "design_top.json" for the mapper.
   #
 
-        # I think e.g. $* == "pointwise" when building e.g. "build/pointwise/correct.txt"
 	@echo Making $@ because of $?
-	# remake the json and cpu output image for our test app
+        # I think e.g. '$*' == "pointwise" when building e.g. "build/pointwise/correct.txt"
+        # remake the json and cpu output image for our test app
 	make -C Halide_CoreIR/apps/coreir_examples/$*/ clean design_top.json out.png
-	# copy over all pertinent files
+        # copy over all pertinent files
 	cp Halide_CoreIR/apps/coreir_examples/$*/design_top.json build/$*_design_top.json
 	cp Halide_CoreIR/apps/coreir_examples/$*/input.png       build/$*_input.png
 	cp Halide_CoreIR/apps/coreir_examples/$*/out.png         build/$*_halide_out.png
@@ -25,8 +25,8 @@ build/%_design_top.json: Halide_CoreIR/apps/coreir_examples/%
 	ls -la build
 
 	echo "CONVERT PNG IMAGES TO RAW for visual inspection"
-	# Could not get "stream" command to work, so using my (steveri) hacky convert script instead...
-	#cd ${TRAVIS_BUILD_DIR}
+        # Could not get "stream" command to work, so using my (steveri) hacky convert script instead...
+        #cd ${TRAVIS_BUILD_DIR}
 
 	$(CONVERT) build/$*_input.png      build/$*_input.raw
 	$(CONVERT) build/$*_halide_out.png build/$*_halide_out.raw
@@ -48,27 +48,42 @@ build/%_mapped.json: build/%_design_top.json
   # to produce a mapped version "mapped.json" for the PNR folks.  Right?
   #
 
+	@echo Making $@ because of $?
 	echo "MAPPER"
 	./CGRAMapper/bin/map build/$*_design_top.json build/$*_mapped.json
 	ls -la build
 	cat build/$*_mapped.json
 
-build/%_pnr_bitstream: build/%_mapped.json
-  ##############################################################################
-
-  # CGRA generate
-	echo "CGRA generate (generates CGRA + connection matrix for pnr)"
-        # cd CGRAGenerator; ./travis-test.csh;
+build/cgra_info_4x4.txt:
+	@echo Making $@ because of $?
+	@echo "CGRA generate (generates 4x4 CGRA + connection matrix for pnr)"
 	cd CGRAGenerator; ./bin/generate.csh || exit -1
+	cp CGRAGenerator/hardware/generator_z/top/cgra_info.txt build/cgra_info_4x4.txt
 
-  # pnr
-  # IN:  mapped.json      # Output from mapper
-  #      cgra_info.txt    # Fully-populated connection matrix from CGRA generator
-  #
-  # OUT: pnr_bitstream    # bitstream file
-  #      annotated        # annotated bitstream file
-  #- cd ${TRAVIS_BUILD_DIR}/smt-pnr/src/
-	smt-pnr/src/test.py  build/$*_mapped.json CGRAGenerator/hardware/generator_z/top/cgra_info.txt --bitstream build/$*_pnr_bitstream --annotate build/$*_annotated --print  --coreir-libs stdlib cgralib
+build/cgra_info_8x8.txt:
+	@echo Making $@ because of $?
+	@echo "CGRA generate (generates 8x8 CGRA + connection matrix for pnr)"
+	cd CGRAGenerator; ./bin/generate.csh || exit -1
+	cp CGRAGenerator/hardware/generator_z/top/cgra_info.txt build/cgra_info_8x8.txt
+
+
+build/%_pnr_bitstream: build/%_mapped.json build/cgra_info_4x4.txt
+        # 
+        # pnr
+        # IN:  mapped.json      # Output from mapper
+        #      cgra_info.txt    # Fully-populated connection matrix from CGRA generator
+        #
+        # OUT: pnr_bitstream    # bitstream file
+        #      annotated        # annotated bitstream file
+        #- cd ${TRAVIS_BUILD_DIR}/smt-pnr/src/
+        # 
+# 	smt-pnr/src/test.py  build/$*_mapped.json CGRAGenerator/hardware/generator_z/top/cgra_info.txt --bitstream build/$*_pnr_bitstream --annotate build/$*_annotated --print  --coreir-libs stdlib cgralib
+	smt-pnr/src/test.py  \
+	    build/$*_mapped.json \
+	    build/cgra_info_4x4.txt \
+	    --bitstream build/$*_pnr_bitstream \
+	    --annotate build/$*_annotated \
+	    --print --coreir-libs stdlib cgralib
 
 	cat build/$*_annotated
 
@@ -79,18 +94,33 @@ build/%_pnr_bitstream: build/%_mapped.json
   # - cp ${EXAMPLE3}/PNRguys_io.xml     ${TRAVIS_BUILD_DIR}/build/io.xml;
   ##############################################################################
 
+VERILATOR_TOP := CGRAGenerator/verilator/generator_z_tb;
 build/%_CGRA_out.raw: build/%_pnr_bitstream
   # cgra program and run (caleb bitstream)
   # IN:  pnr_bitstream (Bitstream for programming CGRA)
   #      input.png     (Input image)
   # OUT: CGRA_out.raw  (Output image)
-  #
+
+	@echo Making $@ because of $?
 	echo "CGRA program and run (uses output of pnr)"
-	cd CGRAGenerator/verilator/generator_z_tb;  ./run.csh top_tb.cpp  -config ../../../build/$*_pnr_bitstream -input ../../../build/$*_input.png -output ../../../build/$*_CGRA_out.raw -nclocks 5M
+
+# 	cd CGRAGenerator/verilator/generator_z_tb;  \
+# 	./run.csh top_tb.cpp  
+# -config ../../../build/$*_pnr_bitstream \
+# 	    -input ../../../build/$*_input.png -output ../../../build/$*_CGRA_out.raw -nclocks 5M
+
+	cd $(VERILATOR_TOP);    \
+	build=../../../build;   \
+	./run.csh top_tb.cpp                   \
+	   -config $${build}/$*_pnr_bitstream  \
+	   -input  $${build}/$*_input.png      \
+	   -output $${build}/$*_CGRA_out.raw   \
+	   -nclocks 5M
 
 build/%.correct.txt: build/%_CGRA_out.raw
   # check to see that output is correct.
 
+	@echo Making $@ because of $?
 	echo "BYTE-BY-BYTE COMPARE OF CGRA VS. HALIDE OUTPUT IMAGES"
 	ls -l build/*.raw
 	cmp   build/$*_halide_out.raw  build/$*_CGRA_out.raw
