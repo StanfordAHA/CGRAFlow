@@ -20,10 +20,10 @@ $(warning CGRA_SIZE = $(CGRA_SIZE))
 $(warning MEM_SWITCH = $(MEM_SWITCH))
 ########################################################################
 
-
 all: start_testing build/pointwise.correct.txt build/conv_bw_mapped.json build/cascade_mapped.json
 
 start_testing:
+        # Build a test summary for the travis log.
 	if `test -e build/test_summary.txt`; then rm build/test_summary.txt; fi
 	echo TEST SUMMARY > build/test_summary.txt
 	echo BEGIN `date` >> build/test_summary.txt
@@ -38,10 +38,11 @@ build/%_design_top.json: Halide_CoreIR/apps/coreir_examples/%
   # as well as the DAG "design_top.json" for the mapper.
   #
 
-	@echo; echo Making $@ because of $?
-        # I think e.g. '$*' == "pointwise" when building e.g. "build/pointwise/correct.txt"
         # remake the json and cpu output image for our test app
+	@echo; echo Making $@ because of $?
+        # E.g. '$*' = "pointwise" when building "build/pointwise/correct.txt"
 	make -C Halide_CoreIR/apps/coreir_examples/$*/ clean design_top.json out.png
+
         # copy over all pertinent files
 	cp Halide_CoreIR/apps/coreir_examples/$*/design_top.json build/$*_design_top.json
 	cp Halide_CoreIR/apps/coreir_examples/$*/input.png       build/$*_input.png
@@ -109,12 +110,6 @@ build/%_pnr_bitstream: build/%_mapped.json build/cgra_info_$(CGRA_SIZE).txt
 
 
 # 	smt-pnr/src/test.py  build/$*_mapped.json CGRAGenerator/hardware/generator_z/top/cgra_info.txt --bitstream build/$*_pnr_bitstream --annotate build/$*_annotated --print  --coreir-libs stdlib cgralib
-# 	smt-pnr/src/test.py  \
-# 	  build/$*_mapped.json \
-# 	  CGRAGenerator/hardware/generator_z/top/cgra_info.txt \
-# 	  --bitstream build/$*_pnr_bitstream \
-# 	  --annotate build/$*_annotated      \
-#	  --print  --coreir-libs stdlib cgralib
 
         # $(filter %.json, $?) => program graph e.g. "build/pointwise_mapped.json"
         # $(filter %.txt,  $?) => config file   e.g. "build/cgra_info_4x4.txt"
@@ -130,13 +125,6 @@ build/%_pnr_bitstream: build/%_mapped.json build/cgra_info_$(CGRA_SIZE).txt
 
 	cat build/$*_annotated
 
-  ##############################################################################
-  # Little temporary hack to get around instabilities above when/if needed.
-  # - EXAMPLE3=${TRAVIS_BUILD_DIR}/CGRAGenerator/bitstream/example3;
-  # - cp ${EXAMPLE3}/PNRguys_config.dat ${TRAVIS_BUILD_DIR}/build/config.dat;
-  # - cp ${EXAMPLE3}/PNRguys_io.xml     ${TRAVIS_BUILD_DIR}/build/io.xml;
-  ##############################################################################
-
 VERILATOR_TOP := CGRAGenerator/verilator/generator_z_tb
 build/%_CGRA_out.raw: build/%_pnr_bitstream
   # cgra program and run (caleb bitstream)
@@ -147,14 +135,10 @@ build/%_CGRA_out.raw: build/%_pnr_bitstream
 	@echo; echo Making $@ because of $?
 	echo "CGRA program and run (uses output of pnr)"
 
-# 	cd CGRAGenerator/verilator/generator_z_tb;  \
-# 	./run.csh top_tb.cpp  
-# -config ../../../build/$*_pnr_bitstream \
-# 	    -input ../../../build/$*_input.png -output ../../../build/$*_CGRA_out.raw -nclocks 5M
-
 	cd $(VERILATOR_TOP);    \
 	build=../../../build;   \
 	./run.csh top_tb.cpp                   \
+           $(MEM_SWITCH)                       \
 	   -config $${build}/$*_pnr_bitstream  \
 	   -input  $${build}/$*_input.png      \
 	   -output $${build}/$*_CGRA_out.raw   \
