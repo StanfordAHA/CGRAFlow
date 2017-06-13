@@ -87,13 +87,35 @@ build/%_pnr_bitstream: build/%_mapped.json build/cgra_info_4x4.txt
         #      annotated        # annotated bitstream file
         #- cd ${TRAVIS_BUILD_DIR}/smt-pnr/src/
         # 
-# 	smt-pnr/src/test.py  build/$*_mapped.json CGRAGenerator/hardware/generator_z/top/cgra_info.txt --bitstream build/$*_pnr_bitstream --annotate build/$*_annotated --print  --coreir-libs stdlib cgralib
+
+	smt-pnr/src/test.py  build/$*_mapped.json CGRAGenerator/hardware/generator_z/top/cgra_info.txt --bitstream build/$*_pnr_bitstream --annotate build/$*_annotated --print  --coreir-libs stdlib cgralib
+
+	smt-pnr/src/test.py  \
+	  build/$*_mapped.json \
+	  CGRAGenerator/hardware/generator_z/top/cgra_info.txt \
+	  --bitstream build/$*_pnr_bitstream \
+	  --annotate build/$*_annotated \
+	  --print  --coreir-libs stdlib cgralib
+
+# 	build/$*_mapped.json 
+# 	CGRAGenerator/hardware/generator_z/top/cgra_info.txt 
+# 	--bitstream build/$*_pnr_bitstream 
+# 	--annotate build/$*_annotated 
+# 	--print  
+# 	--coreir-libs stdlib cgralib
+
         # filter (below) auto-extracts cgra_info file from dependency list maybe
         # I think $(word 2,$?) will return second dependence thingy
 	@echo; echo Making $@ because of $?
 	\
 	set config=$(filter %.txt,$?); \
 	set graph=$(filter %.json,$?); \
+	echo smt-pnr/src/test.py  \
+	    $${graph}  \
+	    $${config} \
+	    --bitstream build/$*_pnr_bitstream \
+	    --annotate build/$*_annotated \
+	    --print --coreir-libs stdlib cgralib
 	smt-pnr/src/test.py  \
 	    $${graph}  \
 	    $${config} \
@@ -102,6 +124,15 @@ build/%_pnr_bitstream: build/%_mapped.json build/cgra_info_4x4.txt
 	    --print --coreir-libs stdlib cgralib
 
 	cat build/$*_annotated
+
+# 	set config=build/cgra_info_4x4.txt; \
+# 	set graph=build/pointwise_mapped.json; \
+# 	smt-pnr/src/test.py  \
+# 	    ${graph}  \
+# 	    ${config} \
+# 	    --bitstream build/pointwise_pnr_bitstream \
+# 	    --annotate build/pointwise_annotated \
+# 	    --print --coreir-libs stdlib cgralib
 
   ##############################################################################
   # Little temporary hack to get around instabilities above when/if needed.
