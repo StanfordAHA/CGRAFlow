@@ -115,8 +115,8 @@ build/%_pnr_bitstream: build/%_mapped.json build/cgra_info_4x4.txt
         # (Could also maybe use $(word 1, $?) and $(word 2, $?)
 	\
 	smt-pnr/src/test.py       \
-	    $(filter %.txt ,$?)   \
 	    $(filter %.json,$?)   \
+	    $(filter %.txt ,$?)   \
 	    --bitstream build/$*_pnr_bitstream \
 	    --annotate build/$*_annotated \
 	    --print --coreir-libs stdlib cgralib
