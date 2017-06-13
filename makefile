@@ -115,8 +115,8 @@ build/%_pnr_bitstream: build/%_mapped.json build/cgra_info_4x4.txt
         # I think $(word 2,$?) will return second dependence thingy
 	@echo; echo Making $@ because of $?
 	\
-	set config=$(filter %.txt,$?); \
-	set graph=$(filter %.json,$?); \
+	config=$(filter %.txt, $?); \
+	graph=$(filter  %.json,$?); \
 	echo smt-pnr/src/test.py  \
 	    $(filter %.txt ,$?)   \
 	    $(filter %.json,$?)   \
