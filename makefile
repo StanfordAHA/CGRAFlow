@@ -21,7 +21,12 @@ $(warning MEM_SWITCH = $(MEM_SWITCH))
 ########################################################################
 
 
-all: build/pointwise.correct.txt build/conv_bw_mapped.json build/cascade_mapped.json
+all: start_testing build/pointwise.correct.txt build/conv_bw_mapped.json build/cascade_mapped.json
+
+start_testing:
+	if `test -e build/test_summary.txt`; then rm build/test_summary.txt; fi
+	echo TEST SUMMARY > build/test_summary.txt
+	echo BEGIN `date` >> build/test_summary.txt
 
 build/%_design_top.json: Halide_CoreIR/apps/coreir_examples/%
 	echo "Halide FLOW"
@@ -161,7 +166,11 @@ build/%.correct.txt: build/%_CGRA_out.raw
 	@echo; echo Making $@ because of $?
 	echo "BYTE-BY-BYTE COMPARE OF CGRA VS. HALIDE OUTPUT IMAGES"
 	ls -l build/*.raw
-	cmp   build/$*_halide_out.raw  build/$*_CGRA_out.raw
+	cmp build/$*_halide_out.raw build/$*_CGRA_out.raw \
+	    && echo $* test PASSED  >> build/test_summary.txt \
+	    || echo $* test FAILED  >> build/test_summary.txt
+	cmp build/$*_halide_out.raw build/$*_CGRA_out.raw
+
 
 	echo "VISUAL COMPARE OF CGRA VS. HALIDE OUTPUT BYTES (should be null)"
 	od -t u1 -w1 -v -A none build/$*_halide_out.raw > /tmp/$*_halide_out.od

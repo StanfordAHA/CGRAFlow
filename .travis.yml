@@ -87,10 +87,8 @@ script:
   # "set -e" means "die at first error" - seems like a good idea!
   - set -e
 
-  # Uncomment one or both of these next two lines when ready for mem tiles
-  # - export CGRA_GEN_USE_MEM=1
-  # - export CGRA_GEN_ALL_REG=1
-  - make
+  # - make CGRA_SIZE=4x4
+  - make CGRA_SIZE=8x8
 
 # What if we make a summary of the test results, to print out at the end?
 after_script:
