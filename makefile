@@ -23,7 +23,7 @@ build/%_design_top.json: Halide_CoreIR/apps/coreir_examples/%
   # as well as the DAG "design_top.json" for the mapper.
   #
 
-	@echo Making $@ because of $?
+	@echo; echo Making $@ because of $?
         # I think e.g. '$*' == "pointwise" when building e.g. "build/pointwise/correct.txt"
         # remake the json and cpu output image for our test app
 	make -C Halide_CoreIR/apps/coreir_examples/$*/ clean design_top.json out.png
@@ -59,20 +59,20 @@ build/%_mapped.json: build/%_design_top.json
   # to produce a mapped version "mapped.json" for the PNR folks.  Right?
   #
 
-	@echo Making $@ because of $?
+	@echo; echo Making $@ because of $?
 	echo "MAPPER"
 	./CGRAMapper/bin/map build/$*_design_top.json build/$*_mapped.json
 	ls -la build
 	cat build/$*_mapped.json
 
 build/cgra_info_4x4.txt:
-	@echo Making $@ because of $?
+	@echo; echo Making $@ because of $?
 	@echo "CGRA generate (generates 4x4 CGRA + connection matrix for pnr)"
 	cd CGRAGenerator; ./bin/generate.csh || exit -1
 	cp CGRAGenerator/hardware/generator_z/top/cgra_info.txt build/cgra_info_4x4.txt
 
 build/cgra_info_8x8.txt:
-	@echo Making $@ because of $?
+	@echo; echo Making $@ because of $?
 	@echo "CGRA generate (generates 8x8 CGRA + connection matrix for pnr)"
 	cd CGRAGenerator; export CGRA_GEN_USE_MEM=1; ./bin/generate.csh || exit -1
 	cp CGRAGenerator/hardware/generator_z/top/cgra_info.txt build/cgra_info_8x8.txt
@@ -90,7 +90,7 @@ build/%_pnr_bitstream: build/%_mapped.json build/cgra_info_4x4.txt
 # 	smt-pnr/src/test.py  build/$*_mapped.json CGRAGenerator/hardware/generator_z/top/cgra_info.txt --bitstream build/$*_pnr_bitstream --annotate build/$*_annotated --print  --coreir-libs stdlib cgralib
         # filter (below) auto-extracts cgra_info file from dependency list maybe
         # I think $(word 2,$?) will return second dependence thingy
-	@echo Making $@ because of $?
+	@echo; echo Making $@ because of $?
 	\
 	set config=$(filter %.txt,$?); \
 	set graph=$(filter %.json,$?); \
@@ -117,7 +117,7 @@ build/%_CGRA_out.raw: build/%_pnr_bitstream
   #      input.png     (Input image)
   # OUT: CGRA_out.raw  (Output image)
 
-	@echo Making $@ because of $?
+	@echo; echo Making $@ because of $?
 	echo "CGRA program and run (uses output of pnr)"
 
 # 	cd CGRAGenerator/verilator/generator_z_tb;  \
@@ -136,7 +136,7 @@ build/%_CGRA_out.raw: build/%_pnr_bitstream
 build/%.correct.txt: build/%_CGRA_out.raw
   # check to see that output is correct.
 
-	@echo Making $@ because of $?
+	@echo; echo Making $@ because of $?
 	echo "BYTE-BY-BYTE COMPARE OF CGRA VS. HALIDE OUTPUT IMAGES"
 	ls -l build/*.raw
 	cmp   build/$*_halide_out.raw  build/$*_CGRA_out.raw
