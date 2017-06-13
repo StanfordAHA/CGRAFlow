@@ -87,7 +87,8 @@ build/cgra_info_8x8.txt:
 	cd CGRAGenerator; export CGRA_GEN_USE_MEM=1; ./bin/generate.csh || exit -1
 	cp CGRAGenerator/hardware/generator_z/top/cgra_info.txt build/cgra_info_8x8.txt
 
-build/%_pnr_bitstream: build/%_mapped.json build/cgra_info_4x4.txt
+# build/%_pnr_bitstream: build/%_mapped.json build/cgra_info_4x4.txt
+build/%_pnr_bitstream: build/%_mapped.json build/cgra_info_$(CGRA_SIZE).txt
         # 
         # pnr
         # IN:  mapped.json      # Output from mapper
@@ -102,7 +103,7 @@ build/%_pnr_bitstream: build/%_mapped.json build/cgra_info_4x4.txt
 	diff CGRAGenerator/hardware/generator_z/top/cgra_info.txt build/cgra_info_4x4.txt
 
 
-	smt-pnr/src/test.py  build/$*_mapped.json CGRAGenerator/hardware/generator_z/top/cgra_info.txt --bitstream build/$*_pnr_bitstream --annotate build/$*_annotated --print  --coreir-libs stdlib cgralib
+# 	smt-pnr/src/test.py  build/$*_mapped.json CGRAGenerator/hardware/generator_z/top/cgra_info.txt --bitstream build/$*_pnr_bitstream --annotate build/$*_annotated --print  --coreir-libs stdlib cgralib
 # 	smt-pnr/src/test.py  \
 # 	  build/$*_mapped.json \
 # 	  CGRAGenerator/hardware/generator_z/top/cgra_info.txt \
@@ -110,13 +111,14 @@ build/%_pnr_bitstream: build/%_mapped.json build/cgra_info_4x4.txt
 # 	  --annotate build/$*_annotated      \
 #	  --print  --coreir-libs stdlib cgralib
 
-        # $(filter %.txt,  $?) => config file   e.g. "build/cgra_info_4x4.txt"
         # $(filter %.json, $?) => program graph e.g. "build/pointwise_mapped.json"
+        # $(filter %.txt,  $?) => config file   e.g. "build/cgra_info_4x4.txt"
         # (Could also maybe use $(word 1, $?) and $(word 2, $?)
+        # Note json file must come before config file on command line!!!
 	\
 	smt-pnr/src/test.py       \
 	    $(filter %.json,$?)   \
-	    $(filter %.txt ,$?)   \
+	    $(filter %.txt, $?)   \
 	    --bitstream build/$*_pnr_bitstream \
 	    --annotate build/$*_annotated \
 	    --print --coreir-libs stdlib cgralib
