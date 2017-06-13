@@ -94,7 +94,14 @@ build/%_pnr_bitstream: build/%_mapped.json build/cgra_info_4x4.txt
 	  build/$*_mapped.json \
 	  CGRAGenerator/hardware/generator_z/top/cgra_info.txt \
 	  --bitstream build/$*_pnr_bitstream \
-	  --annotate build/$*_annotated \
+	  --annotate build/$*_annotated      \
+	  --print  --coreir-libs stdlib cgralib
+
+	smt-pnr/src/test.py     \
+	  build/$*_mapped.json   \
+	  build/cgra_info_4x4.txt \
+	  --bitstream build/$*_pnr_bitstream \
+	  --annotate build/$*_annotated      \
 	  --print  --coreir-libs stdlib cgralib
 
 # 	build/$*_mapped.json 
@@ -111,14 +118,16 @@ build/%_pnr_bitstream: build/%_mapped.json build/cgra_info_4x4.txt
 	set config=$(filter %.txt,$?); \
 	set graph=$(filter %.json,$?); \
 	echo smt-pnr/src/test.py  \
-	    $${graph}  \
-	    $${config} \
+	    $(filter %.txt ,$?)   \
+	    $(filter %.json,$?)   \
 	    --bitstream build/$*_pnr_bitstream \
 	    --annotate build/$*_annotated \
 	    --print --coreir-libs stdlib cgralib
-	smt-pnr/src/test.py  \
-	    $${graph}  \
-	    $${config} \
+
+	\
+	smt-pnr/src/test.py       \
+	    $(filter %.txt ,$?)   \
+	    $(filter %.json,$?)   \
 	    --bitstream build/$*_pnr_bitstream \
 	    --annotate build/$*_annotated \
 	    --print --coreir-libs stdlib cgralib
