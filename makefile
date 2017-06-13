@@ -104,8 +104,8 @@ build/%_pnr_bitstream: build/%_mapped.json build/cgra_info_$(CGRA_SIZE).txt
         #- cd ${TRAVIS_BUILD_DIR}/smt-pnr/src/
 
 	@echo; echo Making $@ because of $?
-	ls -l CGRAGenerator/hardware/generator_z/top/cgra_info.txt build/cgra_info_4x4.txt
-	diff CGRAGenerator/hardware/generator_z/top/cgra_info.txt build/cgra_info_4x4.txt
+# 	ls -l CGRAGenerator/hardware/generator_z/top/cgra_info.txt $(filter %.txt, $?)
+# 	diff CGRAGenerator/hardware/generator_z/top/cgra_info.txt $(filter %.txt, $?)
 
 
 # 	smt-pnr/src/test.py  build/$*_mapped.json CGRAGenerator/hardware/generator_z/top/cgra_info.txt --bitstream build/$*_pnr_bitstream --annotate build/$*_annotated --print  --coreir-libs stdlib cgralib
