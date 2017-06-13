@@ -5,15 +5,15 @@ CONVERT = CGRAGenerator/verilator/generator_z_tb/io/myconvert.csh
 # E.g. "make CGRA_SIZE=8x8"
 
 # For now, default is "4x4"
-CGRA_SIZE := "4x4"
+CGRA_SIZE := 4x4
 MEM_SWITCH := "-oldmem"  # Don't really need this...riiight?
 
 ifeq ($(CGRA_SIZE),"4x4")
-  MEM_SWITCH := "-oldmem"
+  MEM_SWITCH := -oldmem
 endif
 
 ifeq ($(CGRA_SIZE),"8x8")
-  MEM_SWITCH := "-newmem"
+  MEM_SWITCH := -newmem
 endif
 
 $(warning CGRA_SIZE = $(CGRA_SIZE))

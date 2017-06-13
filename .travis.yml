@@ -92,6 +92,11 @@ script:
   # - export CGRA_GEN_ALL_REG=1
   - make
 
+# What if we make a summary of the test results, to print out at the end?
+after_script:
+  - echo hello i am the after script
+  - if `test -e build/test_summary.txt`; then cat build/test_summary.txt; fi
+
 addons:
   apt:
     sources:
