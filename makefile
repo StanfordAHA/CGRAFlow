@@ -1,14 +1,24 @@
 CONVERT = CGRAGenerator/verilator/generator_z_tb/io/myconvert.csh
 
+########################################################################
 # For 8x8 CGRA grid, change CGRA_SIZE from "4x4" to "8x8"
+# E.g. "make CGRA_SIZE=8x8"
+
+# For now, default is "4x4"
 CGRA_SIZE := "4x4"
-MEM_SWITCH = "-oldmem"
+MEM_SWITCH := "-oldmem"  # Don't really need this...riiight?
+
+ifeq ($(CGRA_SIZE),"4x4")
+  MEM_SWITCH := "-oldmem"
+endif
+
 ifeq ($(CGRA_SIZE),"8x8")
-  MEM_SWITCH = "-newmem"
+  MEM_SWITCH := "-newmem"
 endif
 
 $(warning CGRA_SIZE = $(CGRA_SIZE))
 $(warning MEM_SWITCH = $(MEM_SWITCH))
+########################################################################
 
 
 all: build/pointwise.correct.txt build/conv_bw_mapped.json build/cascade_mapped.json
@@ -87,15 +97,18 @@ build/%_pnr_bitstream: build/%_mapped.json build/cgra_info_4x4.txt
         #      annotated        # annotated bitstream file
         #- cd ${TRAVIS_BUILD_DIR}/smt-pnr/src/
 
-#	smt-pnr/src/test.py  build/$*_mapped.json CGRAGenerator/hardware/generator_z/top/cgra_info.txt --bitstream build/$*_pnr_bitstream --annotate build/$*_annotated --print  --coreir-libs stdlib cgralib
+	@echo; echo Making $@ because of $?
+	ls -l CGRAGenerator/hardware/generator_z/top/cgra_info.txt build/cgra_info_4x4.txt
+	diff CGRAGenerator/hardware/generator_z/top/cgra_info.txt build/cgra_info_4x4.txt
+
+
+	smt-pnr/src/test.py  build/$*_mapped.json CGRAGenerator/hardware/generator_z/top/cgra_info.txt --bitstream build/$*_pnr_bitstream --annotate build/$*_annotated --print  --coreir-libs stdlib cgralib
 # 	smt-pnr/src/test.py  \
 # 	  build/$*_mapped.json \
 # 	  CGRAGenerator/hardware/generator_z/top/cgra_info.txt \
 # 	  --bitstream build/$*_pnr_bitstream \
 # 	  --annotate build/$*_annotated      \
 #	  --print  --coreir-libs stdlib cgralib
-
-	@echo; echo Making $@ because of $?
 
         # $(filter %.txt,  $?) => config file   e.g. "build/cgra_info_4x4.txt"
         # $(filter %.json, $?) => program graph e.g. "build/pointwise_mapped.json"
