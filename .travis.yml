@@ -87,9 +87,7 @@ script:
   # "set -e" means "die at first error" - seems like a good idea!
   - set -e
 
-  # - make CGRA_SIZE=4x4
-
-  # Does not work (yet); problems with bitstream generation
+  - make CGRA_SIZE=4x4
   - make CGRA_SIZE=8x8 build/pointwise.correct.txt
 
 after_script:
