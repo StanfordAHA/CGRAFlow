@@ -88,9 +88,7 @@ script:
   - set -e
 
   - make CGRA_SIZE=4x4
-
-  # Does not work (yet); problems with bitstream generation
-  # - make CGRA_SIZE=8x8 build/pointwise.correct.txt
+  - make CGRA_SIZE=8x8 build/pointwise.correct.txt
 
 after_script:
   # The log file is getting very long and unwieldy.

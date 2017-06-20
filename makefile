@@ -9,11 +9,11 @@ CGRA_SIZE := 4x4
 MEM_SWITCH := -oldmem  # Don't really need this...riiight?
 
 ifeq ($(CGRA_SIZE), 4x4)
-  MEM_SWITCH := -oldmem
+  MEM_SWITCH := -oldmem -4x4
 endif
 
 ifeq ($(CGRA_SIZE), 8x8)
-  MEM_SWITCH := -newmem
+  MEM_SWITCH := -newmem -8x8
 endif
 
 $(warning CGRA_SIZE = $(CGRA_SIZE))
