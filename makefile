@@ -20,7 +20,7 @@ $(warning CGRA_SIZE = $(CGRA_SIZE))
 $(warning MEM_SWITCH = $(MEM_SWITCH))
 ########################################################################
 
-all: start_testing build/pointwise.correct.txt build/conv_bw_mapped.json build/cascade_mapped.json
+all: start_testing build/pointwise.correct.txt build/conv_1_2_mapped.json build/conv_2_1_mapped.json build/conv_3_1_mapped.json build/conv_bw_mapped.json build/cascade_mapped.json
 
 start_testing:
         # Build a test summary for the travis log.
@@ -58,7 +58,7 @@ build/%_design_top.json: Halide_CoreIR/apps/coreir_examples/%
 	$(CONVERT) build/$*_input.png      build/$*_input.raw
 	$(CONVERT) build/$*_halide_out.png build/$*_halide_out.raw
 
-	echo "VISUALLY CONFIRM THAT OUT = 2*IN"
+	echo "VISUALLY CONFIRM APP IN/OUT"
 	od -t u1 build/$*_input.raw      | head
 	od -t u1 build/$*_halide_out.raw | head
 
