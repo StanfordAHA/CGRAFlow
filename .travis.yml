@@ -89,7 +89,7 @@ script:
 
   # - make CGRA_SIZE=4x4
   # - make CGRA_SIZE=8x8 build/pointwise.correct.txt
-  - make CGRA_SIZE=8x8 DELAY=1 build/conv_1_2.correct.txt
+  - make CGRA_SIZE=8x8 DELAY=1,0 build/conv_1_2.correct.txt
 
 after_script:
   # The log file is getting very long and unwieldy.
