@@ -6,6 +6,7 @@ CONVERT = CGRAGenerator/verilator/generator_z_tb/io/myconvert.csh
 
 # For now, default is "4x4"
 CGRA_SIZE := 4x4
+DELAY := 0             # How long to wait before first output / last output
 MEM_SWITCH := -oldmem  # Don't really need this...riiight?
 
 ifeq ($(CGRA_SIZE), 4x4)
@@ -142,6 +143,7 @@ build/%_CGRA_out.raw: build/%_pnr_bitstream
 	   -config $${build}/$*_pnr_bitstream  \
 	   -input  $${build}/$*_input.png      \
 	   -output $${build}/$*_CGRA_out.raw   \
+	   -delay $(DELAY)                     \
 	   -nclocks 5M
 
 build/%.correct.txt: build/%_CGRA_out.raw
