@@ -30,7 +30,7 @@ script:
   # 
   # - make CGRA_SIZE=8x8 DELAY=0,10 build/conv_2_1.correct.txt
   # - make CGRA_SIZE=8x8 DELAY=1,1 build/conv_2_1.correct.txt
-  - make CGRA_SIZE=8x8 DELAY=10,0 EGREGIOUS_CONV21_HACK=TRUE build/conv_2_1.correct.txt
+  - make CGRA_SIZE=8x8 DELAY=10,0 EGREGIOUS_CONV21_HACK=1 build/conv_2_1.correct.txt
 
 after_script:
   # The log file is getting very long and unwieldy.
