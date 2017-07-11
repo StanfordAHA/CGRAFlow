@@ -1,27 +1,9 @@
 language: c
 dist: trusty
+sudo: required
 
 env:
   global:
-    - halide_git="https://github.com/jeffsetter/Halide_CoreIR.git"
-    - coreir_git="https://github.com/rdaly525/coreir.git"
-    - mapper_git="https://github.com/StanfordAHA/CGRAMapper.git"
-    - cgra_git="https://github.com/StanfordAHA/CGRAGenerator.git"
-    - pnr_git="https://github.com/cdonovick/smt-pnr"
-    - smt_git="https://github.com/makaimann/smt-switch"
-
-    - halide_branch="coreir"
-    - coreir_branch="master"
-    - mapper_branch="master"
-    - cgra_branch="master"
-    - pnr_branch="master"
-    - smt_branch="master"
-
-    #halide
-    - LLVM_VERSION=3.7.1
-    - BUILD_SYSTEM=MAKE
-    - CXX_=g++-4.9
-    - CC_=gcc-4.9
 
 cache:
   apt: true
@@ -33,55 +15,10 @@ compiler:
   - gcc
 
 before_install:
-  - pip install -U pip setuptools  # Install latest pip and setuptools
-  - pip install virtualenv
-  - virtualenv -p /usr/bin/python3 CGRAFlowPy3Env
-  - source CGRAFlowPy3Env/bin/activate
-
-  #pull all repos
-  - git clone -b ${halide_branch} -- ${halide_git}
-  - git clone -b ${coreir_branch} -- ${coreir_git}
-  - git clone -b ${mapper_branch} -- ${mapper_git}
-  - git clone -b ${cgra_branch} -- ${cgra_git}
-  - git clone -b ${pnr_branch} -- ${pnr_git}
-  - git clone -b ${smt_branch} -- ${smt_git}
-
-  # setup halide env vars
-  - source Halide_CoreIR/test/scripts/before_install_travis.sh
-
-  # build coreir
-  - cd coreir;
-  - export COREIRCONFIG="g++-4.9";
-  - export COREIR=$PWD
-  - export LD_LIBRARY_PATH=$PWD/lib:$LD_LIBRARY_PATH
-  - make install
-  - make py
-  - cd ..;
-
-  # I think the script might be lost...here's a quick reset.
-  - cd ${TRAVIS_BUILD_DIR};
-
-  - cd CGRAMapper
-  - make install
-  - cd ../;
-
-  - date
-
-  # API for SMT solving with different solvers
-  - export PYTHONPATH=$PYTHONPATH:$PWD/smt-switch
+  - ./install.sh
+  - source setenv.sh
 
 install:
-  -  pwd
-
-  # Halide installation (llvm, etc.)
-  - ${TRAVIS_BUILD_DIR}/Halide_CoreIR/test/scripts/install_travis.sh
-
-  # pnr
-  # run script that installs solvers and adds necessary environment variables
-  # if all the solvers are already cached it doesn't need to download
-  # if there are any missing solvers, downloads from Makai's AFS
-  - . ./smt-pnr/util/get_smt_solvers.sh
-  - pip install lxml
 
 script:
   # "set -e" means "die at first error" - seems like a good idea!
@@ -103,34 +40,6 @@ after_script:
 addons:
   apt:
     sources:
-      - ubuntu-toolchain-r-test
+#      - ubuntu-toolchain-r-test
     packages:
-      # rigel
-      - verilator
-      - luajit
-
-      # coreir
-      - build-essential
-      - clang
-
-      # halide
-      - g++-4.9
-      - libedit-dev
-      - libpng-dev
-
-      # CGRAGEN
-      - csh
-
-      # pnr
-      - libgmp3-dev
-      - git
-      - cmake
-      - zlib1g
-      - zlib1g-dev
-      - graphviz-dev
-      - python3
-      - swig2.0
-      - libcln-dev
-
-      # convert png to raw
-      - imagemagick
+#      - g++-4.9
