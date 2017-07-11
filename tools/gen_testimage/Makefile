@@ -8,11 +8,11 @@ gen_testimage: gen_testimage.cpp
 help: gen_testimage
 	./gen_testimage; test $$? -eq 255
 
-input_unique.pgm: gen_testimage
+unique input_unique.pgm: gen_testimage
 	./gen_testimage 10 10 b input_unique.pgm
 	./gen_testimage 10 10 b input.png
 
-input_ones.pgm: gen_testimage
+ones input_ones.pgm: gen_testimage
 	./gen_testimage 10 10 a input_ones.pgm
 	./gen_testimage 10 10 a input.png
 

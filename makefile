@@ -9,6 +9,9 @@ CGRA_SIZE := 4x4
 DELAY := 0,0           # How long to wait before first output / last output
 MEM_SWITCH := -oldmem  # Don't really need this...riiight?
 
+# Image being used
+IMAGE := default
+
 ifeq ($(CGRA_SIZE), 4x4)
 	MEM_SWITCH := -oldmem -4x4
 endif
@@ -29,7 +32,14 @@ start_testing:
 	echo TEST SUMMARY > build/test_summary.txt
 	echo BEGIN `date` >> build/test_summary.txt
 
-build/%_design_top.json: Halide_CoreIR/apps/coreir_examples/%
+%_input_image:
+	# copy image to halide branch if not using "default"
+	if [ $(IMAGE) != default ]; then\
+		$(MAKE) -C $(TESTIMAGE_PATH) $(IMAGE);\
+		cp tools/gen_testimage/input.png Halide_CoreIR/apps/coreir_examples/$*/input.png;\
+	fi
+
+build/%_design_top.json: %_input_image Halide_CoreIR/apps/coreir_examples/%
 	echo "Halide FLOW"
 
 	# Halide files needed are already in the repo
