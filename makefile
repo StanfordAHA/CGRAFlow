@@ -7,8 +7,8 @@ CONVERT = CGRAGenerator/verilator/generator_z_tb/io/myconvert.csh
 # For now, default is "4x4"
 DELAY := 0,0           # How long to wait before first output / last output
 
-EGREGIOUS_CONV21_HACK :=
-ifeq ($(EGREGIOUS_CONV21_HACK), TRUE)
+EGREGIOUS_CONV21_HACK := 0
+ifeq ($(EGREGIOUS_CONV21_HACK), 1)
 	EGREGIOUS_CONV21_HACK := -egregious_conv21_hack
 endif
 
