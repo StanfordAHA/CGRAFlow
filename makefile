@@ -5,26 +5,33 @@ CONVERT = CGRAGenerator/verilator/generator_z_tb/io/myconvert.csh
 # E.g. "make CGRA_SIZE=8x8"
 
 # For now, default is "4x4"
-CGRA_SIZE := 4x4
 DELAY := 0,0           # How long to wait before first output / last output
-MEM_SWITCH := -oldmem  # Don't really need this...riiight?
 
+EGREGIOUS_CONV21_HACK :=
+ifeq ($(EGREGIOUS_CONV21_HACK), TRUE)
+	EGREGIOUS_CONV21_HACK := -egregious_conv21_hack
+endif
+
+
+CGRA_SIZE := 4x4
 ifeq ($(CGRA_SIZE), 4x4)
 	MEM_SWITCH := -oldmem -4x4
 endif
 
+MEM_SWITCH := -oldmem  # Don't really need this...riiight?
 ifeq ($(CGRA_SIZE), 8x8)
 	MEM_SWITCH := -newmem -8x8
 endif
 
 $(warning CGRA_SIZE = $(CGRA_SIZE))
 $(warning MEM_SWITCH = $(MEM_SWITCH))
+$(warning EGREGIOUS_CONV21_HACK = $(EGREGIOUS_CONV21_HACK)
 ########################################################################
 
 all: start_testing build/pointwise.correct.txt build/conv_1_2_mapped.json build/conv_2_1_mapped.json build/conv_3_1_mapped.json build/conv_bw_mapped.json build/cascade_mapped.json
 
 start_testing:
-	# Build a test summary for the travis log.
+        # Build a test summary for the travis log.
 	if `test -e build/test_summary.txt`; then rm build/test_summary.txt; fi
 	echo TEST SUMMARY > build/test_summary.txt
 	echo BEGIN `date` >> build/test_summary.txt
@@ -32,18 +39,18 @@ start_testing:
 build/%_design_top.json: Halide_CoreIR/apps/coreir_examples/%
 	echo "Halide FLOW"
 
-	# Halide files needed are already in the repo
-	# This is where Halide actually compiles our app and runs
-	# it to build our comparison output parrot "halide_out.png"
-	# as well as the DAG "design_top.json" for the mapper.
-	#
+        # Halide files needed are already in the repo
+        # This is where Halide actually compiles our app and runs
+        # it to build our comparison output parrot "halide_out.png"
+        # as well as the DAG "design_top.json" for the mapper.
+        #
 
-	# remake the json and cpu output image for our test app
+        # remake the json and cpu output image for our test app
 	@echo; echo Making $@ because of $?
-	# E.g. '$*' = "pointwise" when building "build/pointwise/correct.txt"
+        # E.g. '$*' = "pointwise" when building "build/pointwise/correct.txt"
 	make -C Halide_CoreIR/apps/coreir_examples/$*/ clean design_top.json out.png
 
-	# copy over all pertinent files
+        # copy over all pertinent files
 	cp Halide_CoreIR/apps/coreir_examples/$*/design_top.json build/$*_design_top.json
 	cp Halide_CoreIR/apps/coreir_examples/$*/input.png       build/$*_input.png
 	cp Halide_CoreIR/apps/coreir_examples/$*/out.png         build/$*_halide_out.png
@@ -138,6 +145,7 @@ build/%_CGRA_out.raw: build/%_pnr_bitstream
 	build=../../../build;   \
 	./run.csh top_tb.cpp -hackmem           \
 		$(MEM_SWITCH)                       \
+		$(EGREGIOUS_CONV21_HACK)            \
 		-config $${build}/$*_pnr_bitstream  \
 		-input  $${build}/$*_input.png      \
 		-output $${build}/$*_CGRA_out.raw   \
