@@ -33,8 +33,8 @@ export BUILD_SYSTEM=MAKE
 export CXX_=g++-4.9
 export CC_=gcc-4.9
 
-pip install -U pip setuptools  # Install latest pip and setuptools
-pip install virtualenv
+sudo pip install -U pip setuptools  # Install latest pip and setuptools
+sudo pip install virtualenv
 virtualenv -p /usr/bin/python3 CGRAFlowPy3Env
 source CGRAFlowPy3Env/bin/activate
 
