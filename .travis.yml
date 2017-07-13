@@ -27,6 +27,7 @@ script:
   - make CGRA_SIZE=8x8 SILENT=TRUE build/pointwise.correct.txt
   - make CGRA_SIZE=8x8 SILENT=TRUE DELAY=1,0  build/conv_1_2.correct.txt
   - make CGRA_SIZE=8x8 SILENT=TRUE DELAY=10,0 build/conv_2_1.correct.txt
+  - make CGRA_SIZE=8x8 SILENT=TRUE DELAY=20,0 build/conv_3_1.correct.txt
 
 after_script:
   # The log file is getting very long and unwieldy.
