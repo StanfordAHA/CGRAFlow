@@ -14,6 +14,14 @@ $(warning DELAY = $(DELAY))
 # 	EGREGIOUS_CONV21_HACK_SWITCH := -egregious_conv21_hack
 # endif
 
+SILENT := FALSE
+ifeq ($(SILENT), TRUE)
+	OUTPUT := > /dev/null
+else
+	OUTPUT :=
+endif
+$(warning OUTPUT = "$(OUTPUT)")
+
 # Image being used
 IMAGE := default
 
@@ -91,7 +99,7 @@ build/%_design_top.json: %_input_image Halide_CoreIR/apps/coreir_examples/%
 
 	ls -la build
 
-	cat build/$*_design_top.json
+	cat build/$*_design_top.json $(OUTPUT)
 #  - xxd build/input.png
 #  - xxd build/input.raw
 #  - xxd build/halide_out.png
@@ -104,9 +112,9 @@ build/%_mapped.json: build/%_design_top.json
 
 	@echo; echo Making $@ because of $?
 	echo "MAPPER"
-	./CGRAMapper/bin/map build/$*_design_top.json build/$*_mapped.json
+	./CGRAMapper/bin/map build/$*_design_top.json build/$*_mapped.json $(OUTPUT)
 	ls -la build
-	cat build/$*_mapped.json
+	cat build/$*_mapped.json $(OUTPUT)
 
 build/cgra_info_4x4.txt:
 	@echo; echo Making $@ because of $?
