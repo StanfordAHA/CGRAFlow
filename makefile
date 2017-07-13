@@ -87,8 +87,8 @@ build/%_design_top.json: %_input_image Halide_CoreIR/apps/coreir_examples/%
 	ls -la build
 
 	echo "CONVERT PNG IMAGES TO RAW for visual inspection"
-	# Could not get "stream" command to work, so using my (steveri) hacky convert script instead...
-	#cd ${TRAVIS_BUILD_DIR}
+        # Could not get "stream" command to work, so using my (steveri) hacky convert script instead...
+        #cd ${TRAVIS_BUILD_DIR}
 
 	$(CONVERT) build/$*_input.png      build/$*_input.raw
 	$(CONVERT) build/$*_halide_out.png build/$*_halide_out.raw
@@ -106,9 +106,9 @@ build/%_design_top.json: %_input_image Halide_CoreIR/apps/coreir_examples/%
 #  - xxd build/halide_out.raw
 
 build/%_mapped.json: build/%_design_top.json
-	# Mapper uses DAG output "design_top.json" from Halide compiler
-	# to produce a mapped version "mapped.json" for the PNR folks.  Right?
-	#
+        # Mapper uses DAG output "design_top.json" from Halide compiler
+        # to produce a mapped version "mapped.json" for the PNR folks.  Right?
+        #
 
 	@echo; echo Making $@ because of $?
 	echo "MAPPER"
@@ -130,14 +130,14 @@ build/cgra_info_8x8.txt:
 
 # build/%_pnr_bitstream: build/%_mapped.json build/cgra_info_4x4.txt
 build/%_pnr_bitstream: build/%_mapped.json build/cgra_info_$(CGRA_SIZE).txt
-	#
-	# pnr
-	# IN:  mapped.json      # Output from mapper
-	#      cgra_info.txt    # Fully-populated connection matrix from CGRA generator
-	#
-	# OUT: pnr_bitstream    # bitstream file
-	#      annotated        # annotated bitstream file
-	#- cd ${TRAVIS_BUILD_DIR}/smt-pnr/src/
+        #
+        # pnr
+        # IN:  mapped.json      # Output from mapper
+        #      cgra_info.txt    # Fully-populated connection matrix from CGRA generator
+        #
+        # OUT: pnr_bitstream    # bitstream file
+        #      annotated        # annotated bitstream file
+        #- cd ${TRAVIS_BUILD_DIR}/smt-pnr/src/
 
 	@echo; echo Making $@ because of $?
 # 	ls -l CGRAGenerator/hardware/generator_z/top/cgra_info.txt $(filter %.txt, $?)
@@ -146,10 +146,10 @@ build/%_pnr_bitstream: build/%_mapped.json build/cgra_info_$(CGRA_SIZE).txt
 
 # 	smt-pnr/src/test.py  build/$*_mapped.json CGRAGenerator/hardware/generator_z/top/cgra_info.txt --bitstream build/$*_pnr_bitstream --annotate build/$*_annotated --print  --coreir-libs stdlib cgralib
 
-	# $(filter %.json, $?) => program graph e.g. "build/pointwise_mapped.json"
-	# $(filter %.txt,  $?) => config file   e.g. "build/cgra_info_4x4.txt"
-	# (Could also maybe use $(word 1, $?) and $(word 2, $?)
-	# Note json file must come before config file on command line!!!
+        # $(filter %.json, $?) => program graph e.g. "build/pointwise_mapped.json"
+        # $(filter %.txt,  $?) => config file   e.g. "build/cgra_info_4x4.txt"
+        # (Could also maybe use $(word 1, $?) and $(word 2, $?)
+        # Note json file must come before config file on command line!!!
 	smt-pnr/src/run_pnr.py                    \
 		$(filter %.json,$?)                   \
 		$(filter %.txt, $?)                   \
@@ -161,10 +161,10 @@ build/%_pnr_bitstream: build/%_mapped.json build/cgra_info_$(CGRA_SIZE).txt
 
 VERILATOR_TOP := CGRAGenerator/verilator/generator_z_tb
 build/%_CGRA_out.raw: build/%_pnr_bitstream
-	# cgra program and run (caleb bitstream)
-	# IN:  pnr_bitstream (Bitstream for programming CGRA)
-	#      input.png     (Input image)
-	# OUT: CGRA_out.raw  (Output image)
+        # cgra program and run (caleb bitstream)
+        # IN:  pnr_bitstream (Bitstream for programming CGRA)
+        #      input.png     (Input image)
+        # OUT: CGRA_out.raw  (Output image)
 
 	@echo; echo Making $@ because of $?
 	echo "CGRA program and run (uses output of pnr)"
@@ -180,7 +180,7 @@ build/%_CGRA_out.raw: build/%_pnr_bitstream
 		-nclocks 5M
 
 build/%.correct.txt: build/%_CGRA_out.raw
-	# check to see that output is correct.
+        # check to see that output is correct.
 
 	@echo; echo Making $@ because of $?
 	echo "BYTE-BY-BYTE COMPARE OF CGRA VS. HALIDE OUTPUT IMAGES"
