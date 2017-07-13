@@ -7,11 +7,11 @@ CONVERT = CGRAGenerator/verilator/generator_z_tb/io/myconvert.csh
 # For now, default is "4x4"
 DELAY := 0,0           # How long to wait before first output / last output
 
-EGREGIOUS_CONV21_HACK := FALSE
-EGREGIOUS_CONV21_HACK_SWITCH :=
-ifeq ($(EGREGIOUS_CONV21_HACK), TRUE)
-	EGREGIOUS_CONV21_HACK_SWITCH := -egregious_conv21_hack
-endif
+# EGREGIOUS_CONV21_HACK := FALSE
+# EGREGIOUS_CONV21_HACK_SWITCH :=
+# ifeq ($(EGREGIOUS_CONV21_HACK), TRUE)
+# 	EGREGIOUS_CONV21_HACK_SWITCH := -egregious_conv21_hack
+# endif
 
 
 CGRA_SIZE := 4x4
@@ -26,8 +26,10 @@ endif
 
 $(warning CGRA_SIZE = $(CGRA_SIZE))
 $(warning MEM_SWITCH = $(MEM_SWITCH))
-$(warning EGREGIOUS_CONV21_HACK = $(EGREGIOUS_CONV21_HACK))
-$(warning EGREGIOUS_CONV21_HACK_SWITCH = $(EGREGIOUS_CONV21_HACK_SWITCH))
+
+# $(warning EGREGIOUS_CONV21_HACK = $(EGREGIOUS_CONV21_HACK))
+# $(warning EGREGIOUS_CONV21_HACK_SWITCH = $(EGREGIOUS_CONV21_HACK_SWITCH))
+
 ########################################################################
 
 all: start_testing build/pointwise.correct.txt build/conv_1_2_mapped.json build/conv_2_1_mapped.json build/conv_3_1_mapped.json build/conv_bw_mapped.json build/cascade_mapped.json
@@ -147,7 +149,6 @@ build/%_CGRA_out.raw: build/%_pnr_bitstream
 	build=../../../build;   \
 	./run.csh top_tb.cpp -hackmem           \
 		$(MEM_SWITCH)                       \
-		$(EGREGIOUS_CONV21_HACK_SWITCH)     \
 		-config $${build}/$*_pnr_bitstream  \
 		-input  $${build}/$*_input.png      \
 		-output $${build}/$*_CGRA_out.raw   \
