@@ -14,7 +14,6 @@ $(warning DELAY = $(DELAY))
 # 	EGREGIOUS_CONV21_HACK_SWITCH := -egregious_conv21_hack
 # endif
 
-=======
 # Image being used
 IMAGE := default
 
