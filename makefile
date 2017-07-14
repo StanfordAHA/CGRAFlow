@@ -16,9 +16,11 @@ $(warning DELAY = $(DELAY))
 
 SILENT := FALSE
 ifeq ($(SILENT), TRUE)
-       OUTPUT := > /dev/null
+	OUTPUT := > /dev/null
+	SILENT_FILTER_HF := | grep compiling
 else
-       OUTPUT :=
+	OUTPUT :=
+	SILENT_FILTER_HF :=
 endif
 $(warning OUTPUT = "$(OUTPUT)")
 
@@ -76,7 +78,7 @@ build/%_design_top.json: %_input_image Halide_CoreIR/apps/coreir_examples/%
         # remake the json and cpu output image for our test app
 	@echo; echo Making $@ because of $?
         # E.g. '$*' = "pointwise" when building "build/pointwise/correct.txt"
-	make -C Halide_CoreIR/apps/coreir_examples/$*/ clean design_top.json out.png
+	make -C Halide_CoreIR/apps/coreir_examples/$*/ clean design_top.json out.png $(SILENT_FILTER_HF)
 
         # copy over all pertinent files
 	cp Halide_CoreIR/apps/coreir_examples/$*/design_top.json build/$*_design_top.json
