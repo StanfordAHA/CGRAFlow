@@ -16,11 +16,13 @@ $(warning DELAY = $(DELAY))
 
 SILENT := FALSE
 ifeq ($(SILENT), TRUE)
-	OUTPUT := > /dev/null
-	SILENT_FILTER_HF := | egrep -i 'compiling|flattening|run|json|start|finish|success'
+	OUTPUT              :=    > /dev/null
+	SILENT_FILTER_HF    :=    | egrep -i 'compiling|flattening|run|json|start|finish|success'
+	RUN_SILENT_RUN_DEEP :=    -q
 else
 	OUTPUT :=
 	SILENT_FILTER_HF :=
+	RUN_SILENT_RUN_DEEP :=
 endif
 $(warning OUTPUT = "$(OUTPUT)")
 
@@ -174,6 +176,7 @@ build/%_CGRA_out.raw: build/%_pnr_bitstream
 	cd $(VERILATOR_TOP);    \
 	build=../../../build;   \
 	./run.csh top_tb.cpp -hackmem           \
+		$(RUNSILENT_RUN_DEEP)               \
 		$(MEM_SWITCH)                       \
 		-config $${build}/$*_pnr_bitstream  \
 		-input  $${build}/$*_input.png      \
