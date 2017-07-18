@@ -163,6 +163,7 @@ build/%_pnr_bitstream: build/%_mapped.json build/cgra_info_$(CGRA_SIZE).txt
 
 	cat build/$*_annotated
 
+BUILD := ../../../build
 VERILATOR_TOP := CGRAGenerator/verilator/generator_z_tb
 build/%_CGRA_out.raw: build/%_pnr_bitstream
         # cgra program and run (caleb bitstream)
