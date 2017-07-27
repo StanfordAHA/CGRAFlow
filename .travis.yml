@@ -23,12 +23,13 @@ install:
 script:
   # "set -e" means "die at first error" - seems like a good idea!
   - set -e
-  - make CGRA_SIZE=4x4 SILENT=TRUE
-  - make CGRA_SIZE=8x8 SILENT=TRUE build/pointwise.correct.txt
-  - make CGRA_SIZE=8x8 SILENT=TRUE DELAY=1,0  build/conv_1_2.correct.txt
-  - make CGRA_SIZE=8x8 SILENT=TRUE DELAY=10,0 build/conv_2_1.correct.txt
-  - make CGRA_SIZE=8x8 SILENT=TRUE DELAY=20,0 build/conv_3_1.correct.txt
-  - make CGRA_SIZE=8x8 SILENT=TRUE DELAY=130,0 build/conv_bw.correct.txt
+  - make CGRA_SIZE=8x8 SILENT=FALSE DELAY=20,0 build/conv_3_1.correct.txt
+  # - make CGRA_SIZE=4x4 SILENT=TRUE
+  # - make CGRA_SIZE=8x8 SILENT=TRUE build/pointwise.correct.txt
+  # - make CGRA_SIZE=8x8 SILENT=TRUE DELAY=1,0  build/conv_1_2.correct.txt
+  # - make CGRA_SIZE=8x8 SILENT=TRUE DELAY=10,0 build/conv_2_1.correct.txt
+  # - make CGRA_SIZE=8x8 SILENT=TRUE DELAY=20,0 build/conv_3_1.correct.txt
+  # - make CGRA_SIZE=8x8 SILENT=TRUE DELAY=130,0 build/conv_bw.correct.txt
 
   # [SR] I'm putting this here so I can see the test results without an extra mouseclick :)
   - if `test -e build/test_summary.txt`; then cat build/test_summary.txt; fi
