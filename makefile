@@ -163,9 +163,6 @@ build/%_pnr_bitstream: build/%_mapped.json build/cgra_info_$(CGRA_SIZE).txt
 
 	cat build/$*_annotated
 	@echo; echo Checking $*_annotated against decoded $*_pnr_bitstream...
-	CGRAGenerator/bitstream/decoder/hackdiff.csh \
-		build/$*_pnr_bitstream build/$*_annotated
-
 
 BUILD := ../../../build
 VERILATOR_TOP := CGRAGenerator/verilator/generator_z_tb
