@@ -24,7 +24,7 @@ export halide_branch="coreir"
 export coreir_branch="master"
 export mapper_branch="master"
 export cgra_branch="master"
-export pnr_branch="master"
+export pnr_branch="pip"
 export smt_branch="master"
 
 #halide
@@ -81,4 +81,4 @@ Halide_CoreIR/test/scripts/install_travis.sh
 # if all the solvers are already cached it doesn't need to download
 # if there are any missing solvers, downloads from Makai's AFS
 . ./smt-pnr/util/get_smt_solvers.sh
-pip install lxml
+pip install -e smt-pnr 
