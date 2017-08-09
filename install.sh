@@ -24,7 +24,7 @@ export halide_branch="coreir"
 export coreir_branch="master"
 export mapper_branch="master"
 export cgra_branch="master"
-export pnr_branch="pip"
+export pnr_branch="master"
 export smt_branch="master"
 
 #halide
