@@ -81,4 +81,4 @@ Halide_CoreIR/test/scripts/install_travis.sh
 # if all the solvers are already cached it doesn't need to download
 # if there are any missing solvers, downloads from Makai's AFS
 . ./smt-pnr/util/get_smt_solvers.sh
-pip install -e smt-pnr 
+pip install -e smt-pnr/package 
