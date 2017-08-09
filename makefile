@@ -154,7 +154,7 @@ build/%_pnr_bitstream: build/%_mapped.json build/cgra_info_$(CGRA_SIZE).txt
         # $(filter %.txt,  $?) => config file   e.g. "build/cgra_info_4x4.txt"
         # (Could also maybe use $(word 1, $?) and $(word 2, $?)
         # Note json file must come before config file on command line!!!
-	smt-pnr/src/run_pnr.py                    \
+	smt-pnr/run_pnr.py                        \
 		$(filter %.json,$?)                   \
 		$(filter %.txt, $?)                   \
 		--bitstream build/$*_pnr_bitstream    \
