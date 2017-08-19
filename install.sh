@@ -20,7 +20,7 @@ export cgra_git="https://github.com/StanfordAHA/CGRAGenerator.git"
 export pnr_git="https://github.com/cdonovick/smt-pnr"
 export smt_git="https://github.com/makaimann/smt-switch"
 
-export halide_branch="coreir"
+export halide_branch="devmerge"
 export coreir_branch="dev"
 export mapper_branch="dev"
 export cgra_branch="master"
