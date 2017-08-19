@@ -24,7 +24,7 @@ export halide_branch="devmerge"
 export coreir_branch="dev"
 export mapper_branch="dev"
 export cgra_branch="master"
-export pnr_branch="master"
+export pnr_branch="coremerge"
 export smt_branch="master"
 
 #halide
