@@ -196,17 +196,26 @@ build/%.correct.txt: build/%_CGRA_out.raw
         # check to see that output is correct.
 
 	@echo; echo Making $@ because of $?
-	echo "BYTE-BY-BYTE COMPARE OF CGRA VS. HALIDE OUTPUT IMAGES"
-	ls -l build/*.raw
-	cmp build/$*_halide_out.raw build/$*_CGRA_out.raw \
-		&& echo $* test PASSED  >> build/test_summary.txt \
-		|| echo $* test FAILED  >> build/test_summary.txt
-	cmp build/$*_halide_out.raw build/$*_CGRA_out.raw
-
-
+	
+	ls -l build/$*_*_out.raw
+	
+	od -t u1 build/$*_halide_out.raw | head -2
+	od -t u1 build/$*_CGRA_out.raw   | head -2
+	
 	echo "VISUAL COMPARE OF CGRA VS. HALIDE OUTPUT BYTES (should be null)"
 	od -t u1 -w1 -v -A none build/$*_halide_out.raw > /tmp/$*_halide_out.od
 	od -t u1 -w1 -v -A none build/$*_CGRA_out.raw   > /tmp/$*_CGRA_out.od
 	diff /tmp/$*_halide_out.od /tmp/$*_CGRA_out.od | head -500
 	diff /tmp/$*_halide_out.od /tmp/$*_CGRA_out.od > build/$*.diff
+	
+	od -t u1 build/$*_halide_out.raw | head -2
+	od -t u1 build/$*_CGRA_out.raw   | head -2
+	
+	echo "BYTE-BY-BYTE COMPARE OF CGRA VS. HALIDE OUTPUT IMAGES"
+	cmp build/$*_halide_out.raw build/$*_CGRA_out.raw \
+		&& echo $* test PASSED  >> build/test_summary.txt \
+		|| echo $* test FAILED  >> build/test_summary.txt
+	cmp build/$*_halide_out.raw build/$*_CGRA_out.raw
+
+	# test -s => file exists and has size > 0
 	test ! -s build/$*.diff && touch build/$*.correct.txt
