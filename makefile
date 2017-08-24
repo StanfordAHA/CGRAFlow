@@ -47,13 +47,10 @@ $(warning MEM_SWITCH = $(MEM_SWITCH))
 
 ########################################################################
 
-all: start_testing \
-     build/pointwise.correct.txt \
-     build/conv_1_2_mapped.json \
-     build/conv_2_1_mapped.json \
-     build/conv_3_1_mapped.json \
-     build/conv_bw_mapped.json \
-     build/cascade_mapped.json
+# No longer used
+# all: start_testing \
+#      build/pointwise.correct.txt \
+#      build/cascade_mapped.json
 
 start_testing:
         # Build a test summary for the travis log.
