@@ -54,8 +54,8 @@ cd coreir;
 export COREIRCONFIG="g++-4.9";
 export COREIR=$PWD
 export LD_LIBRARY_PATH=$PWD/lib:$LD_LIBRARY_PATH
-make install
-make py
+make -j2 install
+make -j2 py
 cd ..;
 
 # I think the script might be lost...here's a quick reset.
@@ -63,7 +63,7 @@ cd ..;
 
 pwd
 cd CGRAMapper
-make
+make -j2
 cd ../;
 
 date
