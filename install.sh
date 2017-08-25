@@ -21,7 +21,7 @@ export pnr_git="https://github.com/cdonovick/smt-pnr"
 export smt_git="https://github.com/makaimann/smt-switch"
 
 export halide_branch="coreir"
-export coreir_branch="master_old"
+export coreir_branch="master"
 export mapper_branch="master"
 export cgra_branch="master"
 export pnr_branch="master"
@@ -63,7 +63,7 @@ cd ..;
 
 pwd
 cd CGRAMapper
-make install
+make
 cd ../;
 
 date
