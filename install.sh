@@ -21,7 +21,7 @@ export pnr_git="https://github.com/cdonovick/smt-pnr"
 export smt_git="https://github.com/makaimann/smt-switch"
 
 export halide_branch="coreir"
-export coreir_branch="master_old"
+export coreir_branch="master"
 export mapper_branch="master"
 export cgra_branch="master"
 export pnr_branch="master"
@@ -54,8 +54,8 @@ cd coreir;
 export COREIRCONFIG="g++-4.9";
 export COREIR=$PWD
 export LD_LIBRARY_PATH=$PWD/lib:$LD_LIBRARY_PATH
-make install
-make py
+make -j2 install
+make -j2 py
 cd ..;
 
 # I think the script might be lost...here's a quick reset.
@@ -63,7 +63,7 @@ cd ..;
 
 pwd
 cd CGRAMapper
-make install
+make -j2
 cd ../;
 
 date
