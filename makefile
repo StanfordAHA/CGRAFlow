@@ -113,7 +113,7 @@ build/%_design_top.json: %_input_image Halide_CoreIR/apps/coreir_examples/%
 	ls -la build
 
 	cat build/$*_design_top.json $(OUTPUT)
-	test/compare.csh $@.compare diff |& tee -a test/compare_summary.txt
+	test/compare.csh $@.compare diff 2>&1 | tee -a test/compare_summary.txt
 
 #	make test/$@.compare
 
