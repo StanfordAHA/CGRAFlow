@@ -8,8 +8,6 @@
 #   compare.csh build/pointwise_design_top.json diff
 #   compare.csh build/pointwise_design_top.json topo
 
-echo BEGIN GOLD-COMPARE
-
 set newfile = $1
 # E.g. newfile = 'build/pointwise_design_top.json'
 
@@ -18,7 +16,7 @@ set goldfile = test/gold/$1:t
 
 set diff = $2
 
-echo "GOLD-COMPARE $diff '$newfile' '$goldfile'"
+# echo "GOLD-COMPARE $diff '$newfile' '$goldfile'"
 
 # Find script home directory
 set scriptpath = "$0"
@@ -35,15 +33,12 @@ cd $scriptdir/..
 
 # Check for existence of gold standard
 if (! -e $goldfile) then
-  echo "Cannot find gold standard '$goldfile'"
-  echo ""
-  exit
+  echo "GOLD-COMPARE $newfile:t Cannot find gold standard '$goldfile'"
 
-echo ""
-set echo
-$diff $goldfile $newfile\
-  && echo "GOLD-COMPARE '$newfile' to '$goldfile' PASSED"\\
-  || echo "GOLD-COMPARE '$newfile' to '$goldfile' FAILED"
-unset echo
-echo ""
+else
+  echo $diff $goldfile $newfile
+  $diff $goldfile $newfile\
+    && echo "GOLD-COMPARE $newfile:t ($diff) PASSED"\\
+    || echo "GOLD-COMPARE $newfile:t ($diff) FAILED"
 
+endif
