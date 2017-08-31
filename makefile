@@ -14,7 +14,7 @@ $(warning DELAY = $(DELAY))
 # 	EGREGIOUS_CONV21_HACK_SWITCH := -egregious_conv21_hack
 # endif
 
-SILENT := FALSE
+SILENT := TRUE
 ifeq ($(SILENT), TRUE)
 	OUTPUT              :=    > /dev/null
 	SILENT_FILTER_HF    :=    | egrep -i 'compiling|flattening|run|json|start|finish|success'
@@ -29,7 +29,7 @@ $(warning OUTPUT = "$(OUTPUT)")
 # Image being used
 IMAGE := default
 
-CGRA_SIZE := 4x4
+CGRA_SIZE := 8x8
 ifeq ($(CGRA_SIZE), 4x4)
 	MEM_SWITCH := -oldmem -4x4
 endif
@@ -58,12 +58,31 @@ start_testing:
 	echo TEST SUMMARY > build/test_summary.txt
 	echo BEGIN `date` >> build/test_summary.txt
 
+	if `test -e test/compare_summary.txt`; then rm test/compare_summary.txt; fi
+	echo GOLD-COMPARE SUMMARY > test/compare_summary.txt
+	echo BEGIN `date`        >> test/compare_summary.txt
+
+end_testing:
+	cat test/compare_summary.txt
+	cat build/test_summary.txt
+
+
 %_input_image:
 	# copy image to halide branch if not using "default"
 	if [ $(IMAGE) != default ]; then\
 		$(MAKE) -C $(TESTIMAGE_PATH) $(IMAGE);\
 		cp tools/gen_testimage/input.png Halide_CoreIR/apps/coreir_examples/$*/input.png;\
 	fi
+
+# clean:
+#	rm test/*.compare
+
+test/%_design_top.json.compare: build/%_design_top.json test/gold/%_design_top.json
+	ls -l $@
+	test/compare.csh $?
+	touch $@
+	ls -l $@
+
 
 build/%_design_top.json: %_input_image Halide_CoreIR/apps/coreir_examples/%
 	echo "Halide FLOW"
@@ -193,26 +212,26 @@ build/%.correct.txt: build/%_CGRA_out.raw
         # check to see that output is correct.
 
 	@echo; echo Making $@ because of $?
-	
+
 	ls -l build/$*_*_out.raw
-	
+
 	od -t u1 build/$*_halide_out.raw | head -2
 	od -t u1 build/$*_CGRA_out.raw   | head -2
-	
+
 	echo "VISUAL COMPARE OF CGRA VS. HALIDE OUTPUT BYTES (should be null)"
 	od -t u1 -w1 -v -A none build/$*_halide_out.raw > build/$*_halide_out.od
 	od -t u1 -w1 -v -A none build/$*_CGRA_out.raw   > build/$*_CGRA_out.od
 	diff build/$*_halide_out.od build/$*_CGRA_out.od | head -50
 	diff build/$*_halide_out.od build/$*_CGRA_out.od > build/$*.diff
-	
+
 	od -t u1 build/$*_halide_out.raw | head -2
 	od -t u1 build/$*_CGRA_out.raw   | head -2
-	
+
 	echo "BYTE-BY-BYTE COMPARE OF CGRA VS. HALIDE OUTPUT IMAGES"
 	cmp build/$*_halide_out.raw build/$*_CGRA_out.raw \
 		&& echo $* test PASSED  >> build/test_summary.txt \
 		|| echo $* test FAILED  >> build/test_summary.txt
 	cmp build/$*_halide_out.raw build/$*_CGRA_out.raw
 
-	# test -s => file exists and has size > 0
+        # test -s => file exists and has size > 0
 	test ! -s build/$*.diff && touch build/$*.correct.txt

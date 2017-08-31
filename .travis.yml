@@ -24,17 +24,19 @@ script:
   # "set -e" means "die at first error" - seems like a good idea!
   - set -e
 
-  - make SILENT=TRUE start_testing
-  - make SILENT=TRUE build/cascade_mapped.json
-  - make SILENT=TRUE CGRA_SIZE=4x4 DELAY=0,0   build/pointwise.correct.txt
-  - make SILENT=TRUE CGRA_SIZE=8x8 DELAY=0,0   build/pointwise.correct.txt
-  - make SILENT=TRUE CGRA_SIZE=8x8 DELAY=1,0   build/conv_1_2.correct.txt
-  - make SILENT=TRUE CGRA_SIZE=8x8 DELAY=10,0  build/conv_2_1.correct.txt
-  - make SILENT=TRUE CGRA_SIZE=8x8 DELAY=20,0  build/conv_3_1.correct.txt
-  - make SILENT=TRUE CGRA_SIZE=8x8 DELAY=130,0 build/conv_bw.correct.txt
+  # For verbose output add "SILENT=FALSE" to command line(s) below
+  - make start_testing
+  - make build/cascade_mapped.json
+  - make build/pointwise.correct.txt DELAY=0,0   CGRA_SIZE=4x4
+  - make build/pointwise.correct.txt DELAY=0,0   
+  - make build/conv_1_2.correct.txt  DELAY=1,0   
+  - make build/conv_2_1.correct.txt  DELAY=10,0  
+  - make build/conv_3_1.correct.txt  DELAY=20,0  
+  - make build/conv_bw.correct.txt   DELAY=130,0 
+  - make end_testing
 
   # [SR] I'm putting this here so I can see the test results without an extra mouseclick :)
-  - if `test -e build/test_summary.txt`; then cat build/test_summary.txt; fi
+  # - if `test -e build/test_summary.txt`; then cat build/test_summary.txt; fi
 
 after_script:
   # The log file is getting very long and unwieldy.
