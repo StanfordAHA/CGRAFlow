@@ -77,13 +77,6 @@ end_testing:
 # clean:
 #	rm test/*.compare
 
-test/%_design_top.json.compare: build/%_design_top.json
-	@echo; echo Making $@ because of $?
-	ls -l $@
-	test/compare.csh $? |& tee -a test/compare_summary.txt; touch $@
-	ls -l $@
-
-
 build/%_design_top.json: %_input_image Halide_CoreIR/apps/coreir_examples/%
 	echo "Halide FLOW"
 
@@ -120,10 +113,20 @@ build/%_design_top.json: %_input_image Halide_CoreIR/apps/coreir_examples/%
 	ls -la build
 
 	cat build/$*_design_top.json $(OUTPUT)
+	test/compare.csh $@.compare diff |& tee -a test/compare_summary.txt
+
+#	make test/$@.compare
+
 #  - xxd build/input.png
 #  - xxd build/input.raw
 #  - xxd build/halide_out.png
 #  - xxd build/halide_out.raw
+
+# test/%_design_top.json.compare: build/%_design_top.json
+# 	@echo; echo Making $@ because of $?
+# 	ls -l $@
+# 	test/compare.csh $? |& tee -a test/compare_summary.txt; touch $@
+# 	ls -l $@
 
 build/%_mapped.json: build/%_design_top.json
         # Mapper uses DAG output "design_top.json" from Halide compiler

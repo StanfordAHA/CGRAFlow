@@ -1,6 +1,13 @@
 #!/bin/csh -f
 
-# Usage: compare.csh build/pointwise_design_top.json
+# Usage:
+#   compare.csh <filename> <diff-command>
+#
+# Examples:
+#   compare.csh build/pointwise_design_top.json cmp
+#   compare.csh build/pointwise_design_top.json diff
+#   compare.csh build/pointwise_design_top.json topo
+
 
 # Find script home directory (https://stackoverflow.com/questions/2563300/
 #   how-can-i-find-the-location-of-the-tcsh-shell-script-im-executing)
@@ -16,7 +23,20 @@ set newfile = $1
 set goldfile = test/gold/$1:t
 # E.g. goldfile = 'test/gold/pointwise_design_top.json'
 
+echo "GOLD-COMPARE '$newfile' to '$goldfile'"
 
-echo "COMPARE '$newfile' to '$goldfile'"
-echo "  It's not plugged in yet."
+# Check for existence of gold standard
+if (! -e $goldfile) then
+  echo "Cannot find gold standard '$goldfile'"
+  echo ""
+  exit
+
+set compare = $3
 echo ""
+set echo
+$compare $goldfile $newfile\
+  && echo "GOLD-COMPARE '$newfile' to '$goldfile' PASSED"\\
+  || echo "GOLD-COMPARE '$newfile' to '$goldfile' FAILED"
+unset echo
+echo ""
+
