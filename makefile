@@ -77,10 +77,10 @@ end_testing:
 # clean:
 #	rm test/*.compare
 
-test/%_design_top.json.compare: build/%_design_top.json test/gold/%_design_top.json
+test/%_design_top.json.compare: build/%_design_top.json
+	@echo; echo Making $@ because of $?
 	ls -l $@
-	test/compare.csh $?
-	touch $@
+	test/compare.csh $? |& tee -a test/compare_summary.txt; touch $@
 	ls -l $@
 
 
