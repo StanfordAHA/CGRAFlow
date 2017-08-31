@@ -8,13 +8,19 @@
 #   compare.csh build/pointwise_design_top.json diff
 #   compare.csh build/pointwise_design_top.json topo
 
+echo "GOLD-COMPARE '$newfile' to '$goldfile'"
 
-# Find script home directory (https://stackoverflow.com/questions/2563300/
-#   how-can-i-find-the-location-of-the-tcsh-shell-script-im-executing)
-scriptdir=`/bin/dirname $0`       # may be relative path
-scriptdir=`cd $scriptdir && pwd`  # ensure absolute path
+# Find script home directory
+set scriptpath = "$0"
+set scriptpath = $scriptpath:h
+if ("$scriptpath" == "$0") then
+  set scriptpath = `pwd`
+  set scriptdir = `cd $scriptpath:h; pwd`
+else
+  set scriptdir = `cd $scriptpath/..; pwd`
+endif
 
-# Go to cgraflow root dir (one level above test dir)
+# Everything is relative to CGRAFlow root, which should be one level up from here
 cd $scriptdir/..
 
 set newfile = $1
@@ -22,8 +28,6 @@ set newfile = $1
 
 set goldfile = test/gold/$1:t
 # E.g. goldfile = 'test/gold/pointwise_design_top.json'
-
-echo "GOLD-COMPARE '$newfile' to '$goldfile'"
 
 # Check for existence of gold standard
 if (! -e $goldfile) then
