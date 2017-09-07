@@ -194,8 +194,8 @@ build/%_pnr_bitstream: build/%_mapped.json build/cgra_info_$(CGRA_SIZE).txt
 		-cgra $(filter %.txt, $?)
 
 	CGRAGenerator/testdir/graphcompare/bscompare.csh \
-	  build/$*_annotated test \
-	  test/gold/$*_annotated test \
+	  build/$*_annotated \
+	  test/gold/$*_annotated \
 	  2>&1 | tee -a test/compare_summary.txt
 
 
