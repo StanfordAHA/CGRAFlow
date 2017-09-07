@@ -1,0 +1,96 @@
+{"top":"global.DesignTop",
+"namespaces":{
+  "global":{
+    "modules":{
+      "DesignTop":{
+        "type":["Record",{
+          "out":["Array",16,"Bit"],
+          "in":["Array",1,["Array",16,"BitIn"]]
+        }],
+        "instances":{
+          "Const_U10":{
+            "genref":"cgralib.Const",
+            "genargs":{"width":16},
+            "configargs":{"value":7}
+          },
+          "Const_U12":{
+            "genref":"cgralib.Const",
+            "genargs":{"width":16},
+            "configargs":{"value":0}
+          },
+          "Const_U14":{
+            "genref":"cgralib.Const",
+            "genargs":{"width":16},
+            "configargs":{"value":7}
+          },
+          "PE_U2":{
+            "genref":"cgralib.PE",
+            "genargs":{"numin":2, "width":16},
+            "configargs":{"op":"add"}
+          },
+          "PE_U4":{
+            "genref":"cgralib.PE",
+            "genargs":{"numin":2, "width":16},
+            "configargs":{"op":"add"}
+          },
+          "PE_U6":{
+            "genref":"cgralib.PE",
+            "genargs":{"numin":2, "width":16},
+            "configargs":{"op":"mul"}
+          },
+          "PE_U8":{
+            "genref":"cgralib.PE",
+            "genargs":{"numin":2, "width":16},
+            "configargs":{"op":"mul"}
+          },
+          "io16_U1":{
+            "genref":"cgralib.IO",
+            "genargs":{"width":16},
+            "configargs":{"mode":"o"}
+          },
+          "io16in_U0":{
+            "genref":"cgralib.IO",
+            "genargs":{"width":16},
+            "configargs":{"mode":"i"}
+          },
+          "lb_p4_clamped_stencil_update_stream$mem_1":{
+            "genref":"cgralib.Mem",
+            "genargs":{"depth":10, "width":16},
+            "configargs":{"mode":"linebuffer"}
+          }
+        },
+        "connections":[
+          ["PE_U8.data.in.1","Const_U10.out"],
+          ["PE_U8.data.in.0","lb_p4_clamped_stencil_update_stream$mem_1.rdata"],
+          ["PE_U6.data.in.1","Const_U14.out"],
+          ["PE_U6.data.in.0","io16in_U0.out"],
+          ["PE_U4.data.in.1","PE_U8.data.out"],
+          ["PE_U4.data.in.0","Const_U12.out"],
+          ["PE_U2.data.in.1","PE_U6.data.out"],
+          ["PE_U2.data.in.0","PE_U4.data.out"],
+          ["PE_U2.data.out","io16_U1.in"],
+          ["lb_p4_clamped_stencil_update_stream$mem_1.wdata","io16in_U0.out"]
+        ]
+      },
+      "Linebuffer_U0":{
+        "type":["Record",{
+          "out":["Array",2,["Array",1,["Array",16,"Bit"]]],
+          "in":["Array",16,"BitIn"]
+        }],
+        "instances":{
+          "mem_1":{
+            "genref":"cgralib.Mem",
+            "genargs":{"depth":10, "width":16},
+            "configargs":{"mode":"linebuffer"}
+          }
+        },
+        "connections":[
+          ["self.out.1.0","self.in"],
+          ["self.out.0.0","mem_1.rdata"],
+          ["self.in","mem_1.wdata"]
+        ]
+      }
+    }
+  }
+}
+}
