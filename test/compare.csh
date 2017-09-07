@@ -20,18 +20,21 @@ set diff = $2
 
 # Find script home directory
 set scriptpath = "$0"
-set scriptpath = $scriptpath:h
-if ("$scriptpath" == "$0") then
-  set scriptpath = `pwd`
-  set scriptdir = `cd $scriptpath:h; pwd`
+set scriptdir = $scriptpath:h
+if ("$scriptdir" == "$0") then
+  # E.g. $0 = "script.csh' => scriptdir = "script.csh"
+  set scriptdir = `pwd`
 else
-  set scriptdir = `cd $scriptpath/..; pwd`
+  # E.g. $0 = /a/b/script.csh or "../script.csh" or "./script.csh"
+  # and scriptdir = "a/b" or ".." or "."
+  set scriptdir = `cd $scriptdir; pwd`
 endif
 
 # Everything is relative to CGRAFlow root, which should be one level up from here
 cd $scriptdir/..
 
 pwd
+
 ls test/gold
 
 # Check for existence of gold standard

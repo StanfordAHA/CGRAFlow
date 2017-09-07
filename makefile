@@ -110,6 +110,7 @@ build/%_design_top.json: %_input_image Halide_CoreIR/apps/coreir_examples/%
 	od -t u1 build/$*_input.raw      | head
 	od -t u1 build/$*_halide_out.raw | head
 
+	pwd
 	ls -la build
 
 	cat build/$*_design_top.json $(OUTPUT)
