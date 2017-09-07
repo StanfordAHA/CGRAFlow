@@ -31,6 +31,9 @@ endif
 # Everything is relative to CGRAFlow root, which should be one level up from here
 cd $scriptdir/..
 
+pwd
+ls test/gold
+
 # Check for existence of gold standard
 if (! -e $goldfile) then
   echo "GOLD-COMPARE $newfile:t Cannot find gold standard '$goldfile'"
