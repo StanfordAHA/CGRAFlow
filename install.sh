@@ -84,4 +84,23 @@ Halide_CoreIR/test/scripts/install_travis.sh
 pip install -e smt-pnr/package 
 
 # need this for the new dot-compare test(s)
-pip install pygtk
+# pip install pygtk
+sudo apt-get install python-gtk2
+
+
+# VIRT=$PWD/CGRAFlowPy3Env
+# cd CGRAFlowPy3Env
+# 
+# wget http://pypi.python.org/packages/source/P/PyGTK/pygtk-2.24.0.tar.bz2
+# tar -xf pygtk-2.24.0.tar.bz2
+# cd pygtk-2.24.0
+# 
+# # export PKG_CONFIG_PATH=/home/PATH/TO/VIRT/lib/pkgconfig
+# export PKG_CONFIG_PATH=$VIRT/lib/pkgconfig
+# 
+# # ./configure --prefix=/home/PATH/TO/VIRT/
+# ./configure --prefix=$VIRT/
+# 
+# make 
+# make install
+# 
