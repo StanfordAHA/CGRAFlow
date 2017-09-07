@@ -87,6 +87,8 @@ pip install -e smt-pnr/package
 # pip install pygtk
 sudo apt-get install python-gtk2
 
+# hello?
+
 
 # VIRT=$PWD/CGRAFlowPy3Env
 # cd CGRAFlowPy3Env
