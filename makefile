@@ -141,11 +141,6 @@ build/%_mapped.json: build/%_design_top.json
 	ls -la build
 	cat build/$*_mapped.json $(OUTPUT)
 
-	CGRAGenerator/testdir/graphcompare/bscompare.csh \
-	  build/$*_annotated test \
-	  test/gold/$*_annotated test \
-	  2>&1 | tee -a test/compare_summary.txt
-
 
 build/cgra_info_4x4.txt:
 	@echo; echo Making $@ because of $?
@@ -196,6 +191,17 @@ build/%_pnr_bitstream: build/%_mapped.json build/cgra_info_$(CGRA_SIZE).txt
 		build/$*_pnr_bitstream \
 		build/$*_annotated \
 		-cgra $(filter %.txt, $?)
+
+	CGRAGenerator/testdir/graphcompare/bscompare.csh \
+	  build/$*_annotated test \
+	  test/gold/$*_annotated test \
+	  2>&1 | tee -a test/compare_summary.txt
+
+
+
+
+
+
 
 BUILD := ../../../build
 VERILATOR_TOP := CGRAGenerator/verilator/generator_z_tb
