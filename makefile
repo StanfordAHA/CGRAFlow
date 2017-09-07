@@ -113,7 +113,8 @@ build/%_design_top.json: %_input_image Halide_CoreIR/apps/coreir_examples/%
 	ls -la build
 
 	cat build/$*_design_top.json $(OUTPUT)
-	test/compare.csh $@.compare diff 2>&1 | tee -a test/compare_summary.txt
+	# test/compare.csh $@.compare diff 2>&1 | tee -a test/compare_summary.txt
+	test/compare.csh $@ diff 2>&1 | tee -a test/compare_summary.txt
 
 #	make test/$@.compare
 
@@ -138,6 +139,12 @@ build/%_mapped.json: build/%_design_top.json
 	./CGRAMapper/bin/map build/$*_design_top.json build/$*_mapped.json $(OUTPUT)
 	ls -la build
 	cat build/$*_mapped.json $(OUTPUT)
+
+	CGRAGenerator/testdir/graphcompare/bscompare.csh \
+	  build/$*_annotated test \
+	  test/gold/$*_annotated test \
+	  2>&1 | tee -a test/compare_summary.txt
+
 
 build/cgra_info_4x4.txt:
 	@echo; echo Making $@ because of $?
