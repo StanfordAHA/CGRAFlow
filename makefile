@@ -119,7 +119,7 @@ build/%_design_top.json: %_input_image Halide_CoreIR/apps/coreir_examples/%
 
 	cat build/$*_design_top.json $(OUTPUT)
 
-	echo "GOLD-COMPARE --------------------------------------------------' \
+	echo "GOLD-COMPARE --------------------------------------------------" \
 	  | tee -a test/compare_summary.txt
 	test/compare.csh $@ diff 2>&1 | tee -a test/compare_summary.txt
 
