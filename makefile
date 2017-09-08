@@ -62,7 +62,9 @@ start_testing:
 	echo GOLD-COMPARE SUMMARY > test/compare_summary.txt
 	echo BEGIN `date`        >> test/compare_summary.txt
 
-	echo DEBUG; cat test/compare_summary.txt
+	echo 'DEBUG BEGIN --------------------------------------------------'
+	cat test/compare_summary.txt
+	echo 'DEBUG END ----------------------------------------------------'
 
 end_testing:
 	cat test/compare_summary.txt
@@ -119,7 +121,9 @@ build/%_design_top.json: %_input_image Halide_CoreIR/apps/coreir_examples/%
         # test/compare.csh $@.compare diff 2>&1 | tee -a test/compare_summary.txt
         # ls -l test/gold
 	test/compare.csh $@ diff 2>&1 | tee -a test/compare_summary.txt
-	echo DEBUG; cat test/compare_summary.txt
+	echo 'DEBUG BEGIN --------------------------------------------------'
+	cat test/compare_summary.txt
+	echo 'DEBUG END ----------------------------------------------------'
 
 #	make test/$@.compare
 
@@ -144,8 +148,11 @@ build/%_mapped.json: build/%_design_top.json
 	./CGRAMapper/bin/map build/$*_design_top.json build/$*_mapped.json $(OUTPUT)
         # ls -la build
 	cat build/$*_mapped.json $(OUTPUT)
-	test/compare.csh $@ diff 2>&1 | head -n10 | tee -a test/compare_summary.txt
-	echo DEBUG; cat test/compare_summary.txt
+	echo "GOLD-COMPARE Cannot compare $*_mapped.json (yet)" | tee -a test/compare_summary.txt
+	# test/compare.csh $@ diff 2>&1 | tail -n10 | tee -a test/compare_summary.txt
+	# echo 'DEBUG BEGIN --------------------------------------------------'
+	# cat test/compare_summary.txt
+	# echo 'DEBUG END ----------------------------------------------------'
 
 
 build/cgra_info_4x4.txt:
@@ -198,16 +205,16 @@ build/%_pnr_bitstream: build/%_mapped.json build/cgra_info_$(CGRA_SIZE).txt
 		build/$*_annotated \
 		-cgra $(filter %.txt, $?)
 
-	CGRAGenerator/testdir/graphcompare/bscompare.csh \
-	  build/$*_annotated \
-	  test/gold/$*_annotated \
-	  2>&1 | tee -a test/compare_summary.txt
-	echo DEBUG; cat test/compare_summary.txt
+	# CGRAGenerator/testdir/graphcompare/bscompare.csh \
+	#   build/$*_annotated \
+	#   test/gold/$*_annotated \
+	#   2>&1 | tee -a test/compare_summary.txt
+	# echo 'DEBUG BEGIN --------------------------------------------------'
+	# cat test/compare_summary.txt
+	# echo 'DEBUG END ----------------------------------------------------'
 
-
-
-
-
+	test/compare.csh build/$*_pnr_bitstream build/$*_annotated bscompare \
+	  $(filter %.txt, $?) 2>&1 | tee -a test/compare_summary.txt
 
 
 BUILD := ../../../build
