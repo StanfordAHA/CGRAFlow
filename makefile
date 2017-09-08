@@ -148,7 +148,7 @@ build/%_mapped.json: build/%_design_top.json
 	./CGRAMapper/bin/map build/$*_design_top.json build/$*_mapped.json $(OUTPUT)
         # ls -la build
 	cat build/$*_mapped.json $(OUTPUT)
-	echo "GOLD-COMPARE Cannot compare $*_mapped.json (yet)" | tee -a test/compare_summary.txt
+	echo "GOLD-COMPARE $*_mapped.json Cannot compare mapped.json (yet)" | tee -a test/compare_summary.txt
 	# test/compare.csh $@ diff 2>&1 | tail -n10 | tee -a test/compare_summary.txt
 	# echo 'DEBUG BEGIN --------------------------------------------------'
 	# cat test/compare_summary.txt
@@ -213,7 +213,7 @@ build/%_pnr_bitstream: build/%_mapped.json build/cgra_info_$(CGRA_SIZE).txt
 	# cat test/compare_summary.txt
 	# echo 'DEBUG END ----------------------------------------------------'
 
-	test/compare.csh build/$*_pnr_bitstream build/$*_annotated bscompare \
+	test/compare.csh build/$*_annotated bscompare \
 	  $(filter %.txt, $?) 2>&1 | tee -a test/compare_summary.txt
 
 

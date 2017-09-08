@@ -42,7 +42,7 @@ if (! -e $goldfile) then
 
 else
   set cgra_info = ""
-  echo "GOLD-COMPARE $diff $goldfile $newfile"
+  # echo "GOLD-COMPARE $diff $goldfile $newfile"
   if ("$diff" == "bscompare") then
     set diff = "CGRAGenerator/testdir/graphcompare/bscompare.csh"
     set cgra_info = "$3"
