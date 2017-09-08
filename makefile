@@ -111,7 +111,7 @@ build/%_design_top.json: %_input_image Halide_CoreIR/apps/coreir_examples/%
 	od -t u1 build/$*_halide_out.raw | head
 
         # pwd
-	ls -la build
+        # ls -la build
 
 	cat build/$*_design_top.json $(OUTPUT)
         # test/compare.csh $@.compare diff 2>&1 | tee -a test/compare_summary.txt
@@ -139,8 +139,9 @@ build/%_mapped.json: build/%_design_top.json
 	@echo; echo Making $@ because of $?
 	echo "MAPPER"
 	./CGRAMapper/bin/map build/$*_design_top.json build/$*_mapped.json $(OUTPUT)
-	ls -la build
+        # ls -la build
 	cat build/$*_mapped.json $(OUTPUT)
+	test/compare.csh $@ diff 2>&1 | tee -a test/compare_summary.txt
 
 
 build/cgra_info_4x4.txt:
