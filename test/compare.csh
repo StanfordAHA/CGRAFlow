@@ -43,7 +43,7 @@ if (! -e $goldfile) then
 else
   echo $diff $goldfile $newfile
   $diff $goldfile $newfile\
-    && echo "GOLD-COMPARE $newfile:t ($diff) PASSED"\\
+    && echo "GOLD-COMPARE $newfile:t ($diff) PASSED"\
     || echo "GOLD-COMPARE $newfile:t ($diff) FAILED"
 
 endif
