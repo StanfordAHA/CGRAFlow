@@ -118,12 +118,10 @@ build/%_design_top.json: %_input_image Halide_CoreIR/apps/coreir_examples/%
         # ls -la build
 
 	cat build/$*_design_top.json $(OUTPUT)
-        # test/compare.csh $@.compare diff 2>&1 | tee -a test/compare_summary.txt
-        # ls -l test/gold
+
+	echo "GOLD-COMPARE --------------------------------------------------' \
+	  | tee -a test/compare_summary.txt
 	test/compare.csh $@ diff 2>&1 | tee -a test/compare_summary.txt
-	echo 'DEBUG BEGIN --------------------------------------------------'
-	cat test/compare_summary.txt
-	echo 'DEBUG END ----------------------------------------------------'
 
 #	make test/$@.compare
 
@@ -131,12 +129,6 @@ build/%_design_top.json: %_input_image Halide_CoreIR/apps/coreir_examples/%
 #  - xxd build/input.raw
 #  - xxd build/halide_out.png
 #  - xxd build/halide_out.raw
-
-# test/%_design_top.json.compare: build/%_design_top.json
-# 	@echo; echo Making $@ because of $?
-# 	ls -l $@
-# 	test/compare.csh $? |& tee -a test/compare_summary.txt; touch $@
-# 	ls -l $@
 
 build/%_mapped.json: build/%_design_top.json
         # Mapper uses DAG output "design_top.json" from Halide compiler
@@ -148,11 +140,9 @@ build/%_mapped.json: build/%_design_top.json
 	./CGRAMapper/bin/map build/$*_design_top.json build/$*_mapped.json $(OUTPUT)
         # ls -la build
 	cat build/$*_mapped.json $(OUTPUT)
+
 	echo "GOLD-COMPARE $*_mapped.json Cannot compare mapped.json (yet)" | tee -a test/compare_summary.txt
-	# test/compare.csh $@ diff 2>&1 | tail -n10 | tee -a test/compare_summary.txt
-	# echo 'DEBUG BEGIN --------------------------------------------------'
-	# cat test/compare_summary.txt
-	# echo 'DEBUG END ----------------------------------------------------'
+        # test/compare.csh $@ diff 2>&1 | tail -n10 | tee -a test/compare_summary.txt
 
 
 build/cgra_info_4x4.txt:
@@ -209,9 +199,6 @@ build/%_pnr_bitstream: build/%_mapped.json build/cgra_info_$(CGRA_SIZE).txt
 	#   build/$*_annotated \
 	#   test/gold/$*_annotated \
 	#   2>&1 | tee -a test/compare_summary.txt
-	# echo 'DEBUG BEGIN --------------------------------------------------'
-	# cat test/compare_summary.txt
-	# echo 'DEBUG END ----------------------------------------------------'
 
 	test/compare.csh build/$*_annotated bscompare \
 	  $(filter %.txt, $?) 2>&1 | tee -a test/compare_summary.txt

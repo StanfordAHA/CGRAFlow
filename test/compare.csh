@@ -36,6 +36,8 @@ cd $scriptdir/..
 # pwd
 # ls test/gold
 
+set diffname = $diff
+
 # Check for existence of gold standard
 if (! -e $goldfile) then
   echo "GOLD-COMPARE $newfile:t Cannot find gold standard '$goldfile'"
@@ -48,7 +50,7 @@ else
     set cgra_info = "$3"
   endif
   $diff $goldfile $newfile $cgra_info\
-    && echo "GOLD-COMPARE $newfile:t ($diff) PASSED"\
-    || echo "GOLD-COMPARE $newfile:t ($diff) FAILED"
+    && echo "GOLD-COMPARE $newfile:t ($diffname) PASSED"\
+    || echo "GOLD-COMPARE $newfile:t ($diffname) FAILED"
 
 endif
