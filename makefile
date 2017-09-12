@@ -141,8 +141,14 @@ build/%_mapped.json: build/%_design_top.json
         # ls -la build
 	cat build/$*_mapped.json $(OUTPUT)
 
-	echo "GOLD-COMPARE $*_mapped.json Cannot compare mapped.json (yet)" | tee -a test/compare_summary.txt
-        # test/compare.csh $@ diff 2>&1 | tail -n10 | tee -a test/compare_summary.txt
+# 	echo "GOLD-COMPARE $*_mapped.json Cannot compare mapped.json (yet)" | tee -a test/compare_summary.txt
+#         # test/compare.csh $@ diff 2>&1 | tail -n10 | tee -a test/compare_summary.txt
+
+        # Try both ways for awhile maybe
+	test/compare.csh build/$*_mapped.json diff \
+	  $(filter %.txt, $?) 2>&1 | tee -a test/compare_summary.txt
+	test/compare.csh build/$*_mapped.json mapcompare \
+	  $(filter %.txt, $?) 2>&1 | tee -a test/compare_summary.txt
 
 
 build/cgra_info_4x4.txt:

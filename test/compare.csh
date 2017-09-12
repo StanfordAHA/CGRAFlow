@@ -49,6 +49,9 @@ else
     set diff = "CGRAGenerator/testdir/graphcompare/bscompare.csh"
     set cgra_info = "$3"
   endif
+  if ("$diff" == "mapcompare") then
+    set diff = "CGRAGenerator/testdir/graphcompare/mapcompare.csh"
+  endif
   $diff $goldfile $newfile $cgra_info\
     && echo "GOLD-COMPARE $newfile:t ($diffname) PASSED"\
     || echo "GOLD-COMPARE $newfile:t ($diffname) FAILED"
