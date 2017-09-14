@@ -67,8 +67,8 @@ start_testing:
 #	echo 'DEBUG END ----------------------------------------------------'
 
 end_testing:
-	echo -n "GOLD-COMPARE SUMMARY " > test/compare_summary.txt
-	echo    "END `date`"           >> test/compare_summary.txt
+	echo -n "GOLD-COMPARE SUMMARY " >> test/compare_summary.txt
+	echo    "END `date`"            >> test/compare_summary.txt
 	cat test/compare_summary.txt
 	cat build/test_summary.txt
 
