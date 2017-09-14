@@ -212,7 +212,9 @@ build/%_pnr_bitstream: build/%_mapped.json build/cgra_info_$(CGRA_SIZE).txt
 	#   2>&1 | tee -a test/compare_summary.txt
 
         # Gotta hack 'it :(
-	if [ "$(CGRA_SIZE)" == "4x4" ]; then \
+	# if [ "$(CGRA_SIZE)" == "4x4" ]; then \
+	# if `test "$(CGRA_SIZE)" == "4x4"` ; then \  # What!  Really!!?
+	if `test "$(CGRA_SIZE)" = "4x4"` ; then \
 	  cp build/$*_annotated build/$*_annotated_4x4;\
 	  test/compare.csh build/$*_annotated_4x4 bscompare \
 	    $(filter %.txt, $?) 2>&1 | tee -a test/compare_summary.txt;\
