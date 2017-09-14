@@ -59,14 +59,16 @@ start_testing:
 	echo BEGIN `date` >> build/test_summary.txt
 
 	if `test -e test/compare_summary.txt`; then rm test/compare_summary.txt; fi
-	echo GOLD-COMPARE SUMMARY > test/compare_summary.txt
-	echo BEGIN `date`        >> test/compare_summary.txt
+	echo -n "GOLD-COMPARE SUMMARY " > test/compare_summary.txt
+	echo    "BEGIN `date`"         >> test/compare_summary.txt
 
-	echo 'DEBUG BEGIN --------------------------------------------------'
-	cat test/compare_summary.txt
-	echo 'DEBUG END ----------------------------------------------------'
+#	echo 'DEBUG BEGIN --------------------------------------------------'
+#	cat test/compare_summary.txt
+#	echo 'DEBUG END ----------------------------------------------------'
 
 end_testing:
+	echo -n "GOLD-COMPARE SUMMARY " > test/compare_summary.txt
+	echo    "END `date`"           >> test/compare_summary.txt
 	cat test/compare_summary.txt
 	cat build/test_summary.txt
 

@@ -1,0 +1,41 @@
+{"top":"global.DesignTop",
+"namespaces":{
+  "global":{
+    "modules":{
+      "DesignTop":{
+        "type":["Record",{
+          "out":["Array",16,"Bit"],
+          "in":["Array",1,["Array",16,"BitIn"]]
+        }],
+        "instances":{
+          "Const_U4":{
+            "genref":"cgralib.Const",
+            "genargs":{"width":16},
+            "configargs":{"value":2}
+          },
+          "PE_U2":{
+            "genref":"cgralib.PE",
+            "genargs":{"numin":2, "width":16},
+            "configargs":{"op":"mul"}
+          },
+          "io16_U1":{
+            "genref":"cgralib.IO",
+            "genargs":{"width":16},
+            "configargs":{"mode":"o"}
+          },
+          "io16in_U0":{
+            "genref":"cgralib.IO",
+            "genargs":{"width":16},
+            "configargs":{"mode":"i"}
+          }
+        },
+        "connections":[
+          ["PE_U2.data.in.1","Const_U4.out"],
+          ["PE_U2.data.in.0","io16in_U0.out"],
+          ["PE_U2.data.out","io16_U1.in"]
+        ]
+      }
+    }
+  }
+}
+}
