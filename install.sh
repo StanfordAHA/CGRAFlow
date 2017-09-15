@@ -52,14 +52,11 @@ source Halide_CoreIR/test/scripts/before_install_travis.sh
 # build coreir
 cd coreir;
 export COREIRCONFIG="g++-4.9";
-export COREIR=$PWD
-export LD_LIBRARY_PATH=$PWD/lib:$LD_LIBRARY_PATH
-make -j2 install
-make -j2 py
+make -j2 build
+sudo make -j2 install
 cd ..;
 
-# I think the script might be lost...here's a quick reset.
-#cd ${TRAVIS_BUILD_DIR};
+# LENNY TODO, add in installing the coreir python bindings
 
 pwd
 cd CGRAMapper
