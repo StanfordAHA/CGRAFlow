@@ -76,9 +76,6 @@ end_testing:
 		cp tools/gen_testimage/input.png Halide_CoreIR/apps/coreir_examples/$*/input.png;\
 	fi
 
-# clean:
-#	rm test/*.compare
-
 build/%_design_top.json: %_input_image Halide_CoreIR/apps/coreir_examples/%
 	echo "Halide FLOW"
 
