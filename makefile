@@ -139,7 +139,6 @@ build/%_mapped.json: build/%_design_top.json
 	test/compare.csh build/$*_mapped.json mapcompare \
 	  $(filter %.txt, $?) 2>&1 | tee -a test/compare_summary.txt
 
-
 build/cgra_info_4x4.txt:
 	@echo; echo Making $@ because of $?
 	@echo "CGRA generate (generates 4x4 CGRA + connection matrix for pnr)"
@@ -203,7 +202,6 @@ build/%_pnr_bitstream: build/%_mapped.json build/cgra_info_$(CGRA_SIZE).txt
 	  test/compare.csh build/$*_annotated bscompare \
 	    $(filter %.txt, $?) 2>&1 | tee -a test/compare_summary.txt;\
 	fi
-
 
 BUILD := ../../../build
 VERILATOR_TOP := CGRAGenerator/verilator/generator_z_tb
