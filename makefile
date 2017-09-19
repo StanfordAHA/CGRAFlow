@@ -62,10 +62,6 @@ start_testing:
 	echo -n "GOLD-COMPARE SUMMARY " > test/compare_summary.txt
 	echo    "BEGIN `date`"         >> test/compare_summary.txt
 
-#	echo 'DEBUG BEGIN --------------------------------------------------'
-#	cat test/compare_summary.txt
-#	echo 'DEBUG END ----------------------------------------------------'
-
 end_testing:
 	echo -n "GOLD-COMPARE SUMMARY " >> test/compare_summary.txt
 	echo    "END `date`"            >> test/compare_summary.txt
@@ -116,16 +112,11 @@ build/%_design_top.json: %_input_image Halide_CoreIR/apps/coreir_examples/%
 	od -t u1 build/$*_input.raw      | head
 	od -t u1 build/$*_halide_out.raw | head
 
-        # pwd
-        # ls -la build
-
 	cat build/$*_design_top.json $(OUTPUT)
 
 	echo "GOLD-COMPARE --------------------------------------------------" \
 	  | tee -a test/compare_summary.txt
 	test/compare.csh $@ diff 2>&1 | tee -a test/compare_summary.txt
-
-#	make test/$@.compare
 
 #  - xxd build/input.png
 #  - xxd build/input.raw
@@ -140,17 +131,13 @@ build/%_mapped.json: build/%_design_top.json
 	@echo; echo Making $@ because of $?
 	echo "MAPPER"
 	./CGRAMapper/bin/map build/$*_design_top.json build/$*_mapped.json $(OUTPUT)
-        # ls -la build
 	cat build/$*_mapped.json $(OUTPUT)
 
-# 	echo "GOLD-COMPARE $*_mapped.json Cannot compare mapped.json (yet)" | tee -a test/compare_summary.txt
-#         # test/compare.csh $@ diff 2>&1 | tail -n10 | tee -a test/compare_summary.txt
-
-        # Try both ways for awhile maybe
-
-        # Yeah, this doesn't always work (straight diff)
+        # Yeah, this doesn't always work (straight diff) (SD)
         #test/compare.csh build/$*_mapped.json diff \
         #  $(filter %.txt, $?) 2>&1 | tee -a test/compare_summary.txt
+        # UPDATE: Ross says this will work now (above).
+        # TODO in next rev: maybe do SD first, then topo compare if/when SD fails?
 
 	test/compare.csh build/$*_mapped.json mapcompare \
 	  $(filter %.txt, $?) 2>&1 | tee -a test/compare_summary.txt
@@ -206,14 +193,11 @@ build/%_pnr_bitstream: build/%_mapped.json build/cgra_info_$(CGRA_SIZE).txt
 		build/$*_annotated \
 		-cgra $(filter %.txt, $?)
 
-	# CGRAGenerator/testdir/graphcompare/bscompare.csh \
-	#   build/$*_annotated \
-	#   test/gold/$*_annotated \
-	#   2>&1 | tee -a test/compare_summary.txt
-
-        # Gotta hack 'it :(
-	# if [ "$(CGRA_SIZE)" == "4x4" ]; then \
-	# if `test "$(CGRA_SIZE)" == "4x4"` ; then \  # What!  Really!!?
+        # Compare to golden model.
+        # Note: Pointwise is run in both 4x4 and 8x8 modes, each of which
+        # will generate different intermediates but with the same names.
+        # What to do? Gotta hack it :(
+        # 
 	if `test "$(CGRA_SIZE)" = "4x4"` ; then \
 	  cp build/$*_annotated build/$*_annotated_4x4;\
 	  test/compare.csh build/$*_annotated_4x4 bscompare \
