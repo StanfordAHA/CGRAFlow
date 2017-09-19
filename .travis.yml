@@ -35,9 +35,6 @@ script:
   - make build/conv_bw.correct.txt   DELAY=130,0 
   - make end_testing
 
-  # [SR] I'm putting this here so I can see the test results without an extra mouseclick :)
-  # - if `test -e build/test_summary.txt`; then cat build/test_summary.txt; fi
-
 after_script:
   # The log file is getting very long and unwieldy.
   # What if we make a summary of the test results, to print out at the end?
