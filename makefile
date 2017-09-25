@@ -14,7 +14,7 @@ $(warning DELAY = $(DELAY))
 # 	EGREGIOUS_CONV21_HACK_SWITCH := -egregious_conv21_hack
 # endif
 
-SILENT := FALSE
+SILENT := TRUE
 ifeq ($(SILENT), TRUE)
 	OUTPUT              :=    > /dev/null
 	SILENT_FILTER_HF    :=    | egrep -i 'compiling|flattening|run|json|start|finish|success'
@@ -29,7 +29,7 @@ $(warning OUTPUT = "$(OUTPUT)")
 # Image being used
 IMAGE := default
 
-CGRA_SIZE := 4x4
+CGRA_SIZE := 8x8
 ifeq ($(CGRA_SIZE), 4x4)
 	MEM_SWITCH := -oldmem -4x4
 endif
@@ -57,6 +57,17 @@ start_testing:
 	if `test -e build/test_summary.txt`; then rm build/test_summary.txt; fi
 	echo TEST SUMMARY > build/test_summary.txt
 	echo BEGIN `date` >> build/test_summary.txt
+
+	if `test -e test/compare_summary.txt`; then rm test/compare_summary.txt; fi
+	echo -n "GOLD-COMPARE SUMMARY " > test/compare_summary.txt
+	echo    "BEGIN `date`"         >> test/compare_summary.txt
+
+end_testing:
+	echo -n "GOLD-COMPARE SUMMARY " >> test/compare_summary.txt
+	echo    "END `date`"            >> test/compare_summary.txt
+	cat test/compare_summary.txt
+	cat build/test_summary.txt
+
 
 %_input_image:
 	# copy image to halide branch if not using "default"
@@ -98,9 +109,12 @@ build/%_design_top.json: %_input_image Halide_CoreIR/apps/coreir_examples/%
 	od -t u1 build/$*_input.raw      | head
 	od -t u1 build/$*_halide_out.raw | head
 
-	ls -la build
-
 	cat build/$*_design_top.json $(OUTPUT)
+
+	echo "GOLD-COMPARE --------------------------------------------------" \
+	  | tee -a test/compare_summary.txt
+	test/compare.csh $@ diff 2>&1 | tee -a test/compare_summary.txt
+
 #  - xxd build/input.png
 #  - xxd build/input.raw
 #  - xxd build/halide_out.png
@@ -114,8 +128,16 @@ build/%_mapped.json: build/%_design_top.json
 	@echo; echo Making $@ because of $?
 	echo "MAPPER"
 	./CGRAMapper/bin/map build/$*_design_top.json build/$*_mapped.json $(OUTPUT)
-	ls -la build
 	cat build/$*_mapped.json $(OUTPUT)
+
+        # Yeah, this doesn't always work (straight diff) (SD)
+        #test/compare.csh build/$*_mapped.json diff \
+        #  $(filter %.txt, $?) 2>&1 | tee -a test/compare_summary.txt
+        # UPDATE: Ross says this will work now (above).
+        # TODO in next rev: maybe do SD first, then topo compare if/when SD fails?
+
+	test/compare.csh build/$*_mapped.json mapcompare \
+	  $(filter %.txt, $?) 2>&1 | tee -a test/compare_summary.txt
 
 build/cgra_info_4x4.txt:
 	@echo; echo Making $@ because of $?
@@ -167,6 +189,20 @@ build/%_pnr_bitstream: build/%_mapped.json build/cgra_info_$(CGRA_SIZE).txt
 		build/$*_annotated \
 		-cgra $(filter %.txt, $?)
 
+        # Compare to golden model.
+        # Note: Pointwise is run in both 4x4 and 8x8 modes, each of which
+        # will generate different intermediates but with the same names.
+        # What to do? Gotta hack it :(
+        # 
+	if `test "$(CGRA_SIZE)" = "4x4"` ; then \
+	  cp build/$*_annotated build/$*_annotated_4x4;\
+	  test/compare.csh build/$*_annotated_4x4 bscompare \
+	    $(filter %.txt, $?) 2>&1 | tee -a test/compare_summary.txt;\
+	else\
+	  test/compare.csh build/$*_annotated bscompare \
+	    $(filter %.txt, $?) 2>&1 | tee -a test/compare_summary.txt;\
+	fi
+
 BUILD := ../../../build
 VERILATOR_TOP := CGRAGenerator/verilator/generator_z_tb
 build/%_CGRA_out.raw: build/%_pnr_bitstream
@@ -193,26 +229,26 @@ build/%.correct.txt: build/%_CGRA_out.raw
         # check to see that output is correct.
 
 	@echo; echo Making $@ because of $?
-	
+
 	ls -l build/$*_*_out.raw
-	
+
 	od -t u1 build/$*_halide_out.raw | head -2
 	od -t u1 build/$*_CGRA_out.raw   | head -2
-	
+
 	echo "VISUAL COMPARE OF CGRA VS. HALIDE OUTPUT BYTES (should be null)"
 	od -t u1 -w1 -v -A none build/$*_halide_out.raw > build/$*_halide_out.od
 	od -t u1 -w1 -v -A none build/$*_CGRA_out.raw   > build/$*_CGRA_out.od
 	diff build/$*_halide_out.od build/$*_CGRA_out.od | head -50
 	diff build/$*_halide_out.od build/$*_CGRA_out.od > build/$*.diff
-	
+
 	od -t u1 build/$*_halide_out.raw | head -2
 	od -t u1 build/$*_CGRA_out.raw   | head -2
-	
+
 	echo "BYTE-BY-BYTE COMPARE OF CGRA VS. HALIDE OUTPUT IMAGES"
 	cmp build/$*_halide_out.raw build/$*_CGRA_out.raw \
 		&& echo $* test PASSED  >> build/test_summary.txt \
 		|| echo $* test FAILED  >> build/test_summary.txt
 	cmp build/$*_halide_out.raw build/$*_CGRA_out.raw
 
-	# test -s => file exists and has size > 0
+        # test -s => file exists and has size > 0
 	test ! -s build/$*.diff && touch build/$*.correct.txt

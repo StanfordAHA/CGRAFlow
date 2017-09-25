@@ -82,3 +82,7 @@ Halide_CoreIR/test/scripts/install_travis.sh
 # if there are any missing solvers, downloads from Makai's AFS
 . ./smt-pnr/util/get_smt_solvers.sh
 pip install -e smt-pnr/package 
+
+# need this for the new dot-compare test(s)
+# pip install pygtk
+sudo apt-get install python-gtk2
