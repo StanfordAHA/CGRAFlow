@@ -44,14 +44,20 @@ if (! -e $goldfile) then
 
 else
   set cgra_info = ""
-  # echo "GOLD-COMPARE $diff $goldfile $newfile"
-  if ("$diff" == "bscompare") then
-    set diff = "CGRAGenerator/testdir/graphcompare/bscompare.csh"
+
+  # if ("$diff" == "bscompare") then
+  #   set diff = "CGRAGenerator/testdir/graphcompare/bscompare.csh"
+  #   set cgra_info = "$3"
+  # endif
+  # if ("$diff" == "mapcompare") then
+  #   set diff = "CGRAGenerator/testdir/graphcompare/mapcompare.csh"
+  # endif
+
+  if ("$diff" == "graphcompare") then
+    set diff = "CGRAGenerator/testdir/graphcompare/graphcompare.csh"
     set cgra_info = "$3"
   endif
-  if ("$diff" == "mapcompare") then
-    set diff = "CGRAGenerator/testdir/graphcompare/mapcompare.csh"
-  endif
+
   $diff $goldfile $newfile $cgra_info\
     && echo "GOLD-COMPARE $newfile:t ($diffname) PASSED"\
     || echo "GOLD-COMPARE $newfile:t ($diffname) FAILED"
