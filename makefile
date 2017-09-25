@@ -113,7 +113,7 @@ build/%_design_top.json: %_input_image Halide_CoreIR/apps/coreir_examples/%
 
 	echo "GOLD-COMPARE --------------------------------------------------" \
 	  | tee -a test/compare_summary.txt
-	test/compare.csh $@ diff 2>&1 | tee -a test/compare_summary.txt
+	test/compare.csh $@ diff 2>&1 | head -n 40 | tee -a test/compare_summary.txt
 
 #  - xxd build/input.png
 #  - xxd build/input.raw
@@ -137,7 +137,7 @@ build/%_mapped.json: build/%_design_top.json
         # TODO in next rev: maybe do SD first, then topo compare if/when SD fails?
 
 	test/compare.csh build/$*_mapped.json mapcompare \
-	  $(filter %.txt, $?) 2>&1 | tee -a test/compare_summary.txt
+	  $(filter %.txt, $?) 2>&1 | head -n 40 | tee -a test/compare_summary.txt
 
 build/cgra_info_4x4.txt:
 	@echo; echo Making $@ because of $?
@@ -197,10 +197,10 @@ build/%_pnr_bitstream: build/%_mapped.json build/cgra_info_$(CGRA_SIZE).txt
 	if `test "$(CGRA_SIZE)" = "4x4"` ; then \
 	  cp build/$*_annotated build/$*_annotated_4x4;\
 	  test/compare.csh build/$*_annotated_4x4 bscompare \
-	    $(filter %.txt, $?) 2>&1 | tee -a test/compare_summary.txt;\
+	    $(filter %.txt, $?) 2>&1 | head -n 40 | tee -a test/compare_summary.txt;\
 	else\
 	  test/compare.csh build/$*_annotated bscompare \
-	    $(filter %.txt, $?) 2>&1 | tee -a test/compare_summary.txt;\
+	    $(filter %.txt, $?) 2>&1 | head -n 40 | tee -a test/compare_summary.txt;\
 	fi
 
 BUILD := ../../../build
