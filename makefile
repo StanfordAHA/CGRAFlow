@@ -114,6 +114,7 @@ build/%_design_top.json: %_input_image Halide_CoreIR/apps/coreir_examples/%
 	echo "GOLD-COMPARE --------------------------------------------------" \
 	  | tee -a test/compare_summary.txt
 	test/compare.csh $@ diff 2>&1 | head -n 40 | tee -a test/compare_summary.txt
+	test/compare.csh $@ graphcompare 2>&1 | head -n 40 | tee -a test/compare_summary.txt
 
 #  - xxd build/input.png
 #  - xxd build/input.raw
