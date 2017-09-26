@@ -136,7 +136,7 @@ build/%_mapped.json: build/%_design_top.json
         # UPDATE: Ross says this will work now (above).
         # TODO in next rev: maybe do SD first, then topo compare if/when SD fails?
 
-	test/compare.csh build/$*_mapped.json mapcompare \
+	test/compare.csh build/$*_mapped.json graphcompare \
 	  $(filter %.txt, $?) 2>&1 | head -n 40 | tee -a test/compare_summary.txt
 
 build/cgra_info_4x4.txt:
@@ -196,10 +196,10 @@ build/%_pnr_bitstream: build/%_mapped.json build/cgra_info_$(CGRA_SIZE).txt
         # 
 	if `test "$(CGRA_SIZE)" = "4x4"` ; then \
 	  cp build/$*_annotated build/$*_annotated_4x4;\
-	  test/compare.csh build/$*_annotated_4x4 bscompare \
+	  test/compare.csh build/$*_annotated_4x4 graphcompare \
 	    $(filter %.txt, $?) 2>&1 | head -n 40 | tee -a test/compare_summary.txt;\
 	else\
-	  test/compare.csh build/$*_annotated bscompare \
+	  test/compare.csh build/$*_annotated graphcompare \
 	    $(filter %.txt, $?) 2>&1 | head -n 40 | tee -a test/compare_summary.txt;\
 	fi
 
