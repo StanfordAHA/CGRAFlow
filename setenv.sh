@@ -1,4 +1,3 @@
-source CGRAFlowPy3Env/bin/activate
 export LLVM_CONFIG=`pwd`/llvm/bin/llvm-config
 export CLANG=`pwd`/llvm/bin/clang
 export PYTHONPATH=$PYTHONPATH:`pwd`/smt-switch
