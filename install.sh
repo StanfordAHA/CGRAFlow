@@ -41,6 +41,10 @@ conda config --set always_yes yes --set changeps1 no
 conda update -q conda
 conda info -a
 
+which pip
+which python
+which python3
+
 
 #pull all repos
 git clone -b ${halide_branch} -- ${halide_git} || git -C Halide_CoreIR pull
