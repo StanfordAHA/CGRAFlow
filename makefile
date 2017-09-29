@@ -174,7 +174,7 @@ build/%_pnr_bitstream: build/%_mapped.json build/cgra_info_$(CGRA_SIZE).txt
         # $(filter %.txt,  $?) => config file   e.g. "build/cgra_info_4x4.txt"
         # (Could also maybe use $(word 1, $?) and $(word 2, $?)
         # Note json file must come before config file on command line!!!
-	python smt-pnr/run_pnr.py                 \
+	smt-pnr/run_pnr.py                        \
 		$(filter %.json,$?)                   \
 		$(filter %.txt, $?)                   \
 		--bitstream build/$*_pnr_bitstream    \
@@ -194,7 +194,7 @@ build/%_pnr_bitstream: build/%_mapped.json build/cgra_info_$(CGRA_SIZE).txt
         # Note: Pointwise is run in both 4x4 and 8x8 modes, each of which
         # will generate different intermediates but with the same names.
         # What to do? Gotta hack it :(
-        #
+        # 
 	if `test "$(CGRA_SIZE)" = "4x4"` ; then \
 	  cp build/$*_annotated build/$*_annotated_4x4;\
 	  test/compare.csh build/$*_annotated_4x4 graphcompare \
