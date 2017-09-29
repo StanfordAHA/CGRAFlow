@@ -1,0 +1,25 @@
+00020016 00000004
+# data[(3, 0)] : @ tile (3, 0) connect wire 4 (in_BUS16_S1_T4) to a
+F1000016 FFFFFFFF
+FF000016 000000FF
+# data[(4, 0)] : op = output
+0105001C 00000040
+# data[(7, 6)] : @ tile (4, 0) connect wire 1 (in_BUS16_S1_T4) to out_BUS16_S3_T4
+01050024 000000C0
+# data[(7, 6)] : @ tile (5, 0) connect wire 3 (pe_out_res) to out_BUS16_S3_T4
+00020024 00000004
+# data[(3, 0)] : @ tile (5, 0) connect wire 4 (in_BUS16_S1_T4) to a
+F1000024 00000002
+# data[(15, 0)] : init `b` reg with const `2`
+FF000024 0000800B
+# data[(4, 0)] : op = mul
+# data[(13, 13)] : read from reg `b`
+# data[(15, 15)] : read from wire `a`
+0105002A 00000040
+# data[(7, 6)] : @ tile (6, 0) connect wire 1 (in_BUS16_S1_T4) to out_BUS16_S3_T4
+01050032 000000C0
+# data[(7, 6)] : @ tile (7, 0) connect wire 3 (pe_out_res) to out_BUS16_S3_T4
+F0000032 FFFFFFFF
+F1000032 FFFFFFFF
+FF000032 000000F0
+# data[(4, 0)] : op = input

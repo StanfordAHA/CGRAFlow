@@ -1,0 +1,255 @@
+{
+  "namespaces": {
+    "global": {
+      "modules": {
+        "DesignTop": {
+          "connections": [
+            [
+              "self.in.0",
+              "mul_3527.in0"
+            ],
+            [
+              "self.in.0",
+              "lb_p4_clamped_stencil_update_stream$mem_1.wdata"
+            ],
+            [
+              "self.out",
+              "add_350_353.out"
+            ],
+            [
+              "mul_3527.out",
+              "add_350_353.in1"
+            ],
+            [
+              "mul_3527.in1",
+              "const7.out"
+            ],
+            [
+              "mul_3475.out",
+              "add_345_348.in1"
+            ],
+            [
+              "mul_3475.in1",
+              "const5.out"
+            ],
+            [
+              "mul_3475.in0",
+              "lb_p4_clamped_stencil_update_stream$mem_1.rdata"
+            ],
+            [
+              "mul_3423.out",
+              "add_340_343.in1"
+            ],
+            [
+              "mul_3423.in1",
+              "const3.out"
+            ],
+            [
+              "mul_3423.in0",
+              "lb_p4_clamped_stencil_update_stream$mem_2.rdata"
+            ],
+            [
+              "lb_p4_clamped_stencil_update_stream$mem_2.wdata",
+              "lb_p4_clamped_stencil_update_stream$mem_1.rdata"
+            ],
+            [
+              "const0.out",
+              "add_340_343.in0"
+            ],
+            [
+              "add_350_353.in0",
+              "add_345_348.out"
+            ],
+            [
+              "add_345_348.in0",
+              "add_340_343.out"
+            ]
+          ],
+          "instances": {
+            "add_340_343": {
+              "genargs": {
+                "width": 16
+              },
+              "genref": "coreir.add"
+            },
+            "add_345_348": {
+              "genargs": {
+                "width": 16
+              },
+              "genref": "coreir.add"
+            },
+            "add_350_353": {
+              "genargs": {
+                "width": 16
+              },
+              "genref": "coreir.add"
+            },
+            "const0": {
+              "configargs": {
+                "value": 0
+              },
+              "genargs": {
+                "width": 16
+              },
+              "genref": "coreir.const"
+            },
+            "const3": {
+              "configargs": {
+                "value": 3
+              },
+              "genargs": {
+                "width": 16
+              },
+              "genref": "coreir.const"
+            },
+            "const5": {
+              "configargs": {
+                "value": 5
+              },
+              "genargs": {
+                "width": 16
+              },
+              "genref": "coreir.const"
+            },
+            "const7": {
+              "configargs": {
+                "value": 7
+              },
+              "genargs": {
+                "width": 16
+              },
+              "genref": "coreir.const"
+            },
+            "lb_p4_clamped_stencil_update_stream$mem_1": {
+              "configargs": {
+                "mode": "linebuffer"
+              },
+              "genargs": {
+                "depth": 10,
+                "width": 16
+              },
+              "genref": "cgralib.Mem"
+            },
+            "lb_p4_clamped_stencil_update_stream$mem_2": {
+              "configargs": {
+                "mode": "linebuffer"
+              },
+              "genargs": {
+                "depth": 10,
+                "width": 16
+              },
+              "genref": "cgralib.Mem"
+            },
+            "mul_3423": {
+              "genargs": {
+                "width": 16
+              },
+              "genref": "coreir.mul"
+            },
+            "mul_3475": {
+              "genargs": {
+                "width": 16
+              },
+              "genref": "coreir.mul"
+            },
+            "mul_3527": {
+              "genargs": {
+                "width": 16
+              },
+              "genref": "coreir.mul"
+            }
+          },
+          "type": [
+            "Record",
+            {
+              "in": [
+                "Array",
+                1,
+                [
+                  "Array",
+                  16,
+                  "BitIn"
+                ]
+              ],
+              "out": [
+                "Array",
+                16,
+                "Bit"
+              ]
+            }
+          ]
+        },
+        "Linebuffer_U0": {
+          "connections": [
+            [
+              "self.out.2.0",
+              "self.in"
+            ],
+            [
+              "self.out.1.0",
+              "mem_1.rdata"
+            ],
+            [
+              "self.out.0.0",
+              "mem_2.rdata"
+            ],
+            [
+              "self.in",
+              "mem_1.wdata"
+            ],
+            [
+              "mem_2.wdata",
+              "mem_1.rdata"
+            ]
+          ],
+          "instances": {
+            "mem_1": {
+              "configargs": {
+                "mode": "linebuffer"
+              },
+              "genargs": {
+                "depth": 10,
+                "width": 16
+              },
+              "genref": "cgralib.Mem"
+            },
+            "mem_2": {
+              "configargs": {
+                "mode": "linebuffer"
+              },
+              "genargs": {
+                "depth": 10,
+                "width": 16
+              },
+              "genref": "cgralib.Mem"
+            }
+          },
+          "type": [
+            "Record",
+            {
+              "in": [
+                "Array",
+                16,
+                "BitIn"
+              ],
+              "out": [
+                "Array",
+                3,
+                [
+                  "Array",
+                  1,
+                  [
+                    "Array",
+                    16,
+                    "Bit"
+                  ]
+                ]
+              ]
+            }
+          ]
+        }
+      }
+    }
+  },
+  "top": "global.DesignTop"
+}

@@ -1,0 +1,178 @@
+{
+  "namespaces": {
+    "global": {
+      "modules": {
+        "DesignTop": {
+          "connections": [
+            [
+              "self.in.0",
+              "mul_313_314.in0"
+            ],
+            [
+              "self.in.0",
+              "lb_p4_clamped_stencil_update_stream$reg_0_1.in"
+            ],
+            [
+              "self.out",
+              "add_311_315.out"
+            ],
+            [
+              "mul_313_314.out",
+              "add_311_315.in1"
+            ],
+            [
+              "mul_313_314.in1",
+              "const_314.out"
+            ],
+            [
+              "mul_307_308.out",
+              "add_305_309.in1"
+            ],
+            [
+              "mul_307_308.in1",
+              "const_308.out"
+            ],
+            [
+              "mul_307_308.in0",
+              "lb_p4_clamped_stencil_update_stream$reg_0_1.out"
+            ],
+            [
+              "const_304.out",
+              "add_305_309.in0"
+            ],
+            [
+              "add_311_315.in0",
+              "add_305_309.out"
+            ]
+          ],
+          "instances": {
+            "add_305_309": {
+              "genargs": {
+                "width": 16
+              },
+              "genref": "coreir.add"
+            },
+            "add_311_315": {
+              "genargs": {
+                "width": 16
+              },
+              "genref": "coreir.add"
+            },
+            "const_304": {
+              "configargs": {
+                "value": 0
+              },
+              "genargs": {
+                "width": 16
+              },
+              "genref": "coreir.const"
+            },
+            "const_308": {
+              "configargs": {
+                "value": 5
+              },
+              "genargs": {
+                "width": 16
+              },
+              "genref": "coreir.const"
+            },
+            "const_314": {
+              "configargs": {
+                "value": 5
+              },
+              "genargs": {
+                "width": 16
+              },
+              "genref": "coreir.const"
+            },
+            "lb_p4_clamped_stencil_update_stream$reg_0_1": {
+              "genargs": {
+                "width": 16
+              },
+              "genref": "cgralib.Reg"
+            },
+            "mul_307_308": {
+              "genargs": {
+                "width": 16
+              },
+              "genref": "coreir.mul"
+            },
+            "mul_313_314": {
+              "genargs": {
+                "width": 16
+              },
+              "genref": "coreir.mul"
+            }
+          },
+          "type": [
+            "Record",
+            {
+              "in": [
+                "Array",
+                1,
+                [
+                  "Array",
+                  16,
+                  "BitIn"
+                ]
+              ],
+              "out": [
+                "Array",
+                16,
+                "Bit"
+              ]
+            }
+          ]
+        },
+        "Linebuffer_U0": {
+          "connections": [
+            [
+              "self.out.0.1",
+              "self.in"
+            ],
+            [
+              "self.out.0.0",
+              "reg_0_1.out"
+            ],
+            [
+              "self.in",
+              "reg_0_1.in"
+            ]
+          ],
+          "instances": {
+            "reg_0_1": {
+              "genargs": {
+                "width": 16
+              },
+              "genref": "cgralib.Reg"
+            }
+          },
+          "type": [
+            "Record",
+            {
+              "in": [
+                "Array",
+                16,
+                "BitIn"
+              ],
+              "out": [
+                "Array",
+                1,
+                [
+                  "Array",
+                  2,
+                  [
+                    "Array",
+                    16,
+                    "Bit"
+                  ]
+                ]
+              ]
+            }
+          ]
+        }
+      }
+    }
+  },
+  "top": "global.DesignTop"
+}
