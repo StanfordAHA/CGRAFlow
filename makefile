@@ -151,6 +151,7 @@ build/cgra_info_8x8.txt:
 	@echo "CGRA generate (generates 8x8 CGRA + connection matrix for pnr)"
 	cd CGRAGenerator; export CGRA_GEN_USE_MEM=1; ./bin/generate.csh $(RUN_SILENT_RUN_DEEP) || exit -1
 	cp CGRAGenerator/hardware/generator_z/top/cgra_info.txt build/cgra_info_8x8.txt
+	CGRAGenerator/bin/cgra_info_analyzer.csh build/cgra_info_8x8.txt
 
 # build/%_pnr_bitstream: build/%_mapped.json build/cgra_info_4x4.txt
 build/%_pnr_bitstream: build/%_mapped.json build/cgra_info_$(CGRA_SIZE).txt
