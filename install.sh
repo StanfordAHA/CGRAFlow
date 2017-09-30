@@ -77,7 +77,7 @@ git clone -b ${smt_branch} -- ${smt_git} || git -C smt-switch pull
 
 # What if we do this FIRST?
 . ./smt-pnr/util/get_smt_solvers.sh
-pip install -e smt-pnr/package 
+# pip install -e smt-pnr/package 
 
 
 
