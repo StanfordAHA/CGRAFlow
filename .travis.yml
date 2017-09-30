@@ -1,5 +1,4 @@
 language: c
-python: 3.6
 dist: trusty
 sudo: required
 
@@ -16,6 +15,10 @@ compiler:
   - gcc
 
 before_install:
+  - sudo tar xjf python-3.6.tar.bz2 --directory /
+  - source ~/virtualenv/python3.6/bin/activate
+  - python --version
+  - pip --version
   - ./install.sh
   - source setenv.sh
 
