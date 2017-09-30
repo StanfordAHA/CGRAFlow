@@ -56,10 +56,16 @@ export BUILD_SYSTEM=MAKE
 export CXX_=g++-4.9
 export CC_=gcc-4.9
 
+python --version
+
 sudo pip install -U pip setuptools  # Install latest pip and setuptools
-sudo pip install virtualenv
-virtualenv -p /usr/bin/python3 CGRAFlowPy3Env
+# sudo pip install virtualenv
+# virtualenv -p /usr/bin/python3 CGRAFlowPy3Env
+
+python3 -m venv CGRAFlowPy3Env
+
 source CGRAFlowPy3Env/bin/activate
+python --version
 
 #pull all repos
 git clone -b ${halide_branch} -- ${halide_git} || git -C Halide_CoreIR pull
