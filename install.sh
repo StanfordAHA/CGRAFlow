@@ -46,6 +46,12 @@ git clone -b ${cgra_branch} -- ${cgra_git} || git -C CGRAGenerator pull
 git clone -b ${pnr_branch} -- ${pnr_git} || git -C smt-pnr pull
 git clone -b ${smt_branch} -- ${smt_git} || git -C smt-switch pull
 
+# What if we do this FIRST?
+. ./smt-pnr/util/get_smt_solvers.sh
+pip install -e smt-pnr/package 
+
+
+
 # setup halide env vars
 source Halide_CoreIR/test/scripts/before_install_travis.sh
 
@@ -80,8 +86,8 @@ Halide_CoreIR/test/scripts/install_travis.sh
 # run script that installs solvers and adds necessary environment variables
 # if all the solvers are already cached it doesn't need to download
 # if there are any missing solvers, downloads from Makai's AFS
-. ./smt-pnr/util/get_smt_solvers.sh
-pip install -e smt-pnr/package 
+# . ./smt-pnr/util/get_smt_solvers.sh
+# pip install -e smt-pnr/package 
 
 # need this for the new dot-compare test(s)
 # pip install pygtk
