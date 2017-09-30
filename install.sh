@@ -59,10 +59,10 @@ export CC_=gcc-4.9
 python --version
 
 sudo pip install -U pip setuptools  # Install latest pip and setuptools
-sudo pip install virtualenv
-virtualenv -p /usr/bin/python3 CGRAFlowPy3Env
+# sudo pip install virtualenv
+# virtualenv -p /usr/bin/python3 CGRAFlowPy3Env
 
-# python3 -m venv CGRAFlowPy3Env
+python3 -m venv CGRAFlowPy3Env
 
 source CGRAFlowPy3Env/bin/activate
 python --version
