@@ -24,10 +24,10 @@ swig2.0 libcln-dev imagemagick python-virtualenv libxml2-dev libxslt-dev
 # python3-dev
 
 python --version
-sudo apt-get update
-sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.5 1
-sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.6 2
-python --version
+# sudo apt-get update
+# sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.5 1
+# sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.6 2
+# python --version
 
 
 
