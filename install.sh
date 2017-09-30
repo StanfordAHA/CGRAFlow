@@ -6,19 +6,23 @@ sudo apt-get update
 sudo apt-get install g++-4.9
 sudo apt-get install gcc-4.9
 
-python --version
 
 
-sudo apt-get install verilator luajit build-essential clang libedit-dev libpng-dev csh libgmp3-dev git cmake zlib1g zlib1g-dev graphviz-dev python3 swig2.0 libcln-dev imagemagick python-virtualenv libxml2-dev libxslt-dev python3-dev
 
 python --version
-
-
-
 sudo apt-get update
 sudo add-apt-repository ppa:jonathonf/python-3.6
 sudo apt-get update
 sudo apt-get install python3.6
+python --version
+
+# sudo apt-get install verilator luajit build-essential clang libedit-dev libpng-dev csh libgmp3-dev git cmake zlib1g zlib1g-dev graphviz-dev python3 swig2.0 libcln-dev imagemagick python-virtualenv libxml2-dev libxslt-dev python3-dev
+sudo apt-get install verilator luajit build-essential clang libedit-dev \
+libpng-dev csh libgmp3-dev git cmake zlib1g zlib1g-dev graphviz-dev \
+swig2.0 libcln-dev imagemagick python-virtualenv libxml2-dev libxslt-dev 
+# python3 
+# python3-dev
+
 python --version
 
 
