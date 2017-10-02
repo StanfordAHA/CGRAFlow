@@ -58,14 +58,24 @@ start_testing:
 	echo TEST SUMMARY > build/test_summary.txt
 	echo BEGIN `date` >> build/test_summary.txt
 
+ifeq ($(GOLD), ignore)
+	echo "Skipping gold test because GOLD=ignore..."
+else
 	if `test -e test/compare_summary.txt`; then rm test/compare_summary.txt; fi
 	echo -n "GOLD-COMPARE SUMMARY " > test/compare_summary.txt
 	echo    "BEGIN `date`"         >> test/compare_summary.txt
+endif
+
+
 
 end_testing:
+ifeq ($(GOLD), ignore)
+	echo "Skipping gold test because GOLD=ignore..."
+else
 	echo -n "GOLD-COMPARE SUMMARY " >> test/compare_summary.txt
 	echo    "END `date`"            >> test/compare_summary.txt
 	cat test/compare_summary.txt
+endif
 	cat build/test_summary.txt
 
 
@@ -111,10 +121,14 @@ build/%_design_top.json: %_input_image Halide_CoreIR/apps/coreir_examples/%
 
 	cat build/$*_design_top.json $(OUTPUT)
 
+ifeq ($(GOLD), ignore)
+	echo "Skipping gold test because GOLD=ignore..."
+else
 	echo "GOLD-COMPARE --------------------------------------------------" \
 	  | tee -a test/compare_summary.txt
 	test/compare.csh $@ diff 2>&1 | head -n 40 | tee -a test/compare_summary.txt
 	test/compare.csh $@ graphcompare 2>&1 | head -n 40 | tee -a test/compare_summary.txt
+endif
 
 #  - xxd build/input.png
 #  - xxd build/input.raw
@@ -137,8 +151,12 @@ build/%_mapped.json: build/%_design_top.json
         # UPDATE: Ross says this will work now (above).
         # TODO in next rev: maybe do SD first, then topo compare if/when SD fails?
 
+ifeq ($(GOLD), ignore)
+	echo "Skipping gold test because GOLD=ignore..."
+else
 	test/compare.csh build/$*_mapped.json graphcompare \
 	  $(filter %.txt, $?) 2>&1 | head -n 40 | tee -a test/compare_summary.txt
+endif
 
 build/cgra_info_4x4.txt:
 	@echo; echo Making $@ because of $?
@@ -191,6 +209,9 @@ build/%_pnr_bitstream: build/%_mapped.json build/cgra_info_$(CGRA_SIZE).txt
 		build/$*_annotated \
 		-cgra $(filter %.txt, $?)
 
+ifeq ($(GOLD), ignore)
+	echo "Skipping gold test because GOLD=ignore..."
+else
         # Compare to golden model.
         # Note: Pointwise is run in both 4x4 and 8x8 modes, each of which
         # will generate different intermediates but with the same names.
@@ -204,6 +225,7 @@ build/%_pnr_bitstream: build/%_mapped.json build/cgra_info_$(CGRA_SIZE).txt
 	  test/compare.csh build/$*_annotated graphcompare \
 	    $(filter %.txt, $?) 2>&1 | head -n 40 | tee -a test/compare_summary.txt;\
 	fi
+endif
 
 BUILD := ../../../build
 VERILATOR_TOP := CGRAGenerator/verilator/generator_z_tb
