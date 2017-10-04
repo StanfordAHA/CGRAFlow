@@ -27,7 +27,7 @@ script:
   # For verbose output add "SILENT=FALSE" to command line(s) below
   - make start_testing
   - make build/cascade_mapped.json
-  - make build/pointwise.correct.txt DELAY=1,1
+  - make build/pointwise.correct.txt DELAY=1,1 GOLD=ignore
   - make build/conv_1_2.correct.txt  DELAY=2,1
   - make build/conv_2_1.correct.txt  DELAY=11,1
   - make build/conv_3_1.correct.txt  DELAY=21,1
