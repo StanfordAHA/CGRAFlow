@@ -36,7 +36,8 @@ endif
 
 MEM_SWITCH := -oldmem  # Don't really need this...riiight?
 ifeq ($(CGRA_SIZE), 8x8)
-	MEM_SWITCH := -newmem -8x8
+#	MEM_SWITCH := -newmem -8x8
+	MEM_SWITCH := -newmem
 endif
 
 $(warning CGRA_SIZE = $(CGRA_SIZE))
@@ -59,7 +60,7 @@ start_testing:
 	echo BEGIN `date` >> build/test_summary.txt
 
 ifeq ($(GOLD), ignore)
-	echo "Skipping gold test because GOLD=ignore..."
+	@echo "Skipping gold test because GOLD=ignore..."
 else
 	if `test -e test/compare_summary.txt`; then rm test/compare_summary.txt; fi
 	echo -n "GOLD-COMPARE SUMMARY " > test/compare_summary.txt
@@ -70,7 +71,7 @@ endif
 
 end_testing:
 ifeq ($(GOLD), ignore)
-	echo "Skipping gold test because GOLD=ignore..."
+	@echo "Skipping gold test because GOLD=ignore..."
 else
 	echo -n "GOLD-COMPARE SUMMARY " >> test/compare_summary.txt
 	echo    "END `date`"            >> test/compare_summary.txt
@@ -214,7 +215,7 @@ build/%_pnr_bitstream: build/%_mapped.json build/cgra_info_$(CGRA_SIZE).txt
 		-cgra $(filter %.txt, $?)
 
 ifeq ($(GOLD), ignore)
-	echo "Skipping gold test because GOLD=ignore..."
+	@echo "Skipping gold test because GOLD=ignore..."
 else
         # Compare to golden model.
         # Note: Pointwise is run in both 4x4 and 8x8 modes, each of which
