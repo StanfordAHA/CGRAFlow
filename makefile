@@ -207,7 +207,9 @@ build/%_pnr_bitstream: build/%_mapped.json build/cgra_info_$(CGRA_SIZE).txt
         # hackdiff compares PNR bitstream intent (encoded as annotations to the bitstream)
         # versus a separately-decoded version of the bitstream, to make sure they match
 	@echo; echo Checking $*_annotated against decoded $*_pnr_bitstream...
+	echo foo
 	@echo bitstream/decoder/hackdiff.csh $*_pnr_bitstream $*_annotated
+	echo bar
 	@CGRAGenerator/bitstream/decoder/hackdiff.csh $(QVSWITCH) \
 		build/$*_pnr_bitstream \
 		build/$*_annotated \
@@ -240,9 +242,10 @@ build/%_CGRA_out.raw: build/%_pnr_bitstream
         # OUT: CGRA_out.raw  (Output image)
 
 	@echo; echo Making $@ because of $?
-	echo "CGRA program and run (uses output of pnr)"
+	@echo "CGRA program and run (run.csh, uses output of pnr)"
+	@echo "run.csh -config $*_pnr_bitstream"
 
-	cd $(VERILATOR_TOP);    \
+	@cd $(VERILATOR_TOP);    \
 	build=../../../build;   \
 	./run.csh top_tb.cpp -hackmem           \
 		$(QVSWITCH)              \
