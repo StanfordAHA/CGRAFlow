@@ -106,7 +106,7 @@ build/%_design_top.json: %_input_image Halide_CoreIR/apps/coreir_examples/%
 	cp Halide_CoreIR/apps/coreir_examples/$*/out.png         build/$*_halide_out.png
 	cd ..
 
-	ls -la build
+	if [ $(SILENT) != "TRUE" ]; then ls -la build; fi
 
 	echo "CONVERT PNG IMAGES TO RAW for visual inspection"
         # Could not get "stream" command to work, so using my (steveri) hacky convert script instead...
