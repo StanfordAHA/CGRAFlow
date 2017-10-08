@@ -88,7 +88,7 @@ endif
 	fi
 
 build/%_design_top.json: %_input_image Halide_CoreIR/apps/coreir_examples/%
-	echo "Halide FLOW"
+	@echo "Halide FLOW"
 
         # Halide files needed are already in the repo
         # This is where Halide actually compiles our app and runs
@@ -107,25 +107,25 @@ build/%_design_top.json: %_input_image Halide_CoreIR/apps/coreir_examples/%
 	cp Halide_CoreIR/apps/coreir_examples/$*/out.png         build/$*_halide_out.png
 	cd ..
 
-	if [ $(SILENT) != "TRUE" ]; then ls -la build; fi
+	@if [ $(SILENT) != "TRUE" ]; then ls -la build; fi
 
-	echo "CONVERT PNG IMAGES TO RAW for visual inspection"
+	@echo "CONVERT PNG IMAGES TO RAW for visual inspection"
         # Could not get "stream" command to work, so using my (steveri) hacky convert script instead...
         #cd ${TRAVIS_BUILD_DIR}
 
-	$(CONVERT) build/$*_input.png      build/$*_input.raw
-	$(CONVERT) build/$*_halide_out.png build/$*_halide_out.raw
+	@$(CONVERT) build/$*_input.png      build/$*_input.raw
+	@$(CONVERT) build/$*_halide_out.png build/$*_halide_out.raw
 
-	echo "VISUALLY CONFIRM APP IN/OUT"
+	@echo "VISUALLY CONFIRM APP IN/OUT"
 	od -t u1 build/$*_input.raw      | head
 	od -t u1 build/$*_halide_out.raw | head
 
-	cat build/$*_design_top.json $(OUTPUT)
+	@cat build/$*_design_top.json $(OUTPUT)
 
 ifeq ($(GOLD), ignore)
-	echo "Skipping gold test because GOLD=ignore..."
+	@echo "Skipping gold test because GOLD=ignore..."
 else
-	echo "GOLD-COMPARE --------------------------------------------------" \
+	@echo "GOLD-COMPARE --------------------------------------------------" \
 	  | tee -a test/compare_summary.txt
 	test/compare.csh $@ diff 2>&1 | head -n 40 | tee -a test/compare_summary.txt
 	test/compare.csh $@ graphcompare 2>&1 | head -n 40 | tee -a test/compare_summary.txt
@@ -142,7 +142,7 @@ build/%_mapped.json: build/%_design_top.json
         #
 
 	@echo; echo Making $@ because of $?
-	echo "MAPPER"
+	@echo "MAPPER"
 	./CGRAMapper/bin/mapper build/$*_design_top.json build/$*_mapped.json $(OUTPUT)
 	cat build/$*_mapped.json $(OUTPUT)
 
@@ -153,7 +153,7 @@ build/%_mapped.json: build/%_design_top.json
         # TODO in next rev: maybe do SD first, then topo compare if/when SD fails?
 
 ifeq ($(GOLD), ignore)
-	echo "Skipping gold test because GOLD=ignore..."
+	@echo "Skipping gold test because GOLD=ignore..."
 else
 	test/compare.csh build/$*_mapped.json graphcompare \
 	  $(filter %.txt, $?) 2>&1 | head -n 40 | tee -a test/compare_summary.txt
@@ -282,9 +282,11 @@ build/%.correct.txt: build/%_CGRA_out.raw
 
 #	Print the final result already; fail if didn't pass
 #	Okay to print FAIL twice, but not PASS.  Get it?
-	tail -n 1 build/test_summary.txt
-	tail -n 1 build/test_summary.txt | grep FAILED  || exit 0 && exit 1
+	@echo ">";echo ">";echo ">";echo ">";echo ">";echo ">";
+	@tail -n 1 build/test_summary.txt
+	@tail -n 1 build/test_summary.txt | grep FAILED  || exit 0 && exit 1
+	@echo ">";echo ">";echo ">";echo ">";echo ">";echo ">";
 
         # Build target file if all went well i.e.
         # test -s => file exists and has size > 0
-	test ! -s build/$*.diff && touch build/$*.correct.txt
+	@test ! -s build/$*.diff && touch build/$*.correct.txt
