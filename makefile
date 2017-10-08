@@ -260,25 +260,31 @@ build/%.correct.txt: build/%_CGRA_out.raw
 
 	@echo; echo Making $@ because of $?
 
-	ls -l build/$*_*_out.raw
+#	For debugging
+#	ls -l build/$*_*_out.raw
+#
+#	od -t u1 build/$*_halide_out.raw | head -2
+#	od -t u1 build/$*_CGRA_out.raw   | head -2
 
-	od -t u1 build/$*_halide_out.raw | head -2
-	od -t u1 build/$*_CGRA_out.raw   | head -2
-
-	echo "VISUAL COMPARE OF CGRA VS. HALIDE OUTPUT BYTES (should be null)"
+	@echo "VISUAL COMPARE OF CGRA VS. HALIDE OUTPUT BYTES (should be null)"
 	od -t u1 -w1 -v -A none build/$*_halide_out.raw > build/$*_halide_out.od
 	od -t u1 -w1 -v -A none build/$*_CGRA_out.raw   > build/$*_CGRA_out.od
 	diff build/$*_halide_out.od build/$*_CGRA_out.od | head -50
-	diff build/$*_halide_out.od build/$*_CGRA_out.od > build/$*.diff
+	@diff build/$*_halide_out.od build/$*_CGRA_out.od > build/$*.diff
 
-	od -t u1 build/$*_halide_out.raw | head -2
-	od -t u1 build/$*_CGRA_out.raw   | head -2
+#	od -t u1 build/$*_halide_out.raw | head -2
+#	od -t u1 build/$*_CGRA_out.raw   | head -2
 
 	echo "BYTE-BY-BYTE COMPARE OF CGRA VS. HALIDE OUTPUT IMAGES"
-	cmp build/$*_halide_out.raw build/$*_CGRA_out.raw \
+	@cmp build/$*_halide_out.raw build/$*_CGRA_out.raw \
 		&& echo $* test PASSED  >> build/test_summary.txt \
 		|| echo $* test FAILED  >> build/test_summary.txt
-	cmp build/$*_halide_out.raw build/$*_CGRA_out.raw
 
+#	Print the final result already; fail if didn't pass
+#	Okay to print FAIL twice, but not PASS.  Get it?
+	tail -n 1 build/test_summary.txt
+	tail -n 1 build/test_summary.txt | grep FAILED  || exit 0 && exit 1
+
+        # Build target file if all went well i.e.
         # test -s => file exists and has size > 0
 	test ! -s build/$*.diff && touch build/$*.correct.txt
