@@ -274,7 +274,6 @@ build/%.correct.txt: build/%_CGRA_out.raw
 	od -t u1 -w1 -v -A none build/$*_halide_out.raw > build/$*_halide_out.od
 	od -t u1 -w1 -v -A none build/$*_CGRA_out.raw   > build/$*_CGRA_out.od
 	diff build/$*_halide_out.od build/$*_CGRA_out.od | head -50
-	@diff build/$*_halide_out.od build/$*_CGRA_out.od > build/$*.diff
 
 #	od -t u1 build/$*_halide_out.raw | head -2
 #	od -t u1 build/$*_CGRA_out.raw   | head -2
@@ -293,6 +292,10 @@ build/%.correct.txt: build/%_CGRA_out.raw
 	@echo "************************************************************************"
 	@echo "************************************************************************"
 
-        # Build target file if all went well i.e.
-        # test -s => file exists and has size > 0
-	@test ! -s build/$*.diff && touch build/$*.correct.txt
+#        # Build target file if all went well i.e.
+#        # test -s => file exists and has size > 0
+#	@diff build/$*_halide_out.od build/$*_CGRA_out.od > build/$*.diff
+#	@test ! -s build/$*.diff && touch build/$*.correct.txt
+
+        # Build target file if all went well
+	@cmp build/$*_halide_out.raw build/$*_CGRA_out.raw && touch build/$*.correct.txt
