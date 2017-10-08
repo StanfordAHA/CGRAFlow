@@ -1,3 +1,7 @@
+# .SECONDARY means don't remove any intermediate files
+.SECONDARY:
+
+
 CONVERT = CGRAGenerator/verilator/generator_z_tb/io/myconvert.csh
 
 ########################################################################
@@ -141,8 +145,8 @@ build/%_mapped.json: build/%_design_top.json
         # to produce a mapped version "mapped.json" for the PNR folks.  Right?
         #
 
-	@echo; echo Making $@ because of $?
 	@echo "MAPPER"
+	@echo; echo Making $@ because of $?
 	./CGRAMapper/bin/mapper build/$*_design_top.json build/$*_mapped.json $(OUTPUT)
 	cat build/$*_mapped.json $(OUTPUT)
 
@@ -282,10 +286,12 @@ build/%.correct.txt: build/%_CGRA_out.raw
 
 #	Print the final result already; fail if didn't pass
 #	Okay to print FAIL twice, but not PASS.  Get it?
-	@echo ">";echo ">";echo ">";echo ">";echo ">";echo ">";
+	@echo ">"; echo ">"; echo ">"
 	@tail -n 1 build/test_summary.txt
 	@tail -n 1 build/test_summary.txt | grep FAILED  || exit 0 && exit 1
-	@echo ">";echo ">";echo ">";echo ">";echo ">";echo ">";
+	@echo "************************************************************************"
+	@echo "************************************************************************"
+	@echo "************************************************************************"
 
         # Build target file if all went well i.e.
         # test -s => file exists and has size > 0
