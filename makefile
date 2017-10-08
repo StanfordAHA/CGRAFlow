@@ -279,7 +279,7 @@ build/%.correct.txt: build/%_CGRA_out.raw
 #	od -t u1 build/$*_halide_out.raw | head -2
 #	od -t u1 build/$*_CGRA_out.raw   | head -2
 
-	echo "BYTE-BY-BYTE COMPARE OF CGRA VS. HALIDE OUTPUT IMAGES"
+	@echo "BYTE-BY-BYTE COMPARE OF CGRA VS. HALIDE OUTPUT IMAGES"
 	@cmp build/$*_halide_out.raw build/$*_CGRA_out.raw \
 		&& echo $* test PASSED  >> build/test_summary.txt \
 		|| echo $* test FAILED  >> build/test_summary.txt
