@@ -266,19 +266,16 @@ build/%.correct.txt: build/%_CGRA_out.raw
 
 #	For debugging
 #	ls -l build/$*_*_out.raw
-#
 #	od -t u1 build/$*_halide_out.raw | head -2
 #	od -t u1 build/$*_CGRA_out.raw   | head -2
 
 	@echo "VISUAL COMPARE OF CGRA VS. HALIDE OUTPUT BYTES (should be null)"
-	od -t u1 -w1 -v -A none build/$*_halide_out.raw > build/$*_halide_out.od
-	od -t u1 -w1 -v -A none build/$*_CGRA_out.raw   > build/$*_CGRA_out.od
+	@od -t u1 -w1 -v -A none build/$*_halide_out.raw > build/$*_halide_out.od
+	@od -t u1 -w1 -v -A none build/$*_CGRA_out.raw   > build/$*_CGRA_out.od
 	diff build/$*_halide_out.od build/$*_CGRA_out.od | head -50
 
-#	od -t u1 build/$*_halide_out.raw | head -2
-#	od -t u1 build/$*_CGRA_out.raw   | head -2
-
 	@echo "BYTE-BY-BYTE COMPARE OF CGRA VS. HALIDE OUTPUT IMAGES"
+	@echo cmp build/$*_halide_out.raw build/$*_CGRA_out.raw
 	@cmp build/$*_halide_out.raw build/$*_CGRA_out.raw \
 		&& echo $* test PASSED  >> build/test_summary.txt \
 		|| echo $* test FAILED  >> build/test_summary.txt
@@ -292,10 +289,12 @@ build/%.correct.txt: build/%_CGRA_out.raw
 	@echo "************************************************************************"
 	@echo "************************************************************************"
 
-#        # Build target file if all went well i.e.
-#        # test -s => file exists and has size > 0
+        # Build target file if all went well
+	@cmp build/$*_halide_out.raw build/$*_CGRA_out.raw && touch build/$*.correct.txt
+
+#	(OLD)
+#	# Build target file if all went well i.e.
+#	# test -s => file exists and has size > 0
 #	@diff build/$*_halide_out.od build/$*_CGRA_out.od > build/$*.diff
 #	@test ! -s build/$*.diff && touch build/$*.correct.txt
 
-        # Build target file if all went well
-	@cmp build/$*_halide_out.raw build/$*_CGRA_out.raw && touch build/$*.correct.txt
