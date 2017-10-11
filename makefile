@@ -20,13 +20,13 @@ $(warning DELAY = $(DELAY))
 
 SILENT := TRUE
 ifeq ($(SILENT), TRUE)
-	OUTPUT              :=    > /dev/null
-	SILENT_FILTER_HF    :=    | egrep -i 'compiling|flattening|run|json|start|finish|success'
-	QVSWITCH :=    -q
+	OUTPUT           := > /dev/null
+	SILENT_FILTER_HF := | egrep -i 'compiling|flattening|run|json|start|finish|success'
+	QVSWITCH         := -q
 else
-	OUTPUT :=
+	OUTPUT           :=
 	SILENT_FILTER_HF :=
-	QVSWITCH :=
+	QVSWITCH         := -v
 endif
 $(warning OUTPUT = "$(OUTPUT)")
 
