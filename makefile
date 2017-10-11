@@ -22,11 +22,11 @@ SILENT := TRUE
 ifeq ($(SILENT), TRUE)
 	OUTPUT              :=    > /dev/null
 	SILENT_FILTER_HF    :=    | egrep -i 'compiling|flattening|run|json|start|finish|success'
-	RUN_SILENT_RUN_DEEP :=    -q
+	QVSWITCH :=    -q
 else
 	OUTPUT :=
 	SILENT_FILTER_HF :=
-	RUN_SILENT_RUN_DEEP :=
+	QVSWITCH :=
 endif
 $(warning OUTPUT = "$(OUTPUT)")
 
@@ -165,13 +165,13 @@ endif
 build/cgra_info_4x4.txt:
 	@echo; echo Making $@ because of $?
 	@echo "CGRA generate (generates 4x4 CGRA + connection matrix for pnr)"
-	cd CGRAGenerator; ./bin/generate.csh $(RUN_SILENT_RUN_DEEP) || exit -1
+	cd CGRAGenerator; ./bin/generate.csh $(QVSWITCH) || exit -1
 	cp CGRAGenerator/hardware/generator_z/top/cgra_info.txt build/cgra_info_4x4.txt
 
 build/cgra_info_8x8.txt:
 	@echo; echo Making $@ because of $?
 	@echo "CGRA generate (generates 8x8 CGRA + connection matrix for pnr)"
-	cd CGRAGenerator; export CGRA_GEN_USE_MEM=1; ./bin/generate.csh $(RUN_SILENT_RUN_DEEP) || exit -1
+	cd CGRAGenerator; export CGRA_GEN_USE_MEM=1; ./bin/generate.csh $(QVSWITCH) || exit -1
 	cp CGRAGenerator/hardware/generator_z/top/cgra_info.txt build/cgra_info_8x8.txt
 	CGRAGenerator/bin/cgra_info_analyzer.csh build/cgra_info_8x8.txt
 
@@ -245,7 +245,7 @@ build/%_CGRA_out.raw: build/%_pnr_bitstream
 	cd $(VERILATOR_TOP);    \
 	build=../../../build;   \
 	./run.csh top_tb.cpp -hackmem           \
-		$(RUN_SILENT_RUN_DEEP)              \
+		$(QVSWITCH)              \
 		$(MEM_SWITCH)                       \
 		-config $${build}/$*_pnr_bitstream  \
 		-input  $${build}/$*_input.png      \
