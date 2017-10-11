@@ -1,18 +1,43 @@
 #!/bin/csh -f
 
-# Usage:
-#   compare.csh <filename> <diff-command>
-#
-# Examples:
-#   compare.csh build/pointwise_design_top.json cmp
-#   compare.csh build/pointwise_design_top.json diff
-#   compare.csh build/pointwise_design_top.json topo
+goto MAIN
+
+USAGE:
+cat << eof
+Usage:
+  compare.csh --help
+  compare.csh -ignore <filename>
+  compare.csh <filename> <diff-command>
+
+Examples:
+  compare.csh build/pointwise_design_top.json cmp
+  compare.csh build/pointwise_design_top.json diff
+  compare.csh build/pointwise_design_top.json topo
+eof
+exit 0
+
+MAIN:
+if ("$1" == "--help") goto USAGE
+
+unset INIT
+if ("$1" == "-ignore") then
+  set INIT; shift
+endif
 
 set newfile = $1
 # E.g. newfile = 'build/pointwise_design_top.json'
 
 set goldfile = test/gold/$1:t
 # E.g. goldfile = 'test/gold/pointwise_design_top.json'
+
+
+if ($?INIT) then
+  # makefile prints "To initialize gold test do this:"
+  echo cp $newfile $goldfile
+  exit 0
+endif
+
+
 
 set diff = $2
 
