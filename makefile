@@ -1,3 +1,7 @@
+# .SECONDARY means don't remove any intermediate files
+.SECONDARY:
+
+
 CONVERT = CGRAGenerator/verilator/generator_z_tb/io/myconvert.csh
 
 ########################################################################
