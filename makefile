@@ -125,8 +125,9 @@ build/%_design_top.json: %_input_image Halide_CoreIR/apps/coreir_examples/%
 
 ifeq ($(GOLD), ignore)
 	@echo "Skipping gold test because GOLD=ignore..."
-	@echo "To initialize test:"
-	test/compare.csh -$(GOLD) $@
+	@echo "To reset gold test:"
+	@test/compare.csh -$(GOLD) $@ | tee -a test/compare_summary.txt
+	@echo
 else
 	@echo "GOLD-COMPARE --------------------------------------------------" \
 	  | tee -a test/compare_summary.txt
