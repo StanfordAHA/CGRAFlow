@@ -63,24 +63,21 @@ start_testing:
 	echo TEST SUMMARY > build/test_summary.txt
 	echo BEGIN `date` >> build/test_summary.txt
 
-ifeq ($(GOLD), ignore)
-	@echo "Skipping gold test because GOLD=ignore..."
-else
+#	gold compare of intermediates; "ignore" still prints setup info
 	if `test -e test/compare_summary.txt`; then rm test/compare_summary.txt; fi
 	echo -n "GOLD-COMPARE SUMMARY " > test/compare_summary.txt
 	echo    "BEGIN `date`"         >> test/compare_summary.txt
+ifeq ($(GOLD), ignore)
+	@echo "Skipping gold test because GOLD=ignore..."
+	@echo "To initialize gold tests:" >> test/compare_summary.txt
 endif
 
 
 
 end_testing:
-ifeq ($(GOLD), ignore)
-	@echo "Skipping gold test because GOLD=ignore..."
-else
 	echo -n "GOLD-COMPARE SUMMARY " >> test/compare_summary.txt
 	echo    "END `date`"            >> test/compare_summary.txt
 	cat test/compare_summary.txt
-endif
 	cat build/test_summary.txt
 
 
@@ -128,6 +125,8 @@ build/%_design_top.json: %_input_image Halide_CoreIR/apps/coreir_examples/%
 
 ifeq ($(GOLD), ignore)
 	@echo "Skipping gold test because GOLD=ignore..."
+	@echo "To initialize test:"
+	test/compare.csh -$(GOLD) $@
 else
 	@echo "GOLD-COMPARE --------------------------------------------------" \
 	  | tee -a test/compare_summary.txt
