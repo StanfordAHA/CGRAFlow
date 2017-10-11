@@ -20,13 +20,13 @@ $(warning DELAY = $(DELAY))
 
 SILENT := TRUE
 ifeq ($(SILENT), TRUE)
-	OUTPUT           := > /dev/null
-	SILENT_FILTER_HF := | egrep -i 'compiling|flattening|run|json|start|finish|success'
-	QVSWITCH         := -q
+	OUTPUT           :=  > /dev/null
+	SILENT_FILTER_HF :=  | egrep -i 'compiling|flattening|run|json|start|finish|success'
+	QVSWITCH         :=  -q
 else
 	OUTPUT           :=
 	SILENT_FILTER_HF :=
-	QVSWITCH         := -v
+	QVSWITCH         :=  -v
 endif
 $(warning OUTPUT = "$(OUTPUT)")
 
@@ -40,7 +40,8 @@ endif
 
 MEM_SWITCH := -oldmem  # Don't really need this...riiight?
 ifeq ($(CGRA_SIZE), 8x8)
-	MEM_SWITCH := -newmem -8x8
+#	MEM_SWITCH := -newmem -8x8
+	MEM_SWITCH := -newmem
 endif
 
 $(warning CGRA_SIZE = $(CGRA_SIZE))
@@ -63,7 +64,7 @@ start_testing:
 	echo BEGIN `date` >> build/test_summary.txt
 
 ifeq ($(GOLD), ignore)
-	echo "Skipping gold test because GOLD=ignore..."
+	@echo "Skipping gold test because GOLD=ignore..."
 else
 	if `test -e test/compare_summary.txt`; then rm test/compare_summary.txt; fi
 	echo -n "GOLD-COMPARE SUMMARY " > test/compare_summary.txt
@@ -74,7 +75,7 @@ endif
 
 end_testing:
 ifeq ($(GOLD), ignore)
-	echo "Skipping gold test because GOLD=ignore..."
+	@echo "Skipping gold test because GOLD=ignore..."
 else
 	echo -n "GOLD-COMPARE SUMMARY " >> test/compare_summary.txt
 	echo    "END `date`"            >> test/compare_summary.txt
@@ -91,7 +92,7 @@ endif
 	fi
 
 build/%_design_top.json: %_input_image Halide_CoreIR/apps/coreir_examples/%
-	echo "Halide FLOW"
+	@echo "Halide FLOW"
 
         # Halide files needed are already in the repo
         # This is where Halide actually compiles our app and runs
@@ -110,25 +111,25 @@ build/%_design_top.json: %_input_image Halide_CoreIR/apps/coreir_examples/%
 	cp Halide_CoreIR/apps/coreir_examples/$*/out.png         build/$*_halide_out.png
 	cd ..
 
-	ls -la build
+	@if [ $(SILENT) != "TRUE" ]; then ls -la build; fi
 
-	echo "CONVERT PNG IMAGES TO RAW for visual inspection"
+	@echo "CONVERT PNG IMAGES TO RAW for visual inspection"
         # Could not get "stream" command to work, so using my (steveri) hacky convert script instead...
         #cd ${TRAVIS_BUILD_DIR}
 
-	$(CONVERT) build/$*_input.png      build/$*_input.raw
-	$(CONVERT) build/$*_halide_out.png build/$*_halide_out.raw
+	@$(CONVERT) build/$*_input.png      build/$*_input.raw
+	@$(CONVERT) build/$*_halide_out.png build/$*_halide_out.raw
 
-	echo "VISUALLY CONFIRM APP IN/OUT"
+	@echo "VISUALLY CONFIRM APP IN/OUT"
 	od -t u1 build/$*_input.raw      | head
 	od -t u1 build/$*_halide_out.raw | head
 
-	cat build/$*_design_top.json $(OUTPUT)
+	@cat build/$*_design_top.json $(OUTPUT)
 
 ifeq ($(GOLD), ignore)
-	echo "Skipping gold test because GOLD=ignore..."
+	@echo "Skipping gold test because GOLD=ignore..."
 else
-	echo "GOLD-COMPARE --------------------------------------------------" \
+	@echo "GOLD-COMPARE --------------------------------------------------" \
 	  | tee -a test/compare_summary.txt
 	test/compare.csh $@ diff 2>&1 | head -n 40 | tee -a test/compare_summary.txt
 	test/compare.csh $@ graphcompare 2>&1 | head -n 40 | tee -a test/compare_summary.txt
@@ -144,9 +145,9 @@ build/%_mapped.json: build/%_design_top.json
         # to produce a mapped version "mapped.json" for the PNR folks.  Right?
         #
 
+	@echo "MAPPER"
 	@echo; echo Making $@ because of $?
-	echo "MAPPER"
-	./CGRAMapper/bin/map build/$*_design_top.json build/$*_mapped.json $(OUTPUT)
+	./CGRAMapper/bin/mapper build/$*_design_top.json build/$*_mapped.json $(OUTPUT)
 	cat build/$*_mapped.json $(OUTPUT)
 
         # Yeah, this doesn't always work (straight diff) (SD)
@@ -156,7 +157,7 @@ build/%_mapped.json: build/%_design_top.json
         # TODO in next rev: maybe do SD first, then topo compare if/when SD fails?
 
 ifeq ($(GOLD), ignore)
-	echo "Skipping gold test because GOLD=ignore..."
+	@echo "Skipping gold test because GOLD=ignore..."
 else
 	test/compare.csh build/$*_mapped.json graphcompare \
 	  $(filter %.txt, $?) 2>&1 | head -n 40 | tee -a test/compare_summary.txt
@@ -204,17 +205,21 @@ build/%_pnr_bitstream: build/%_mapped.json build/cgra_info_$(CGRA_SIZE).txt
 		--annotate build/$*_annotated         \
 		--print --coreir-libs cgralib
 
+        # Note: having the annotated bitstream embedded as cleartext in the log 
+        # file (below) is incredibly useful...let's please keep it if we can.
+	cat build/$*_annotated
+
         # hackdiff compares PNR bitstream intent (encoded as annotations to the bitstream)
         # versus a separately-decoded version of the bitstream, to make sure they match
-	cat build/$*_annotated
 	@echo; echo Checking $*_annotated against decoded $*_pnr_bitstream...
-	CGRAGenerator/bitstream/decoder/hackdiff.csh \
+	@echo "% hackdiff.csh $*_pnr_bitstream $*_annotated"
+	@CGRAGenerator/bitstream/decoder/hackdiff.csh $(QVSWITCH) \
 		build/$*_pnr_bitstream \
 		build/$*_annotated \
 		-cgra $(filter %.txt, $?)
 
 ifeq ($(GOLD), ignore)
-	echo "Skipping gold test because GOLD=ignore..."
+	@echo "Skipping gold test because GOLD=ignore..."
 else
         # Compare to golden model.
         # Note: Pointwise is run in both 4x4 and 8x8 modes, each of which
@@ -240,9 +245,10 @@ build/%_CGRA_out.raw: build/%_pnr_bitstream
         # OUT: CGRA_out.raw  (Output image)
 
 	@echo; echo Making $@ because of $?
-	echo "CGRA program and run (uses output of pnr)"
+	@echo "CGRA program and run (run.csh, uses output of pnr)"
+	@echo "run.csh -config $*_pnr_bitstream"
 
-	cd $(VERILATOR_TOP);    \
+	@cd $(VERILATOR_TOP);    \
 	build=../../../build;   \
 	./run.csh top_tb.cpp -hackmem           \
 		$(QVSWITCH)              \
@@ -258,25 +264,37 @@ build/%.correct.txt: build/%_CGRA_out.raw
 
 	@echo; echo Making $@ because of $?
 
-	ls -l build/$*_*_out.raw
+#	For debugging
+#	ls -l build/$*_*_out.raw
+#	od -t u1 build/$*_halide_out.raw | head -2
+#	od -t u1 build/$*_CGRA_out.raw   | head -2
 
-	od -t u1 build/$*_halide_out.raw | head -2
-	od -t u1 build/$*_CGRA_out.raw   | head -2
-
-	echo "VISUAL COMPARE OF CGRA VS. HALIDE OUTPUT BYTES (should be null)"
-	od -t u1 -w1 -v -A none build/$*_halide_out.raw > build/$*_halide_out.od
-	od -t u1 -w1 -v -A none build/$*_CGRA_out.raw   > build/$*_CGRA_out.od
+	@echo "VISUAL COMPARE OF CGRA VS. HALIDE OUTPUT BYTES (should be null)"
+	@od -t u1 -w1 -v -A none build/$*_halide_out.raw > build/$*_halide_out.od
+	@od -t u1 -w1 -v -A none build/$*_CGRA_out.raw   > build/$*_CGRA_out.od
 	diff build/$*_halide_out.od build/$*_CGRA_out.od | head -50
-	diff build/$*_halide_out.od build/$*_CGRA_out.od > build/$*.diff
-
-	od -t u1 build/$*_halide_out.raw | head -2
-	od -t u1 build/$*_CGRA_out.raw   | head -2
-
-	echo "BYTE-BY-BYTE COMPARE OF CGRA VS. HALIDE OUTPUT IMAGES"
-	cmp build/$*_halide_out.raw build/$*_CGRA_out.raw \
+	@echo
+	@echo "BYTE-BY-BYTE COMPARE OF CGRA VS. HALIDE OUTPUT IMAGES (should be null)"
+	@echo cmp build/$*_halide_out.raw build/$*_CGRA_out.raw
+	@cmp build/$*_halide_out.raw build/$*_CGRA_out.raw \
 		&& echo $* test PASSED  >> build/test_summary.txt \
 		|| echo $* test FAILED  >> build/test_summary.txt
-	cmp build/$*_halide_out.raw build/$*_CGRA_out.raw
 
-        # test -s => file exists and has size > 0
-	test ! -s build/$*.diff && touch build/$*.correct.txt
+#	Print the final result already; fail if didn't pass
+#	Okay to print FAIL twice, but not PASS.  Get it?
+	@echo ">"; echo ">"; echo ">"
+	@tail -n 1 build/test_summary.txt
+	@tail -n 1 build/test_summary.txt | grep FAILED  || exit 0 && exit 1
+	@echo "************************************************************************"
+	@echo "************************************************************************"
+	@echo "************************************************************************"
+
+        # Build target file if all went well
+	@cmp build/$*_halide_out.raw build/$*_CGRA_out.raw && touch build/$*.correct.txt
+
+#	(OLD)
+#	# Build target file if all went well i.e.
+#	# test -s => file exists and has size > 0
+#	@diff build/$*_halide_out.od build/$*_CGRA_out.od > build/$*.diff
+#	@test ! -s build/$*.diff && touch build/$*.correct.txt
+
