@@ -59,25 +59,28 @@ $(warning MEM_SWITCH = $(MEM_SWITCH))
 
 start_testing:
         # Build a test summary for the travis log.
-	if `test -e build/test_summary.txt`; then rm build/test_summary.txt; fi
-	echo TEST SUMMARY > build/test_summary.txt
-	echo BEGIN `date` >> build/test_summary.txt
+	@if `test -e build/test_summary.txt`; then rm build/test_summary.txt; fi
+	@echo TEST SUMMARY BEGIN `date` > build/test_summary.txt
+	@cat build/test_summary.txt
 
 #	gold compare of intermediates; "ignore" still prints setup info
-	if `test -e test/compare_summary.txt`; then rm test/compare_summary.txt; fi
-	echo -n "GOLD-COMPARE SUMMARY " > test/compare_summary.txt
-	echo    "BEGIN `date`"         >> test/compare_summary.txt
+	@if `test -e test/compare_summary.txt`; then rm test/compare_summary.txt; fi
+	@echo "GOLD-COMPARE SUMMARY BEGIN `date`" > test/compare_summary.txt
 ifeq ($(GOLD), ignore)
 	@echo "Skipping gold test because GOLD=ignore..."
 	@echo "To initialize gold tests:" >> test/compare_summary.txt
+else
+	@cat test/compare_summary.txt
 endif
 
 
 
 end_testing:
-	echo -n "GOLD-COMPARE SUMMARY " >> test/compare_summary.txt
-	echo    "END `date`"            >> test/compare_summary.txt
+	@echo
+	@echo "GOLD-COMPARE SUMMARY END `date`" >> test/compare_summary.txt
 	cat test/compare_summary.txt
+	@echo
+	@echo "TEST SUMMARY END `date`" >> test/test_summary.txt
 	cat build/test_summary.txt
 
 
@@ -158,8 +161,14 @@ build/%_mapped.json: build/%_design_top.json
         # TODO in next rev: maybe do SD first, then topo compare if/when SD fails?
 
 ifeq ($(GOLD), ignore)
-	@echo "Skipping gold test because GOLD=ignore..."
+	@echo
+	@echo -n "Skipping gold test because GOLD=ignore. "
+	@echo "To reset gold test:"
+	@test/compare.csh -$(GOLD) $@ | tee -a test/compare_summary.txt
+	@echo
 else
+	@echo "GOLD-COMPARE --------------------------------------------------" \
+	  | tee -a test/compare_summary.txt
 	test/compare.csh build/$*_mapped.json graphcompare \
 	  $(filter %.txt, $?) 2>&1 | head -n 40 | tee -a test/compare_summary.txt
 endif
@@ -220,13 +229,23 @@ build/%_pnr_bitstream: build/%_mapped.json build/cgra_info_$(CGRA_SIZE).txt
 		-cgra $(filter %.txt, $?)
 
 ifeq ($(GOLD), ignore)
-	@echo "Skipping gold test because GOLD=ignore..."
+	@echo
+	@echo -n "Skipping gold test because GOLD=ignore. "
+	@echo "To reset gold test:"
+	@if `test "$(CGRA_SIZE)" = "4x4"` ; then \
+	  test/compare.csh -$(GOLD) build/$*_annotated_4x4 | tee -a test/compare_summary.txt;\
+	else\
+	  test/compare.csh -$(GOLD) build/$*_annotated | tee -a test/compare_summary.txt;\
+	fi
+	@echo
 else
         # Compare to golden model.
         # Note: Pointwise is run in both 4x4 and 8x8 modes, each of which
         # will generate different intermediates but with the same names.
         # What to do? Gotta hack it :(
         # 
+	@echo "GOLD-COMPARE --------------------------------------------------" \
+	  | tee -a test/compare_summary.txt
 	if `test "$(CGRA_SIZE)" = "4x4"` ; then \
 	  cp build/$*_annotated build/$*_annotated_4x4;\
 	  test/compare.csh build/$*_annotated_4x4 graphcompare \
@@ -299,3 +318,5 @@ build/%.correct.txt: build/%_CGRA_out.raw
 #	@diff build/$*_halide_out.od build/$*_CGRA_out.od > build/$*.diff
 #	@test ! -s build/$*.diff && touch build/$*.correct.txt
 
+clean:
+	rm build/*
