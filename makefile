@@ -203,6 +203,7 @@ build/%_pnr_bitstream: build/%_mapped.json build/cgra_info_$(CGRA_SIZE).txt
 		$(filter %.txt, $?)                   \
 		--bitstream build/$*_pnr_bitstream    \
 		--annotate build/$*_annotated         \
+		--debug                               \
 		--print --coreir-libs cgralib
 
         # Note: having the annotated bitstream embedded as cleartext in the log 
