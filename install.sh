@@ -20,11 +20,11 @@ export cgra_git="https://github.com/StanfordAHA/CGRAGenerator.git"
 export pnr_git="https://github.com/cdonovick/smt-pnr"
 export smt_git="https://github.com/makaimann/smt-switch"
 
-export halide_branch="dev"
-export coreir_branch="dev"
-export mapper_branch="dev"
+export halide_branch="coreir"
+export coreir_branch="master"
+export mapper_branch="master"
 export cgra_branch="master"
-export pnr_branch="onebit_bs"
+export pnr_branch="master"
 export smt_branch="master"
 
 #halide
