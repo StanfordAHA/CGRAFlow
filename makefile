@@ -58,7 +58,7 @@ $(warning MEM_SWITCH = $(MEM_SWITCH))
 #      build/cascade_mapped.json
 
 start_testing:
-        # Build a test summary for the travis log.
+# Build a test summary for the travis log.
 	@if `test -e build/test_summary.txt`; then rm build/test_summary.txt; fi
 	@echo "TEST SUMMARY BEGIN `date`" > build/test_summary.txt
 	@cat build/test_summary.txt
@@ -144,7 +144,7 @@ else
 	  | tee -a test/compare_summary.txt
 	test/compare.csh $@ diff 2>&1 | head -n 40 | tee -a test/compare_summary.txt
 	test/compare.csh $@ graphcompare 2>&1 | head -n 40 | tee -a test/compare_summary.txt
-
+endif
 
 #  - xxd build/input.png
 #  - xxd build/input.raw
