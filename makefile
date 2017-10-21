@@ -58,7 +58,7 @@ $(warning MEM_SWITCH = $(MEM_SWITCH))
 #      build/cascade_mapped.json
 
 start_testing:
-        # Build a test summary for the travis log.
+# Build a test summary for the travis log.
 	@if `test -e build/test_summary.txt`; then rm build/test_summary.txt; fi
 	@echo "TEST SUMMARY BEGIN `date`" > build/test_summary.txt
 	@cat build/test_summary.txt
@@ -73,15 +73,26 @@ else
 	@cat build/compare_summary.txt
 endif
 
+ifeq ($(GOLD), ignore)
+	@echo "Skipping gold test because GOLD=ignore..."
+else
+	if `test -e test/compare_summary.txt`; then rm test/compare_summary.txt; fi
+	echo -n "GOLD-COMPARE SUMMARY " > test/compare_summary.txt
+	echo    "BEGIN `date`"         >> test/compare_summary.txt
+endif
+
 
 
 end_testing:
-	@echo
-	@echo "GOLD-COMPARE SUMMARY END `date`" >> build/compare_summary.txt
-	@cat build/compare_summary.txt
-	@echo
-	@echo "TEST SUMMARY END `date`" >> build/test_summary.txt
-	@cat build/test_summary.txt
+ifeq ($(GOLD), ignore)
+	@echo "Skipping gold test because GOLD=ignore..."
+else
+	echo -n "GOLD-COMPARE SUMMARY " >> test/compare_summary.txt
+	echo    "END `date`"            >> test/compare_summary.txt
+	cat test/compare_summary.txt
+endif
+	cat build/test_summary.txt
+
 
 
 %_input_image:
@@ -127,16 +138,12 @@ build/%_design_top.json: %_input_image Halide_CoreIR/apps/coreir_examples/%
 	@cat build/$*_design_top.json $(OUTPUT)
 
 ifeq ($(GOLD), ignore)
-	@echo
-	@echo -n "Skipping gold test because GOLD=ignore. "
-	@echo "To reset gold test:"
-	@test/compare.csh -$(GOLD) $@ | tee -a build/compare_summary.txt
-	@echo
+	@echo "Skipping gold test because GOLD=ignore..."
 else
 	@echo "GOLD-COMPARE --------------------------------------------------" \
-	  | tee -a build/compare_summary.txt
-	test/compare.csh $@ diff 2>&1 | head -n 40 | tee -a build/compare_summary.txt
-	test/compare.csh $@ graphcompare 2>&1 | head -n 40 | tee -a build/compare_summary.txt
+	  | tee -a test/compare_summary.txt
+	test/compare.csh $@ diff 2>&1 | head -n 40 | tee -a test/compare_summary.txt
+	test/compare.csh $@ graphcompare 2>&1 | head -n 40 | tee -a test/compare_summary.txt
 endif
 
 #  - xxd build/input.png
@@ -151,7 +158,7 @@ build/%_mapped.json: build/%_design_top.json
 
 	@echo "MAPPER"
 	@echo; echo Making $@ because of $?
-	./CGRAMapper/bin/map build/$*_design_top.json build/$*_mapped.json $(OUTPUT)
+	./CGRAMapper/bin/mapper build/$*_design_top.json build/$*_mapped.json $(OUTPUT)
 	cat build/$*_mapped.json $(OUTPUT)
 
         # Yeah, this doesn't always work (straight diff) (SD)
@@ -161,16 +168,10 @@ build/%_mapped.json: build/%_design_top.json
         # TODO in next rev: maybe do SD first, then topo compare if/when SD fails?
 
 ifeq ($(GOLD), ignore)
-	@echo
-	@echo -n "Skipping gold test because GOLD=ignore. "
-	@echo "To reset gold test:"
-	@test/compare.csh -$(GOLD) $@ | tee -a build/compare_summary.txt
-	@echo
+	@echo "Skipping gold test because GOLD=ignore..."
 else
-	@echo "GOLD-COMPARE --------------------------------------------------" \
-	  | tee -a build/compare_summary.txt
 	test/compare.csh build/$*_mapped.json graphcompare \
-	  $(filter %.txt, $?) 2>&1 | head -n 40 | tee -a build/compare_summary.txt
+	  $(filter %.txt, $?) 2>&1 | head -n 40 | tee -a test/compare_summary.txt
 endif
 
 build/cgra_info_4x4.txt:
@@ -213,6 +214,7 @@ build/%_pnr_bitstream: build/%_mapped.json build/cgra_info_$(CGRA_SIZE).txt
 		$(filter %.txt, $?)                   \
 		--bitstream build/$*_pnr_bitstream    \
 		--annotate build/$*_annotated         \
+		--debug                               \
 		--print --coreir-libs cgralib
 
         # Note: having the annotated bitstream embedded as cleartext in the log 
@@ -229,15 +231,7 @@ build/%_pnr_bitstream: build/%_mapped.json build/cgra_info_$(CGRA_SIZE).txt
 		-cgra $(filter %.txt, $?)
 
 ifeq ($(GOLD), ignore)
-	@echo
-	@echo -n "Skipping gold test because GOLD=ignore. "
-	@echo "To reset gold test:"
-	@if `test "$(CGRA_SIZE)" = "4x4"` ; then \
-	  test/compare.csh -$(GOLD) build/$*_annotated_4x4 | tee -a build/compare_summary.txt;\
-	else\
-	  test/compare.csh -$(GOLD) build/$*_annotated | tee -a build/compare_summary.txt;\
-	fi
-	@echo
+	@echo "Skipping gold test because GOLD=ignore..."
 else
         # Compare to golden model.
         # Note: Pointwise is run in both 4x4 and 8x8 modes, each of which
