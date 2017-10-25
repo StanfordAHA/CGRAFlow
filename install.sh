@@ -22,7 +22,7 @@ export smt_git="https://github.com/makaimann/smt-switch"
 
 export halide_branch="master"
 export coreir_branch="dev"
-export mapper_branch="master"
+export mapper_branch="dev"
 export cgra_branch="master"
 export pnr_branch="master"
 export smt_branch="master"
