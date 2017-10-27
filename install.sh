@@ -64,8 +64,8 @@ export COREIRCONFIG="g++-4.9";
 # SR 171027 derp support
 # COREIRCONFIG var (above) did not do the trick for derp.
 # Had to add this (until someone comes up with something better):
-sudo update-alternatives --remove-all gcc 
-sudo update-alternatives --remove-all g++
+# sudo update-alternatives --remove-all gcc # Travis error: "no alternatives for gcc"
+# sudo update-alternatives --remove-all g++ # Travis error: "no alternatives for gcc"
 # Installs with priority 20, dunno why.  Web page says:
 #   Each alternative has a priority associated with it. When a link
 #   group is in automatic mode, the alternatives pointed to by members
