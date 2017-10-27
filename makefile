@@ -221,15 +221,6 @@ build/%_pnr_bitstream: build/%_mapped.json build/cgra_info_$(CGRA_SIZE).txt
         # file (below) is incredibly useful...let's please keep it if we can.
 	cat build/$*_annotated
 
-#         # hackdiff compares PNR bitstream intent (encoded as annotations to the bitstream)
-#         # versus a separately-decoded version of the bitstream, to make sure they match
-# 	@echo; echo Checking $*_annotated against decoded $*_pnr_bitstream...
-# 	@echo "% hackdiff.csh $*_pnr_bitstream $*_annotated"
-# 	@CGRAGenerator/bitstream/decoder/hackdiff.csh $(QVSWITCH) \
-# 		build/$*_pnr_bitstream \
-# 		build/$*_annotated \
-# 		-cgra $(filter %.txt, $?)
-
         # bsa_verify compares PNR bitstream intent (encoded as annotations to
         # the bitstream) versus a separately-decoded version of the bitstream,
         # to make  sure they match
@@ -238,10 +229,6 @@ build/%_pnr_bitstream: build/%_mapped.json build/cgra_info_$(CGRA_SIZE).txt
 	@CGRAGenerator/testdir/bsa_verify.csh $(QVSWITCH) \
 		build/$*_annotated \
 		-cgra $(filter %.txt, $?)
-
-
-
-
 
 ifeq ($(GOLD), ignore)
 	@echo "Skipping gold test because GOLD=ignore..."
