@@ -60,12 +60,12 @@ $(warning MEM_SWITCH = $(MEM_SWITCH))
 start_testing:
 # Build a test summary for the travis log.
 	@if `test -e build/test_summary.txt`; then rm build/test_summary.txt; fi
-	@echo "TEST SUMMARY BEGIN `date`" > build/test_summary.txt
+	@echo "TEST SUMMARY BEGIN `date +%H:%M:%S`" > build/test_summary.txt
 	@cat build/test_summary.txt
 
 #	gold compare of intermediates; "ignore" still prints setup info
 	@if `test -e build/compare_summary.txt`; then rm build/compare_summary.txt; fi
-	@echo "GOLD-COMPARE SUMMARY BEGIN `date`" > build/compare_summary.txt
+	@echo "GOLD-COMPARE SUMMARY BEGIN `date +%H:%M:%S`" > build/compare_summary.txt
 ifeq ($(GOLD), ignore)
 	@echo "Skipping gold test because GOLD=ignore..."
 	@echo "To initialize gold tests:" >> build/compare_summary.txt
@@ -78,7 +78,7 @@ ifeq ($(GOLD), ignore)
 else
 	if `test -e test/compare_summary.txt`; then rm test/compare_summary.txt; fi
 	echo -n "GOLD-COMPARE SUMMARY " > test/compare_summary.txt
-	echo    "BEGIN `date`"         >> test/compare_summary.txt
+	echo    "BEGIN `date +%H:%M:%S`"         >> test/compare_summary.txt
 endif
 
 
@@ -88,15 +88,17 @@ ifeq ($(GOLD), ignore)
 	@echo "Skipping gold test because GOLD=ignore..."
 else
 	echo -n "GOLD-COMPARE SUMMARY " >> test/compare_summary.txt
-	echo    "END `date`"            >> test/compare_summary.txt
+	echo    "END `date +%H:%M:%S`"            >> test/compare_summary.txt
+	echo ''
 	cat test/compare_summary.txt
 endif
+	echo ''
 	cat build/test_summary.txt
 
 
 
 %_input_image:
-	# copy image to halide branch if not using "default"
+        # copy image to halide branch if not using "default"
 	if [ $(IMAGE) != default ]; then\
 		$(MAKE) -C $(TESTIMAGE_PATH) $(IMAGE);\
 		cp tools/gen_testimage/input.png Halide_CoreIR/apps/coreir_examples/$*/input.png;\
@@ -139,6 +141,7 @@ build/%_design_top.json: %_input_image Halide_CoreIR/apps/coreir_examples/%
 
 ifeq ($(GOLD), ignore)
 	@echo "Skipping gold test because GOLD=ignore..."
+	@echo "  " $@ "No gold test b/c GOLD=ignore..." >> test/compare_summary.txt
 else
 	@echo "GOLD-COMPARE --------------------------------------------------" \
 	  | tee -a test/compare_summary.txt
@@ -169,6 +172,7 @@ build/%_mapped.json: build/%_design_top.json
 
 ifeq ($(GOLD), ignore)
 	@echo "Skipping gold test because GOLD=ignore..."
+	@echo "  " $@ "No gold test b/c GOLD=ignore..." >> test/compare_summary.txt
 else
 	test/compare.csh build/$*_mapped.json graphcompare \
 	  $(filter %.txt, $?) 2>&1 | head -n 40 | tee -a test/compare_summary.txt
@@ -232,6 +236,7 @@ build/%_pnr_bitstream: build/%_mapped.json build/cgra_info_$(CGRA_SIZE).txt
 
 ifeq ($(GOLD), ignore)
 	@echo "Skipping gold test because GOLD=ignore..."
+	@echo "  " $@ "No gold test b/c GOLD=ignore..." >> test/compare_summary.txt
 else
         # Compare to golden model.
         # Note: Pointwise is run in both 4x4 and 8x8 modes, each of which
@@ -291,8 +296,8 @@ build/%.correct.txt: build/%_CGRA_out.raw
 	@echo "BYTE-BY-BYTE COMPARE OF CGRA VS. HALIDE OUTPUT IMAGES (should be null)"
 	@echo cmp build/$*_halide_out.raw build/$*_CGRA_out.raw
 	@cmp build/$*_halide_out.raw build/$*_CGRA_out.raw \
-		&& echo $* test PASSED  >> build/test_summary.txt \
-		|| echo $* test FAILED  >> build/test_summary.txt
+		&& echo TEST RESULT $* PASSED `date +%H:%M:%S` >> build/test_summary.txt \
+		|| echo TEST RESULT $* FAILED `date +%H:%M:%S` >> build/test_summary.txt
 
 #	Print the final result already; fail if didn't pass
 #	Okay to print FAIL twice, but not PASS.  Get it?
