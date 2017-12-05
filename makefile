@@ -57,6 +57,41 @@ $(warning MEM_SWITCH = $(MEM_SWITCH))
 #      build/pointwise.correct.txt \
 #      build/cascade_mapped.json
 
+test_all:
+	make start_testing
+	echo 'Core tests'    >> build/test_summary.txt
+	make core_tests
+	echo ''              >> build/test_summary.txt
+	echo 'Serpent tests' >> build/test_summary.txt
+	make serpent_tests
+	make end_testing
+
+core_tests:
+	make clean_pnr
+#       # For verbose output add "SILENT=FALSE" to command line(s) below
+	make build/pointwise.correct.txt DELAY=0.0   GOLD=ignore
+	make build/conv_1_2.correct.txt  DELAY=1,0   GOLD=ignore
+	make build/conv_2_1.correct.txt  DELAY=10,0  GOLD=ignore
+	make build/conv_3_1.correct.txt  DELAY=20,0  GOLD=ignore
+	make build/conv_bw.correct.txt   DELAY=130,0 GOLD=ignore
+	make build/cascade_mapped.json GOLD=ignore
+
+serpent_tests:
+	make clean_pnr
+#       # For verbose output add "SILENT=FALSE" to command line(s) below
+	make build/pointwise.correct.txt DELAY=0.0   GOLD=ignore PNR=serpent
+	make build/conv_1_2.correct.txt  DELAY=1,0   GOLD=ignore PNR=serpent
+	make build/conv_2_1.correct.txt  DELAY=10,0  GOLD=ignore PNR=serpent
+	make build/conv_3_1.correct.txt  DELAY=20,0  GOLD=ignore PNR=serpent
+	make build/conv_bw.correct.txt   DELAY=130,0 GOLD=ignore PNR=serpent
+
+clean_pnr:
+#       # Remove pnr intermediates for e.g. retesting w/serpent
+	ls build/*correct.txt    && rm build/*correct.txt    || echo "Nothing to clean"
+	ls build/*CGRA_out.raw   && rm build/*CGRA_out.raw   || echo "Nothing to clean"
+	ls build/*_pnr_bitstream && rm build/*_pnr_bitstream || echo "Nothing to clean"
+
+
 start_testing:
 # Build a test summary for the travis log.
 	@if `test -e build/test_summary.txt`; then rm build/test_summary.txt; fi
@@ -143,7 +178,7 @@ ifeq ($(GOLD), ignore)
 	@echo "Skipping gold test because GOLD=ignore..."
 	@echo "  " $@ "No gold test b/c GOLD=ignore..." >> test/compare_summary.txt
 else
-	@echo "GOLD-COMPARE --------------------------------------------------" \
+	@echo GOLD-COMPARE $(PNR) "--------------------------------------------------" \
 	  | tee -a test/compare_summary.txt
 	test/compare.csh $@ diff 2>&1 | head -n 40 | tee -a test/compare_summary.txt
 	test/compare.csh $@ graphcompare 2>&1 | head -n 40 | tee -a test/compare_summary.txt
@@ -206,7 +241,21 @@ build/%_pnr_bitstream: build/%_mapped.json build/cgra_info_$(CGRA_SIZE).txt
 # 	ls -l CGRAGenerator/hardware/generator_z/top/cgra_info.txt $(filter %.txt, $?)
 # 	diff CGRAGenerator/hardware/generator_z/top/cgra_info.txt $(filter %.txt, $?)
 
+ifeq ($(PNR), serpent)
 
+	@echo Using deterministic PNR
+	@echo serpent.csh\
+		$(filter %.json,$?)                   \
+		$(filter %.txt, $?)                   \
+		-o build/$*_annotated
+	CGRAGenerator/bitstream/bsbuilder/serpent.csh\
+		$(filter %.json,$?)                   \
+		-cgra_info $(filter %.txt, $?)                   \
+		-o build/$*_annotated
+
+	cp build/$*_annotated build/$*_pnr_bitstream
+
+else
 # 	smt-pnr/src/test.py  build/$*_mapped.json CGRAGenerator/hardware/generator_z/top/cgra_info.txt --bitstream build/$*_pnr_bitstream --annotate build/$*_annotated --print  --coreir-libs stdlib cgralib
 
         # $(filter %.json, $?) => program graph e.g. "build/pointwise_mapped.json"
@@ -220,6 +269,9 @@ build/%_pnr_bitstream: build/%_mapped.json build/cgra_info_$(CGRA_SIZE).txt
 		--annotate build/$*_annotated         \
 		--debug                               \
 		--print --coreir-libs cgralib
+endif
+
+
 
         # Note: having the annotated bitstream embedded as cleartext in the log 
         # file (below) is incredibly useful...let's please keep it if we can.
@@ -296,8 +348,8 @@ build/%.correct.txt: build/%_CGRA_out.raw
 	@echo "BYTE-BY-BYTE COMPARE OF CGRA VS. HALIDE OUTPUT IMAGES (should be null)"
 	@echo cmp build/$*_halide_out.raw build/$*_CGRA_out.raw
 	@cmp build/$*_halide_out.raw build/$*_CGRA_out.raw \
-		&& echo TEST RESULT $* PASSED `date +%H:%M:%S` >> build/test_summary.txt \
-		|| echo TEST RESULT $* FAILED `date +%H:%M:%S` >> build/test_summary.txt
+		&& echo ' ' `date +%H:%M:%S` TEST RESULT $* PASSED >> build/test_summary.txt \
+		|| echo ' ' `date +%H:%M:%S` TEST RESULT $* FAILED >> build/test_summary.txt
 
 #	Print the final result already; fail if didn't pass
 #	Okay to print FAIL twice, but not PASS.  Get it?
