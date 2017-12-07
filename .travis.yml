@@ -22,7 +22,8 @@ install:
 
 script:
   # "set -e" means "die at first error" - seems like a good idea!
-  - set -e
+  # BUT what if we don't (to see if e.g. smt passes when serpent fails...?)
+  # - set -e
   - make test_all
 
 after_failure:
