@@ -24,7 +24,15 @@ script:
   # "set -e" means "die at first error" - seems like a good idea!
   # BUT what if we don't (to see if e.g. smt passes when serpent fails...?)
   # - set -e
-  - make test_all
+  # - make test_all
+  # I will clean this up later (SR)
+	- make start_testing
+	- echo 'Core tests'    >> build/test_summary.txt
+	- make core_tests
+	- echo ''              >> build/test_summary.txt
+	- echo 'Serpent tests' >> build/test_summary.txt
+	- make serpent_tests
+  - make end_testing
 
 after_failure:
   # The log file is getting very long and unwieldy.
