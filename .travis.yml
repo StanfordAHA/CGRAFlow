@@ -34,7 +34,7 @@ script:
   - echo 'Serpent tests' >> build/test_summary.txt
   - make serpent_tests || (echo oops serpent failed | tee -a build/test_summary.txt)
   - make end_testing
-  - grep -i fail build/test_summary.txt && exit 13
+  - grep -i fail build/test_summary.txt && (exit 1) || echo test passed
 
 after_failure:
   # The log file is getting very long and unwieldy.
