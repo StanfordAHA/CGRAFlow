@@ -27,11 +27,11 @@ script:
   # - make test_all
   # I will clean this up later (SR)
   - make start_testing
-  - echo 'Core tests'    >> build/test_summary.txt
-  - make core_tests
-  - echo ''              >> build/test_summary.txt
   - echo 'Serpent tests' >> build/test_summary.txt
   - make serpent_tests
+  - echo ''              >> build/test_summary.txt
+  - echo 'Core tests'    >> build/test_summary.txt
+  - make core_tests
   - make end_testing
 
 after_failure:
