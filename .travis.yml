@@ -34,7 +34,7 @@ after_failure:
   # Note "after_failure" DOES NOT WORK when using "set -e" in script above (apparently)
 
 after_script:
-  - echo Why does this not work
+  # - echo Why does this not work
   # Note "after_script" DOES NOT WORK when using "set -e" in script above (apparently)
 
 notifications:
