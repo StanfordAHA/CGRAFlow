@@ -24,17 +24,7 @@ script:
   # "set -e" means "die at first error" - seems like a good idea!
   # BUT what if we don't (to see if e.g. smt passes when serpent fails...?)
   # - set -e
-  # - make test_all
-  # I'm hoping the '||' below will allow travis to go on to the next test after failure...?
-  # I will clean this up later (SR) (unless someone else beats me to it) (in which case please feel free)
-  - make start_testing
-  - echo 'Core tests'    >> build/test_summary.txt
-  - make core_tests || (echo oops SMT failed | tee -a build/test_summary.txt)
-  - echo ''              >> build/test_summary.txt
-  - echo 'Serpent tests' >> build/test_summary.txt
-  - make serpent_tests || (echo oops serpent failed | tee -a build/test_summary.txt)
-  - make end_testing
-  - grep -i fail build/test_summary.txt && (exit 1)
+  - make test_all
 
 after_failure:
   # The log file is getting very long and unwieldy.

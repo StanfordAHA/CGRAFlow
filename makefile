@@ -60,10 +60,10 @@ $(warning MEM_SWITCH = $(MEM_SWITCH))
 test_all:
 	make start_testing
 	echo 'Core tests'    >> build/test_summary.txt
-	make core_tests
+	make core_tests || (echo oops SMT failed | tee -a build/test_summary.txt)
 	echo ''              >> build/test_summary.txt
 	echo 'Serpent tests' >> build/test_summary.txt
-	make serpent_tests
+	make serpent_tests || (echo oops serpent failed | tee -a build/test_summary.txt)
 	make end_testing
 
 core_tests:
@@ -83,7 +83,7 @@ serpent_tests:
 	make build/conv_1_2.correct.txt  DELAY=1,0   GOLD=ignore PNR=serpent
 	make build/conv_2_1.correct.txt  DELAY=10,0  GOLD=ignore PNR=serpent
 	make build/conv_3_1.correct.txt  DELAY=20,0  GOLD=ignore PNR=serpent
-	make build/conv_bw.correct.txt   DELAY=130,0 GOLD=ignore PNR=serpent
+#	make build/conv_bw.correct.txt   DELAY=130,0 GOLD=ignore PNR=serpent
 
 clean_pnr:
 #       # Remove pnr intermediates for e.g. retesting w/serpent
