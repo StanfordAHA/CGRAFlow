@@ -34,11 +34,7 @@ $(warning OUTPUT = "$(OUTPUT)")
 IMAGE := default
 
 CGRA_SIZE := 8x8
-ifeq ($(CGRA_SIZE), 4x4)
-	MEM_SWITCH := -oldmem -4x4
-endif
-
-MEM_SWITCH := -oldmem  # Don't really need this...riiight?
+MEM_SWITCH := -newmem  # Don't really need this...riiight?
 ifeq ($(CGRA_SIZE), 8x8)
 #	MEM_SWITCH := -newmem -8x8
 	MEM_SWITCH := -newmem
