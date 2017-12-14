@@ -48,6 +48,9 @@ $ vagrant halt
 
 The virtualbox window should now say 'Powered Off'.
 
+*Optional*: Right click on the VM and choose 'Clone' to rename the VM (e.g.
+'cgraflow')
+
 To export the appliance, use File > Export Appliance, select the new VM and
 follow the instructions.
 
