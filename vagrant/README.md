@@ -34,7 +34,6 @@ If everything has run correctly, you should see an output like:
     default:   22:28:54 TEST RESULT conv_1_2 PASSED
     default:   22:29:09 TEST RESULT conv_2_1 PASSED
     default:   22:29:23 TEST RESULT conv_3_1 PASSED
-    default: make[1]: Leaving directory `/home/vagrant/CGRAFlow'<Paste>
 ```
 
 Open virtualbox and make sure you see a running virtual machine, something like:
