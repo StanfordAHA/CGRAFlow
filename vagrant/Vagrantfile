@@ -69,7 +69,7 @@ Vagrant.configure("2") do |config|
   # documentation for more information about their specific syntax and use.
   $script = <<-SCRIPT
     sudo apt-get update -y
-    sudo apt-get install ubuntu-desktop -y
+    # sudo apt-get install ubuntu-desktop -y
     sudo apt-get install git -y
     git clone -b vagrant https://github.com/StanfordAHA/CGRAFlow
     cd CGRAFlow
