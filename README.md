@@ -16,8 +16,6 @@ Setup your environment (you'll need to do this any time you start a new shell),
 note that this script expects an environment variable `CGRAFLOW_PATH` that
 points to the directory where `install.sh` was run (typically something like
 `export CGRAFLOW_PATH=$HOME/CGRAFlow`).
-**TODO:* `install.sh` should prompt the user to edit there `.bashrc` and append
-the proper configuration commands
 ```bash
 source setenv.sh
 ```
