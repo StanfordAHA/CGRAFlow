@@ -54,6 +54,9 @@ git clone -b ${cgra_branch} -- ${cgra_git} || git -C CGRAGenerator pull
 git clone -b ${pnr_branch} -- ${pnr_git} || git -C smt-pnr pull
 git clone -b ${smt_branch} -- ${smt_git} || git -C smt-switch pull
 
+#[SR 12/2017] somebody might want to clean this up later
+git clone https://github.com/StanfordVLSI/Genesis2.git /tmp/Genesis2
+
 # setup halide env vars
 source Halide_CoreIR/test/scripts/before_install_travis.sh
 
