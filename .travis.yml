@@ -4,6 +4,7 @@ sudo: required
 
 env:
   global:
+    - CGRAFLOW_HOME=${TRAVIS_BUILD_DIR}
 
 cache:
   apt: true

@@ -12,12 +12,13 @@ Install dependencies
 ./install.sh
 ```
 
-Setup your environment (you'll need to do this any time you start a new shell)
+Setup your environment (you'll need to do this any time you start a new shell),
+note that this script expects an environment variable `CGRAFLOW_PATH` that
+points to the directory where `install.sh` was run (typically something like
+`export CGRAFLOW_PATH=$HOME/CGRAFlow`).
 ```bash
 source setenv.sh
 ```
-**NOTE**: To exit the Python virtualenv, use the command `deactivate`. To
-reactivate it, use `source CGRAFlowPy3Env/bin/activate`
 
 Note you'll need to explicitly set the CC and CXX variables for make to the right version of GCC
 ```

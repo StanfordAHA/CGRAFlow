@@ -2,11 +2,11 @@
 set -e  # Exit immediately if a command exits with a non-zero status.
 
 sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
-sudo apt-get update
-sudo apt-get install g++-4.9
-sudo apt-get install gcc-4.9
+sudo apt-get update -y
+sudo apt-get install g++-4.9 -y
+sudo apt-get install gcc-4.9 -y
 
-sudo apt-get install verilator luajit build-essential clang libedit-dev libpng-dev csh libgmp3-dev git cmake zlib1g zlib1g-dev graphviz-dev python3 swig2.0 libcln-dev imagemagick python-virtualenv libxml2-dev libxslt-dev python3-dev
+sudo apt-get install verilator luajit build-essential clang libedit-dev libpng-dev csh libgmp3-dev git cmake zlib1g zlib1g-dev graphviz-dev python3 swig2.0 libcln-dev imagemagick python-virtualenv libxml2-dev libxslt-dev python3-dev -y
 
 if [[ -z "${TRAVIS_BUILD_DIR}" ]]; then
     # Halide_CoreIR/test/scripts/install_travis.sh is known to use this
@@ -106,4 +106,4 @@ pip install -e smt-pnr/package
 
 # need this for the new dot-compare test(s)
 # pip install pygtk
-sudo apt-get install python-gtk2
+sudo apt-get install python-gtk2 -y
