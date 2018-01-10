@@ -28,14 +28,6 @@ export BUILD_SYSTEM=MAKE
 export CXX_=g++-4.9
 export CC_=gcc-4.9
 
-wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
-bash miniconda.sh -u -b -p $HOME/miniconda
-export PATH="$HOME/miniconda/bin:$PATH"
-hash -r
-conda config --set always_yes yes --set changeps1 no
-conda update -q conda
-conda info -a
-
 which pip
 which python
 which python3
@@ -98,7 +90,3 @@ Halide_CoreIR/test/scripts/install_travis.sh
 # if there are any missing solvers, downloads from Makai's AFS
 . ./smt-pnr/util/get_smt_solvers.sh
 pip install -e smt-pnr/package
-
-# need this for the new dot-compare test(s)
-# pip install pygtk
-sudo apt-get install python-gtk2 -y

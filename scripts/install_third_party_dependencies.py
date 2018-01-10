@@ -30,7 +30,8 @@ apt_packages = [
     "python-virtualenv",
     "libxml2-dev",
     "libxslt-dev",
-    "python3-dev"
+    "python3-dev",
+    "python-gtk2"  # for dot-compare test(s)
 ]
 
 brew_packages = []
