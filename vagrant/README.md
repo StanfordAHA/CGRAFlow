@@ -3,8 +3,10 @@ CI build environment.
 
 # Dependencies
 
-[packer](https://www.packer.io/intro/getting-started/install.html)
-## macOS
+* [virtualbox](https://www.virtualbox.org/wiki/Downloads)
+* [vagrant](https://www.vagrantup.com/downloads.html)
+
+## macOS (homebrew)
 ```
 $ brew install virtualbox vagrant
 ```
