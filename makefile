@@ -70,6 +70,7 @@ test_all:
 	echo ''              >> build/test_summary.txt
 	echo 'Serpent tests' >> build/test_summary.txt
 	make serpent_tests || (echo oops serpent failed | tee -a build/test_summary.txt)
+	grep oops build/test_summary.txt && exit 13
 	make end_testing
 
 core_tests:
