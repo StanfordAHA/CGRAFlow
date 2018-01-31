@@ -63,6 +63,15 @@ $(warning MEM_SWITCH = $(MEM_SWITCH))
 #      build/pointwise.correct.txt \
 #      build/cascade_mapped.json
 
+test_newapp:
+	make start_testing
+	echo 'New app SMT test'    >> build/test_summary.txt
+	make new_app || (echo oops SMT failed | tee -a build/test_summary.txt)
+	echo ''              >> build/test_summary.txt
+	echo 'New app Serpent tests' >> build/test_summary.txt
+	make new_app_serpent || (echo oops serpent failed | tee -a build/test_summary.txt)
+	make end_testing
+
 test_all:
 	make start_testing
 	echo 'Core tests'    >> build/test_summary.txt
@@ -71,6 +80,13 @@ test_all:
 	echo 'Serpent tests' >> build/test_summary.txt
 	make serpent_tests || (echo oops serpent failed | tee -a build/test_summary.txt)
 	make end_testing
+
+new_app:
+	make clean_pnr
+	make build/onebit_bool.correct.txt DELAY=0.0   GOLD=ignore
+new_app_serpent:
+	make clean_pnr
+	make build/onebit_bool.correct.txt DELAY=0.0   GOLD=ignore PNR=serpent
 
 core_tests:
 	make clean_pnr
