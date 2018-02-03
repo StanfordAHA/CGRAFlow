@@ -81,7 +81,7 @@ core_tests:
 	make build/conv_2_1.correct.txt  DELAY=10,0  GOLD=ignore
 	make build/conv_3_1.correct.txt  DELAY=20,0  GOLD=ignore
 	make build/conv_bw.correct.txt   DELAY=130,0 GOLD=ignore
-	make build/cascade_mapped.json GOLD=ignore
+#	make build/cascade_mapped.json GOLD=ignore
 
 serpent_tests:
 	make clean_pnr
