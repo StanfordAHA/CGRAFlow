@@ -70,6 +70,7 @@ test_newapp:
 	echo ''              >> build/test_summary.txt
 	echo 'New app Serpent tests' >> build/test_summary.txt
 	make new_app_serpent || (echo oops serpent failed | tee -a build/test_summary.txt)
+	grep oops build/test_summary.txt && exit 13 || exit 0
 	make end_testing
 
 test_all:
