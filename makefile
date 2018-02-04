@@ -79,6 +79,7 @@ test_all:
 	echo ''              >> build/test_summary.txt
 	echo 'Serpent tests' >> build/test_summary.txt
 	make serpent_tests || (echo oops serpent failed | tee -a build/test_summary.txt)
+	grep oops build/test_summary.txt && exit 13 || exit 0
 	make end_testing
 
 new_app:
@@ -96,7 +97,7 @@ core_tests:
 	make build/conv_2_1.correct.txt  DELAY=10,0  GOLD=ignore
 	make build/conv_3_1.correct.txt  DELAY=20,0  GOLD=ignore
 	make build/conv_bw.correct.txt   DELAY=130,0 GOLD=ignore
-	make build/cascade_mapped.json GOLD=ignore
+#	make build/cascade_mapped.json GOLD=ignore
 
 serpent_tests:
 	make clean_pnr
