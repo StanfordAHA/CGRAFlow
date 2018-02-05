@@ -26,7 +26,8 @@ script:
   # "set -e" means "die at first error" - seems like a good idea!
   # BUT what if we don't (to see if e.g. smt passes when serpent fails...?)
   # - set -e
-  - make test_all
+  # - make SILENT=FALSE test_all
+  - make core_only
 
 after_failure:
   # The log file is getting very long and unwieldy.

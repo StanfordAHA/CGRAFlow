@@ -73,6 +73,22 @@ test_all:
 	grep oops build/test_summary.txt && exit 13 || exit 0
 	make end_testing
 
+core_only:
+	make start_testing
+	echo 'Core tests'    >> build/test_summary.txt
+	make core_tests || (echo oops SMT failed | tee -a build/test_summary.txt)
+	grep oops build/test_summary.txt && exit 13 || exit 0
+	make end_testing
+
+serpent_only:
+	make start_testing
+	echo 'Serpent tests' >> build/test_summary.txt
+	make serpent_tests || (echo oops serpent failed | tee -a build/test_summary.txt)
+	grep oops build/test_summary.txt && exit 13 || exit 0
+	make end_testing
+
+
+
 core_tests:
 	make clean_pnr
 #       # For verbose output add "SILENT=FALSE" to command line(s) below
@@ -223,20 +239,21 @@ endif
 build/cgra_info_4x4.txt:
 	@echo; echo Making $@ because of $?
 	@echo "CGRA generate (generates 4x4 CGRA + connection matrix for pnr)"
-	cd CGRAGenerator; ./bin/generate.csh $(QVSWITCH) || exit -1
+	cd CGRAGenerator; ./bin/generate.csh $(QVSWITCH) || exit 13
 	cp CGRAGenerator/hardware/generator_z/top/cgra_info.txt build/cgra_info_4x4.txt
 
 build/cgra_info_8x8.txt:
 	@echo; echo Making $@ because of $?
 	@echo "CGRA generate (generates 8x8 CGRA + connection matrix for pnr)"
-	cd CGRAGenerator; export CGRA_GEN_USE_MEM=1; ./bin/generate.csh $(QVSWITCH) || exit -1
+	cd CGRAGenerator; export CGRA_GEN_USE_MEM=1; ./bin/generate.csh $(QVSWITCH) || exit 13
+#	cd CGRAGenerator; export CGRA_GEN_USE_MEM=1; ./bin/generate.csh -v || exit 13
 	cp CGRAGenerator/hardware/generator_z/top/cgra_info.txt build/cgra_info_8x8.txt
 	CGRAGenerator/bin/cgra_info_analyzer.csh build/cgra_info_8x8.txt
 
 build/cgra_info_16x16.txt:
 	@echo; echo Making $@ because of $?
 	@echo "CGRA generate (generates 16x16 CGRA + connection matrix for pnr)"
-	cd CGRAGenerator; export CGRA_GEN_USE_MEM=1; ./bin/generate.csh $(QVSWITCH) -$(CGRA_SIZE)|| exit -1
+	cd CGRAGenerator; export CGRA_GEN_USE_MEM=1; ./bin/generate.csh $(QVSWITCH) -$(CGRA_SIZE)|| exit 13
 	cp CGRAGenerator/hardware/generator_z/top/cgra_info.txt build/cgra_info_16x16.txt
 	CGRAGenerator/bin/cgra_info_analyzer.csh build/cgra_info_16x16.txt
 
