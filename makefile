@@ -97,7 +97,6 @@ core_tests:
 	make build/conv_2_1.correct.txt  DELAY=10,0  GOLD=ignore
 	make build/conv_3_1.correct.txt  DELAY=20,0  GOLD=ignore
 	make build/conv_bw.correct.txt   DELAY=130,0 GOLD=ignore
-#	make build/cascade_mapped.json GOLD=ignore
 
 serpent_tests:
 	make clean_pnr
@@ -246,7 +245,6 @@ build/cgra_info_8x8.txt:
 	@echo; echo Making $@ because of $?
 	@echo "CGRA generate (generates 8x8 CGRA + connection matrix for pnr)"
 	cd CGRAGenerator; export CGRA_GEN_USE_MEM=1; ./bin/generate.csh $(QVSWITCH) || exit 13
-#	cd CGRAGenerator; export CGRA_GEN_USE_MEM=1; ./bin/generate.csh -v || exit 13
 	cp CGRAGenerator/hardware/generator_z/top/cgra_info.txt build/cgra_info_8x8.txt
 	CGRAGenerator/bin/cgra_info_analyzer.csh build/cgra_info_8x8.txt
 
