@@ -27,6 +27,11 @@ script:
   # BUT what if we don't (to see if e.g. smt passes when serpent fails...?)
   # - set -e
   - make test_newapp
+  # - make SILENT=FALSE test_all
+  - make serpent_only
+
+  # core (SMT-based) tests don't work (yet)
+  # - make core_only
 
 after_failure:
   # The log file is getting very long and unwieldy.

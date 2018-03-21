@@ -33,22 +33,8 @@ $(warning OUTPUT = "$(OUTPUT)")
 # Image being used
 IMAGE := default
 
-CGRA_SIZE := 8x8
+CGRA_SIZE := 16x16
 MEM_SWITCH := -newmem  # Don't really need this...riiight?
-ifeq ($(CGRA_SIZE), 4x4)
-	MEM_SWITCH := -oldmem -4x4
-endif
-
-ifeq ($(CGRA_SIZE), 8x8)
-#	MEM_SWITCH := -newmem -8x8
-	MEM_SWITCH := -newmem
-endif
-
-# should be the default!
-ifeq ($(CGRA_SIZE), 16x16)
-	MEM_SWITCH := -newmem
-endif
-
 
 $(warning CGRA_SIZE = $(CGRA_SIZE))
 $(warning MEM_SWITCH = $(MEM_SWITCH))
@@ -89,25 +75,38 @@ new_app:
 new_app_serpent:
 	make clean_pnr
 	make build/onebit_bool.correct.txt DELAY=0.0   GOLD=ignore PNR=serpent
+core_only:
+	make start_testing
+	echo 'Core tests'    >> build/test_summary.txt
+	make core_tests || (echo oops SMT failed | tee -a build/test_summary.txt)
+	grep oops build/test_summary.txt && exit 13 || exit 0
+	make end_testing
+
+serpent_only:
+	make start_testing
+	echo 'Serpent tests' >> build/test_summary.txt
+	make serpent_tests || (echo oops serpent failed | tee -a build/test_summary.txt)
+	grep oops build/test_summary.txt && exit 13 || exit 0
+	make end_testing
+
 
 core_tests:
 	make clean_pnr
 #       # For verbose output add "SILENT=FALSE" to command line(s) below
-	make build/pointwise.correct.txt DELAY=0.0   GOLD=ignore
+	make build/pointwise.correct.txt DELAY=0,0   GOLD=ignore
 	make build/conv_1_2.correct.txt  DELAY=1,0   GOLD=ignore
 	make build/conv_2_1.correct.txt  DELAY=10,0  GOLD=ignore
 	make build/conv_3_1.correct.txt  DELAY=20,0  GOLD=ignore
 	make build/conv_bw.correct.txt   DELAY=130,0 GOLD=ignore
-#	make build/cascade_mapped.json GOLD=ignore
 
 serpent_tests:
 	make clean_pnr
 #       # For verbose output add "SILENT=FALSE" to command line(s) below
-	make build/pointwise.correct.txt DELAY=0.0   GOLD=ignore PNR=serpent
+	make build/pointwise.correct.txt DELAY=0,0   GOLD=ignore PNR=serpent
 	make build/conv_1_2.correct.txt  DELAY=1,0   GOLD=ignore PNR=serpent
 	make build/conv_2_1.correct.txt  DELAY=10,0  GOLD=ignore PNR=serpent
 	make build/conv_3_1.correct.txt  DELAY=20,0  GOLD=ignore PNR=serpent
-#	make build/conv_bw.correct.txt   DELAY=130,0 GOLD=ignore PNR=serpent
+	make build/conv_bw.correct.txt   DELAY=130,0 GOLD=ignore PNR=serpent
 
 clean_pnr:
 #       # Remove pnr intermediates for e.g. retesting w/serpent
@@ -237,23 +236,10 @@ else
 	  $(filter %.txt, $?) 2>&1 | head -n 40 | tee -a test/compare_summary.txt
 endif
 
-build/cgra_info_4x4.txt:
-	@echo; echo Making $@ because of $?
-	@echo "CGRA generate (generates 4x4 CGRA + connection matrix for pnr)"
-	cd CGRAGenerator; ./bin/generate.csh $(QVSWITCH) || exit -1
-	cp CGRAGenerator/hardware/generator_z/top/cgra_info.txt build/cgra_info_4x4.txt
-
-build/cgra_info_8x8.txt:
-	@echo; echo Making $@ because of $?
-	@echo "CGRA generate (generates 8x8 CGRA + connection matrix for pnr)"
-	cd CGRAGenerator; export CGRA_GEN_USE_MEM=1; ./bin/generate.csh $(QVSWITCH) || exit -1
-	cp CGRAGenerator/hardware/generator_z/top/cgra_info.txt build/cgra_info_8x8.txt
-	CGRAGenerator/bin/cgra_info_analyzer.csh build/cgra_info_8x8.txt
-
 build/cgra_info_16x16.txt:
 	@echo; echo Making $@ because of $?
 	@echo "CGRA generate (generates 16x16 CGRA + connection matrix for pnr)"
-	cd CGRAGenerator; export CGRA_GEN_USE_MEM=1; ./bin/generate.csh $(QVSWITCH) -$(CGRA_SIZE)|| exit -1
+	cd CGRAGenerator; export CGRA_GEN_USE_MEM=1; ./bin/generate.csh $(QVSWITCH) -$(CGRA_SIZE)|| exit 13
 	cp CGRAGenerator/hardware/generator_z/top/cgra_info.txt build/cgra_info_16x16.txt
 	CGRAGenerator/bin/cgra_info_analyzer.csh build/cgra_info_16x16.txt
 
@@ -314,7 +300,7 @@ endif
         # the bitstream) versus a separately-decoded version of the bitstream,
         # to make  sure they match
 	@echo; echo Checking $*_annotated against separately-decoded $*_annotated...
-	@echo "% bsa_verify $*_pnr_bitstream $*_annotated"
+	@echo "% bsa_verify.csh" $(QVSWITCH) build/$*_annotated -cgra $(filter %.txt, $?)
 	@CGRAGenerator/testdir/bsa_verify.csh $(QVSWITCH) \
 		build/$*_annotated \
 		-cgra $(filter %.txt, $?)
