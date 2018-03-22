@@ -285,10 +285,11 @@ endif
         # the bitstream) versus a separately-decoded version of the bitstream,
         # to make  sure they match
 	@echo; echo Checking $*_annotated against separately-decoded $*_annotated...
-	@echo "% bsa_verify.csh" $(QVSWITCH) build/$*_annotated -cgra $(filter %.txt, $?)
-	@CGRAGenerator/testdir/bsa_verify.csh $(QVSWITCH) \
-		build/$*_annotated \
-		-cgra $(filter %.txt, $?)
+	
+	# @echo "% bsa_verify.csh" $(QVSWITCH) build/$*_annotated -cgra $(filter %.txt, $?)
+	# @CGRAGenerator/testdir/bsa_verify.csh $(QVSWITCH) \
+	# 	build/$*_annotated \
+	# 	-cgra $(filter %.txt, $?)
 
 ifeq ($(GOLD), ignore)
 	@echo "Skipping gold test because GOLD=ignore..."
