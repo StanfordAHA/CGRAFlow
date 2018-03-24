@@ -263,6 +263,7 @@ build/%_pnr_bitstream: build/%_mapped.json build/cgra_info_$(CGRA_SIZE).txt
 ifeq ($(PNR), serpent)
 
 	@echo Using deterministic PNR
+	cat $(filter %.json,$?)
 	@echo serpent.csh\
 		$(filter %.json,$?)                   \
 		$(filter %.txt, $?)                   \
