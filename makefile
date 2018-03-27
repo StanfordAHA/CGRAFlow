@@ -285,11 +285,11 @@ endif
         # the bitstream) versus a separately-decoded version of the bitstream,
         # to make  sure they match
 	@echo; echo Checking $*_annotated against separately-decoded $*_annotated...
-	
-	# @echo "% bsa_verify.csh" $(QVSWITCH) build/$*_annotated -cgra $(filter %.txt, $?)
-	# @CGRAGenerator/testdir/bsa_verify.csh $(QVSWITCH) \
-	# 	build/$*_annotated \
-	# 	-cgra $(filter %.txt, $?)
+	@echo "% bsa_verify.csh" $(QVSWITCH) build/$*_annotated -cgra $(filter %.txt, $?)
+	@echo NOPE Temporarily NOT doing the bsa_verify check
+# 	@CGRAGenerator/testdir/bsa_verify.csh $(QVSWITCH) \
+# 		build/$*_annotated \
+# 		-cgra $(filter %.txt, $?)
 
 ifeq ($(GOLD), ignore)
 	@echo "Skipping gold test because GOLD=ignore..."
@@ -326,7 +326,7 @@ build/%_CGRA_out.raw: build/%_pnr_bitstream
 
 	@cd $(VERILATOR_TOP);    \
 	build=../../../build;   \
-	./run.csh top_tb.cpp -hackmem           \
+	./run.csh top_tb.cpp             \
 		$(QVSWITCH)              \
 		$(MEM_SWITCH)                       \
 		-config $${build}/$*_pnr_bitstream  \
