@@ -226,6 +226,7 @@ build/cgra_info_16x16.txt:
 	@echo "CGRA generate (generates 16x16 CGRA + connection matrix for pnr)"
 	cd CGRAGenerator; export CGRA_GEN_USE_MEM=1; ./bin/generate.csh $(QVSWITCH) -$(CGRA_SIZE)|| exit 13
 	cp CGRAGenerator/hardware/generator_z/top/cgra_info.txt build/cgra_info_16x16.txt
+	cp CGRAGenerator/hardware/generator_z/top/board_info.json build/board_info.json
 	CGRAGenerator/bin/cgra_info_analyzer.csh build/cgra_info_16x16.txt
 
 
@@ -271,6 +272,8 @@ else
 		$(filter %.txt, $?)                   \
 		--bitstream build/$*_pnr_bitstream    \
 		--annotate build/$*_annotated         \
+		--board-info build/board_info.json    \
+		--solver Boolector                    \
 		--debug                               \
 		--print --coreir-libs cgralib
 endif
