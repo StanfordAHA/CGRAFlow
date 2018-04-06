@@ -27,9 +27,8 @@ script:
   # BUT what if we don't (to see if e.g. smt passes when serpent fails...?)
   # - set -e
   # - make SILENT=FALSE test_all
-  make core_only
-  # serpent currently broken
-  # - make serpent_only
+  - make core_only
+  - make serpent_only
 
 after_failure:
   # The log file is getting very long and unwieldy.
