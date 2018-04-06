@@ -90,7 +90,7 @@ cd ../;
 date
 
 # API for SMT solving with different solvers
-export PYTHONPATH=$PYTHONPATH:$PWD/smt-switch
+pip install -e smt-switch
 
 pwd
 
