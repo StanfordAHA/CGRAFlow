@@ -28,9 +28,9 @@ script:
   # - set -e
   # - make SILENT=FALSE test_all
   # - make core_only
-  - make SILENT=FALSE build/conv_bw_mapped.json
-  - make SILENT=FALSE build/conv_3_1_mapped.json
-  # - make SILENT=FALSE serpent_only
+  - make SILENT=FALSE serpent_only
+  # - make SILENT=FALSE build/conv_bw_mapped.json
+  # - make SILENT=FALSE build/conv_3_1_mapped.json
 
 after_failure:
   # The log file is getting very long and unwieldy.
