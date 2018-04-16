@@ -25,7 +25,7 @@ export halide_branch="master"
 export coreir_branch="master"
 export mapper_branch="master"
 export cgra_branch="master"
-export pnr_branch="master"
+export pnr_branch="io-collateral"
 export smt_branch="master"
 export test_bench_generator_branch="master"
 
