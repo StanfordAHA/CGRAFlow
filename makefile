@@ -330,11 +330,6 @@ build/%_CGRA_out.raw: build/%_pnr_bitstream
 
 	cp $(VERILATOR_TOP)/sram_stub.v $(RTL_DIR)/sram_512w_16b.v  # SRAM hack
 
-	python TestBenchGenerator/wrap_cgra.py   \
-		--pnr-io-collateral build/$*.io.json \
-		--cgra-verilog $(RTL_DIR)/top.v      \
-		--output-directory=$(RTL_DIR)
-
 	python TestBenchGenerator/generate_harness.py \
 		--pnr-io-collateral build/$*.io.json      \
 		--bitstream build/$*_pnr_bitstream        \
@@ -347,15 +342,15 @@ build/%_CGRA_out.raw: build/%_pnr_bitstream
 		--harness harness.cpp             \
 		--verilog-directory $(RTL_DIR)    \
 		--output-directory build          \
-		--top-module-name CGRA_wrapper
+		--top-module-name top
 
-	make --silent -C build -j -f VCGRA_wrapper.mk VCGRA_wrapper
+	make --silent -C build -j -f Vtop.mk Vtop
 
 	# HACK: Input file name to inpurt port file name, also post-processing
 	# output file for DELAY
 	cd build; python ../TestBenchGenerator/rename_input.py $*.io.json $*_input.raw $(DELAY)
 
-	cd build; ./VCGRA_wrapper
+	cd build; ./Vtop
 
 	# HACK: Output port file name to output file name, also post-processing
 	# output file for DELAY

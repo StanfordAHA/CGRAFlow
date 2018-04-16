@@ -112,4 +112,3 @@ pip install -e smt-pnr/package
 sudo apt-get install python-gtk2 -y
 
 pip install delegator.py
-pip install git+git://github.com/phanrahan/magma.git
