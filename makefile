@@ -346,15 +346,15 @@ build/%_CGRA_out.raw: build/%_pnr_bitstream
 
 	make --silent -C build -j -f Vtop.mk Vtop
 
-	# HACK: Input file name to inpurt port file name, also post-processing
-	# output file for DELAY
-	cd build; python ../TestBenchGenerator/rename_input.py $*.io.json $*_input.raw $(DELAY)
+	# HACK: Input file name to inpurt port file name, also pre-processing input
+	# file for DELAY
+	cd build; python ../TestBenchGenerator/process_input.py $*.io.json $*_input.raw $(DELAY)
 
 	cd build; ./Vtop
 
 	# HACK: Output port file name to output file name, also post-processing
 	# output file for DELAY
-	cd build; python ../TestBenchGenerator/rename_output.py $*.io.json $*_CGRA_out.raw $* $(DELAY)
+	cd build; python ../TestBenchGenerator/process_output.py $*.io.json $*_CGRA_out.raw $* $(DELAY)
 
 build/%.correct.txt: build/%_CGRA_out.raw
         # check to see that output is correct.
