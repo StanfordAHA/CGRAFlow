@@ -56,3 +56,21 @@ To export the appliance, use File > Export Appliance, select the new VM and
 follow the instructions.
 
 (12-14-17) - Lenny used Open Virtualization Format 1.0
+
+# Using the VM for local development
+After you've provisioned the VM, you can use it for development as follows.
+
+Start the VM
+```
+vagrant up
+```
+
+SSH into the VM
+```
+vagrant ssh
+```
+
+Stop the VM
+```
+vagrant halt
+```

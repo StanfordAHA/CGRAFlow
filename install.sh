@@ -19,13 +19,15 @@ export mapper_git="https://github.com/StanfordAHA/CGRAMapper.git"
 export cgra_git="https://github.com/StanfordAHA/CGRAGenerator.git"
 export pnr_git="https://github.com/cdonovick/smt-pnr"
 export smt_git="https://github.com/makaimann/smt-switch"
+export test_bench_generator_git="https://github.com/StanfordAHA/TestBenchGenerator"
 
 export halide_branch="master"
 export coreir_branch="master"
 export mapper_branch="master"
 export cgra_branch="master"
-export pnr_branch="master"
+export pnr_branch="io-collateral"
 export smt_branch="master"
+export test_bench_generator_branch="master"
 
 #halide
 export LLVM_VERSION=3.7.1
@@ -53,6 +55,7 @@ git clone -b ${mapper_branch} -- ${mapper_git} || git -C CGRAMapper pull
 git clone -b ${cgra_branch} -- ${cgra_git} || git -C CGRAGenerator pull
 git clone -b ${pnr_branch} -- ${pnr_git} || git -C smt-pnr pull
 git clone -b ${smt_branch} -- ${smt_git} || git -C smt-switch pull
+git clone -b ${test_bench_generator_branch} -- ${test_bench_generator_git} || git -C TestBenchGenerator pull
 
 #[SR 12/2017] somebody might want to clean this up later
 git clone https://github.com/StanfordVLSI/Genesis2.git /tmp/Genesis2
@@ -90,7 +93,7 @@ cd ../;
 date
 
 # API for SMT solving with different solvers
-export PYTHONPATH=$PYTHONPATH:$PWD/smt-switch
+pip install -e smt-switch
 
 pwd
 
@@ -107,3 +110,5 @@ pip install -e smt-pnr/package
 # need this for the new dot-compare test(s)
 # pip install pygtk
 sudo apt-get install python-gtk2 -y
+
+pip install delegator.py
