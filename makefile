@@ -272,7 +272,7 @@ else
 		$(filter %.txt, $?)                   \
 		--bitstream build/$*_pnr_bitstream    \
 		--annotate build/$*_annotated         \
-		--board-info build/board_info.json    \
+		--io-collateral build/$*.io.json      \
 		--solver Boolector                    \
 		--debug                               \
 		--print --coreir-libs cgralib
@@ -317,6 +317,7 @@ endif
 
 BUILD := ../../../build
 VERILATOR_TOP := CGRAGenerator/verilator/generator_z_tb
+RTL_DIR=CGRAGenerator/hardware/generator_z/top/genesis_verif
 build/%_CGRA_out.raw: build/%_pnr_bitstream
         # cgra program and run (caleb bitstream)
         # IN:  pnr_bitstream (Bitstream for programming CGRA)
@@ -327,16 +328,33 @@ build/%_CGRA_out.raw: build/%_pnr_bitstream
 	@echo "CGRA program and run (run.csh, uses output of pnr)"
 	@echo "run.csh -config $*_pnr_bitstream"
 
-	@cd $(VERILATOR_TOP);    \
-	build=../../../build;   \
-	./run.csh top_tb.cpp             \
-		$(QVSWITCH)              \
-		$(MEM_SWITCH)                       \
-		-config $${build}/$*_pnr_bitstream  \
-		-input  $${build}/$*_input.png      \
-		-output $${build}/$*_CGRA_out.raw   \
-		-delay $(DELAY)                     \
-		-nclocks 5M
+	cp $(VERILATOR_TOP)/sram_stub.v $(RTL_DIR)/sram_512w_16b.v  # SRAM hack
+
+	python TestBenchGenerator/generate_harness.py \
+		--pnr-io-collateral build/$*.io.json      \
+		--bitstream build/$*_pnr_bitstream        \
+		--max-clock-cycles 5000000                \
+		--output-file-name harness.cpp
+	
+	# Verilator wrapper that only builds if the output object is not present
+	# (override with --force-rebuild)
+	python TestBenchGenerator/verilate.py \
+		--harness harness.cpp             \
+		--verilog-directory $(RTL_DIR)    \
+		--output-directory build          \
+		--top-module-name top
+
+	make --silent -C build -j -f Vtop.mk Vtop
+
+	# HACK: Input file name to inpurt port file name, also pre-processing input
+	# file for DELAY
+	cd build; python ../TestBenchGenerator/process_input.py $*.io.json $*_input.raw $(DELAY)
+
+	cd build; ./Vtop
+
+	# HACK: Output port file name to output file name, also post-processing
+	# output file for DELAY
+	cd build; python ../TestBenchGenerator/process_output.py $*.io.json $*_CGRA_out.raw $* $(DELAY)
 
 build/%.correct.txt: build/%_CGRA_out.raw
         # check to see that output is correct.
