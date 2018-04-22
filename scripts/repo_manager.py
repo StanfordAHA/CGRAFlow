@@ -29,108 +29,112 @@ parser.add_argument("--test-bench-generator-remote", help="TestBenchGenerator re
 
 args = parser.parse_args()
 
-remote_prefix = "git@" if args.with_ssh else "https://"
-
 class Repo:
+    remote_prefix = "git@" if args.with_ssh else "https://"
+    def __init__(self, remote, branch):
+        """
+        Each repository is initialized with a remote and a branch
+        """
+        self.remote = remote
+        self.branch = branch
+
     def install(self):
+        """
+        Each repository must implement an `install` method that builds and
+        installs the software
+        """
         raise NotImplementedError()
 
     @property
     def directory(self):
+        """
+        Dynamically returns the directory into which the repository is cloned
+        based on the name of the class.  A repository should override this
+        property if the directory name does not match with the class name (e.g.
+        smt-switch since the dash is not a valid character for a  Python
+        identifier)
+        """
         return type(self).__name__
 
-    @property
-    def branch(self):
-        raise NotImplementedError()
-
     def clone(self):
-        sh.git.clone(self.url)
+        """
+        Clones the repository using the remote prefix specified by
+        args.with_ssh
+        """
+        sh.git.clone(Repo.remote_prefix + self.remote)
 
 
 class Halide_CoreIR(Repo):
-    url = remote_prefix + args.halide_remote
     def install(self):
         pass
 
-    @property
-    def branch(self):
-        return args.halide
-
 class coreir(Repo):
-    url = remote_prefix + args.coreir_remote
     def install(self):
         run("make clean")
         run("sudo make -j 2 install")
 
-    @property
-    def branch(self):
-        return args.coreir
-
 class pycoreir(Repo):
-    url = remote_prefix + args.pycoreir_remote
     def install(self):
         run("pip install -e .")
 
-    @property
-    def branch(self):
-        return args.coreir
-
 class CGRAMapper(Repo):
-    url = remote_prefix + args.mapper_remote
     def install(self):
         run("make clean")
         run("sudo make -j 2 install")
 
-    @property
-    def branch(self):
-        return args.mapper
-
-class smt_pnr(Repo):
-    url = remote_prefix + args.pnr_doctor_remote
-    @property
-    def directory(self):
-        return "smt-pnr"
+class PnRDoctor(Repo):
+    directory = "smt-pnr"
 
     def install(self):
         run("pip install -e package")
 
-    @property
-    def branch(self):
-        return args.pnr_doctor
-
-class smt(Repo):
-    url = remote_prefix + args.smt_switch_remote
-    @property
-    def directory(self):
-        return "smt-switch"
+class smt_switch(Repo):
+    directory = "smt-switch"
 
     def install(self):
         pass
 
-    @property
-    def branch(self):
-        return args.smt_switch
-
 class CGRAGenerator(Repo):
-    url = remote_prefix + args.cgra_generator_remote
-    @property
-    def branch(self):
-        return args.cgra_generator
-
     def install(self):
         pass
 
 class TestBenchGenerator(Repo):
-    url = remote_prefix + args.test_bench_generator_remote
-    @property
-    def branch(self):
-        return args.test_bench_generator
-
     def install(self):
         pass
 
-repos = (Halide_CoreIR(), coreir(), pycoreir(), CGRAMapper(), smt_pnr(), smt(),
-         CGRAGenerator(), TestBenchGenerator())
+repos = (
+    Halide_CoreIR(
+        remote=args.halide_remote, 
+        branch=args.halide
+    ), 
+    coreir(
+        remote=args.coreir_remote, 
+        branch=args.coreir
+    ), 
+    pycoreir(
+        remote=args.pycoreir_remote, 
+        branch=args.pycoreir
+    ), 
+    CGRAMapper(
+        remote=args.mapper_remote, 
+        branch=args.mapper
+    ), 
+    PnRDoctor(
+        remote=args.pnr_doctor_remote, 
+        branch=args.pnr_doctor
+    ), 
+    smt_switch(
+        remote=args.smt_switch_remote, 
+        branch=args.smt_switch
+    ),
+    CGRAGenerator(
+        remote=args.cgra_generator_remote, 
+        branch=args.cgra_generator
+    ), 
+    TestBenchGenerator(
+        remote=args.test_bench_generator_remote, 
+        branch=args.test_bench_generator)
+)
 
 for repo in repos:
     branch = "master"
