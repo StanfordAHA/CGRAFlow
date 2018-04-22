@@ -145,10 +145,11 @@ for repo in repos:
     os.chdir(repo.directory)
     current_head = sh.git("symbolic-ref", "HEAD").rstrip()
     print("    Currently on branch {}".format(current_head))
-    if current_head != "refs/heads/{}".format(branch) or args.force:
-        sh.git.pull()
-        print("    Checking out {}".format(branch))
-        sh.git.checkout(branch)
+    if current_head != "refs/heads/{}".format(repo.branch) or args.force:
+        print("    Fetching from remote origin")
+        sh.git.fetch("origin")
+        print("    Checking out {}".format(repo.branch))
+        sh.git.checkout(repo.branch)
         print("    Installing")
         repo.install()
     print()
