@@ -13,7 +13,9 @@ parser.add_argument("--coreir", help="coreir and pycoreir branch", default="mast
 parser.add_argument("--mapper", help="mapper branch", default="master")
 parser.add_argument("--halide", help="halide branch", default="master")
 parser.add_argument("--pnr-doctor", help="pnr branch", default="master")
+parser.add_argument("--smt-switch", help="smt-switch branch", default="master")
 parser.add_argument("--cgra-generator", help="generator branch", default="master")
+parser.add_argument("--test-bench-generator", help="TestBenchGenerator branch", default="master")
 
 args = parser.parse_args()
 
@@ -31,6 +33,7 @@ class Repo:
 
 
 class Halide_CoreIR(Repo):
+    url = "https://github.com/jeffsetter/Halide_CoreIR.git"
     def install(self):
         pass
 
@@ -39,6 +42,7 @@ class Halide_CoreIR(Repo):
         return args.halide
 
 class coreir(Repo):
+    url = "https://github.com/rdaly525/coreir.git"
     def install(self):
         run("make clean")
         run("sudo make -j 2 install")
@@ -48,6 +52,7 @@ class coreir(Repo):
         return args.coreir
 
 class pycoreir(Repo):
+    url = "https://github.com/leonardt/pycoreir.git"
     def install(self):
         run("pip install -e .")
 
@@ -56,6 +61,7 @@ class pycoreir(Repo):
         return args.coreir
 
 class CGRAMapper(Repo):
+    url = "https://github.com/StanfordAHA/CGRAMapper.git"
     def install(self):
         run("make clean")
         run("sudo make -j 2 install")
@@ -65,6 +71,7 @@ class CGRAMapper(Repo):
         return args.mapper
 
 class smt_pnr(Repo):
+    url = "https://github.com/cdonovick/smt-pnr"
     @property
     def directory(self):
         return "smt-pnr"
@@ -76,7 +83,21 @@ class smt_pnr(Repo):
     def branch(self):
         return args.pnr_doctor
 
+class smt(Repo):
+    url = "https://github.com/makaimann/smt-switch"
+    @property
+    def directory(self):
+        return "smt-switch"
+
+    def install(self):
+        pass
+
+    @property
+    def branch(self):
+        return args.smt_switch
+
 class CGRAGenerator(Repo):
+    url = "https://github.com/StanfordAHA/CGRAGenerator.git"
     @property
     def branch(self):
         return args.cgra_generator
@@ -84,10 +105,24 @@ class CGRAGenerator(Repo):
     def install(self):
         pass
 
-for repo in (Halide_CoreIR(), coreir(), pycoreir(), CGRAMapper(), smt_pnr(), CGRAGenerator()):
+class TestBenchGenerator(Repo):
+    url = "https://github.com/StanfordAHA/TestBenchGenerator"
+    @property
+    def branch(self):
+        return args.test_bench_generator
+
+    def install(self):
+        pass
+
+repos = (Halide_CoreIR(), coreir(), pycoreir(), CGRAMapper(), smt_pnr(), smt(),
+         CGRAGenerator(), TestBenchGenerator())
+
+for repo in repos:
     branch = "master"
     print(type(repo).__name__)
     print("=" * len(type(repo).__name__))
+    if not os.path.exists(repo.directory):
+        repo.clone()
     os.chdir(repo.directory)
     current_head = sh.git("symbolic-ref", "HEAD").rstrip()
     print(f"    Currently on branch {current_head}")

@@ -31,6 +31,17 @@ export pnr_branch="master"
 export smt_branch="master"
 export test_bench_generator_branch="master"
 
+pip install sh
+python scripts/checkout_branches.py \
+    --halide master                 \
+    --coreir master                 \
+    --pycoreir master               \
+    --pnr-doctor master             \
+    --smt-switch master             \
+    --cgra-generator master         \
+    --test-bench-generator master
+
+
 #halide
 export LLVM_VERSION=3.7.1
 export BUILD_SYSTEM=MAKE
