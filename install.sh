@@ -14,7 +14,7 @@ if [[ -z "${TRAVIS_BUILD_DIR}" ]]; then
 fi
 
 pip3 install --user sh
-python3 sc.py \
+python3 scripts/repo_manager.py \
     --halide master \
     --halide-remote github.com/jeffsetter/Halide_CoreIR.git \
     --coreir master \
