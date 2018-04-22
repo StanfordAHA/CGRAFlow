@@ -131,10 +131,10 @@ for repo in repos:
         repo.clone()
     os.chdir(repo.directory)
     current_head = sh.git("symbolic-ref", "HEAD").rstrip()
-    print(f"    Currently on branch {current_head}")
-    if current_head != f"refs/heads/{branch}" or args.force:
+    print("    Currently on branch {}".format(current_head))
+    if current_head != "refs/heads/{}".format(branch) or args.force:
         sh.git.pull()
-        print(f"    Checking out {branch}")
+        print("    Checking out {}".format(branch))
         sh.git.checkout(branch)
         print("    Installing")
         repo.install()
