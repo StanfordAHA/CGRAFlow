@@ -331,6 +331,7 @@ build/%_CGRA_out.raw: build/%_pnr_bitstream
 	cp $(VERILATOR_TOP)/sram_stub.v $(RTL_DIR)/sram_512w_16b.v  # SRAM hack
 
 	python TestBenchGenerator/generate_harness.py \
+		--use-jtag                                \
 		--pnr-io-collateral build/$*.io.json      \
 		--bitstream build/$*_pnr_bitstream        \
 		--max-clock-cycles 5000000                \
