@@ -9,6 +9,7 @@ def run(*args, **kwargs):
 parser = argparse.ArgumentParser(description="Checkout and update branches in project repos")
 
 parser.add_argument("-f", "--force", action="store_true", help="Force rebuild and install", default=False)
+parser.add_argument("--with-ssh", action="store_true", help="Clone with ssh", default=False)
 parser.add_argument("--coreir", help="coreir and pycoreir branch", default="master")
 parser.add_argument("--mapper", help="mapper branch", default="master")
 parser.add_argument("--halide", help="halide branch", default="master")
@@ -18,6 +19,8 @@ parser.add_argument("--cgra-generator", help="generator branch", default="master
 parser.add_argument("--test-bench-generator", help="TestBenchGenerator branch", default="master")
 
 args = parser.parse_args()
+
+remote_prefix = "git@" if args.with_ssh else "https://"
 
 class Repo:
     def install(self):
@@ -31,9 +34,12 @@ class Repo:
     def branch(self):
         raise NotImplementedError()
 
+    def clone(self):
+        sh.git.clone(self.url)
+
 
 class Halide_CoreIR(Repo):
-    url = "https://github.com/jeffsetter/Halide_CoreIR.git"
+    url = remote_prefix + args.halide_remote
     def install(self):
         pass
 
@@ -42,7 +48,7 @@ class Halide_CoreIR(Repo):
         return args.halide
 
 class coreir(Repo):
-    url = "https://github.com/rdaly525/coreir.git"
+    url = remote_prefix + args.coreir_remote
     def install(self):
         run("make clean")
         run("sudo make -j 2 install")
@@ -52,7 +58,7 @@ class coreir(Repo):
         return args.coreir
 
 class pycoreir(Repo):
-    url = "https://github.com/leonardt/pycoreir.git"
+    url = remote_prefix + args.pycoreir_remote
     def install(self):
         run("pip install -e .")
 
@@ -61,7 +67,7 @@ class pycoreir(Repo):
         return args.coreir
 
 class CGRAMapper(Repo):
-    url = "https://github.com/StanfordAHA/CGRAMapper.git"
+    url = remote_prefix + args.mapper_remote
     def install(self):
         run("make clean")
         run("sudo make -j 2 install")
@@ -71,7 +77,7 @@ class CGRAMapper(Repo):
         return args.mapper
 
 class smt_pnr(Repo):
-    url = "https://github.com/cdonovick/smt-pnr"
+    url = remote_prefix + args.pnr_doctor_remote
     @property
     def directory(self):
         return "smt-pnr"
@@ -84,7 +90,7 @@ class smt_pnr(Repo):
         return args.pnr_doctor
 
 class smt(Repo):
-    url = "https://github.com/makaimann/smt-switch"
+    url = remote_prefix + args.smt_switch_remote
     @property
     def directory(self):
         return "smt-switch"
@@ -97,7 +103,7 @@ class smt(Repo):
         return args.smt_switch
 
 class CGRAGenerator(Repo):
-    url = "https://github.com/StanfordAHA/CGRAGenerator.git"
+    url = remote_prefix + args.cgra_generator_remote
     @property
     def branch(self):
         return args.cgra_generator
@@ -106,7 +112,7 @@ class CGRAGenerator(Repo):
         pass
 
 class TestBenchGenerator(Repo):
-    url = "https://github.com/StanfordAHA/TestBenchGenerator"
+    url = remote_prefix + args.test_bench_generator_remote
     @property
     def branch(self):
         return args.test_bench_generator
