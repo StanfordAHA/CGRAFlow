@@ -15,6 +15,7 @@ fi
 
 export halide_git="https://github.com/jeffsetter/Halide_CoreIR.git"
 export coreir_git="https://github.com/rdaly525/coreir.git"
+export pycoreir_git="https://github.com/leonardt/pycoreir.git"
 export mapper_git="https://github.com/StanfordAHA/CGRAMapper.git"
 export cgra_git="https://github.com/StanfordAHA/CGRAGenerator.git"
 export pnr_git="https://github.com/cdonovick/smt-pnr"
@@ -23,6 +24,7 @@ export test_bench_generator_git="https://github.com/StanfordAHA/TestBenchGenerat
 
 export halide_branch="master"
 export coreir_branch="master"
+export pycoreir_branch="master"
 export mapper_branch="master"
 export cgra_branch="master"
 export pnr_branch="master"
@@ -51,6 +53,7 @@ which python3
 #pull all repos
 git clone -b ${halide_branch} -- ${halide_git} || git -C Halide_CoreIR pull
 git clone -b ${coreir_branch} -- ${coreir_git} || git -C coreir pull
+git clone -b ${pycoreir_branch} -- ${pycoreir_git} || git -C pycoreir pull
 git clone -b ${mapper_branch} -- ${mapper_git} || git -C CGRAMapper pull
 git clone -b ${cgra_branch} -- ${cgra_git} || git -C CGRAGenerator pull
 git clone -b ${pnr_branch} -- ${pnr_git} || git -C smt-pnr pull
@@ -83,7 +86,7 @@ make -j2 build
 sudo make -j2 install
 cd ..;
 
-pip install coreir
+pip install -e pycoreir
 
 pwd
 cd CGRAMapper
