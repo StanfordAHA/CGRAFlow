@@ -1,10 +1,16 @@
 import argparse
 import os 
-import sh
-import subprocess
+import delegator
 
-def run(*args, **kwargs):
-    subprocess.run(*args, shell=True, check=True, **kwargs)
+tab = "    "
+def run(command, *args, **kwargs):
+    print(tab + "❯ " + command)
+    result = delegator.run(command, *args, **kwargs)
+    print((tab * 2) + (tab * 2).join(result.out.splitlines()))
+    if result.return_code:
+        print((tab * 2) + (tab * 2).join(result.err.splitlines()))
+        raise RuntimeError("Running command {} failed".format(command))
+    return result.out
 
 parser = argparse.ArgumentParser(description="Checkout and update branches in project repos")
 
@@ -61,7 +67,7 @@ class Repo:
         Clones the repository using the remote prefix specified by
         args.with_ssh
         """
-        sh.git.clone(Repo.remote_prefix + self.remote)
+        run("git clone {}{}".format(Repo.remote_prefix, self.remote))
 
 
 class Halide_CoreIR(Repo):
@@ -70,23 +76,23 @@ class Halide_CoreIR(Repo):
 
 class coreir(Repo):
     def install(self):
-        run("make clean")
-        run("sudo make -j 2 install")
+        run("make clean", cwd=repo.directory)
+        run("sudo make -j 2 install", cwd=repo.directory)
 
 class pycoreir(Repo):
     def install(self):
-        run("pip install -e .")
+        run("pip install -e .", cwd=repo.directory)
 
 class CGRAMapper(Repo):
     def install(self):
-        run("make clean")
-        run("sudo make -j 2 install")
+        run("make clean", cwd=repo.directory)
+        run("sudo make -j 2 install", cwd=repo.directory)
 
 class PnRDoctor(Repo):
     directory = "smt-pnr"
 
     def install(self):
-        run("pip install -e package")
+        run("pip install -e package", cwd=repo.directory)
 
 class smt_switch(Repo):
     directory = "smt-switch"
@@ -142,15 +148,12 @@ for repo in repos:
     print("=" * len(type(repo).__name__))
     if not os.path.exists(repo.directory):
         repo.clone()
-    os.chdir(repo.directory)
-    current_head = sh.git("symbolic-ref", "HEAD").rstrip()
-    print("    Currently on branch {}".format(current_head))
+    current_head = run("git symbolic-ref HEAD", cwd=repo.directory).rstrip()
     if current_head != "refs/heads/{}".format(repo.branch) or args.force:
-        print("    Fetching from remote origin")
-        sh.git.fetch("origin")
-        print("    Checking out {}".format(repo.branch))
-        sh.git.checkout(repo.branch)
-        print("    Installing")
+        run("git fetch origin", cwd=repo.directory)
+        run("git checkout {}".format(repo.branch), cwd=repo.directory)
+        print(tab + "Installing")
         repo.install()
+    else:
+        print(tab + "Already on requested branch")
     print()
-    os.chdir("..")
