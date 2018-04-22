@@ -10,13 +10,22 @@ parser = argparse.ArgumentParser(description="Checkout and update branches in pr
 
 parser.add_argument("-f", "--force", action="store_true", help="Force rebuild and install", default=False)
 parser.add_argument("--with-ssh", action="store_true", help="Clone with ssh", default=False)
-parser.add_argument("--coreir", help="coreir and pycoreir branch", default="master")
+parser.add_argument("--coreir", help="coreir branch", default="master")
+parser.add_argument("--coreir-remote", help="coreir remote ", default="github.com/rdaly525/coreir.git")
+parser.add_argument("--pycoreir", help="pycoreir branch", default="master")
+parser.add_argument("--pycoreir-remote", help="pycoreir remote ", default="github.com/leonardt/pycoreir.git")
 parser.add_argument("--mapper", help="mapper branch", default="master")
+parser.add_argument("--mapper-remote", help="mapper remote", default="github.com/StanfordAHA/CGRAMapper.git")
 parser.add_argument("--halide", help="halide branch", default="master")
+parser.add_argument("--halide-remote", help="halide remote", default="github.com/jeffsetter/Halide_CoreIR.git")
 parser.add_argument("--pnr-doctor", help="pnr branch", default="master")
+parser.add_argument("--pnr-doctor-remote", help="pnr remote", default="github.com/cdonovick/smt-pnr.git")
 parser.add_argument("--smt-switch", help="smt-switch branch", default="master")
+parser.add_argument("--smt-switch-remote", help="smt-switch remote", default="github.com/makaimann/smt-switch.git")
 parser.add_argument("--cgra-generator", help="generator branch", default="master")
+parser.add_argument("--cgra-generator-remote", help="generator remote", default="github.com/StanfordAHA/CGRAGenerator.git")
 parser.add_argument("--test-bench-generator", help="TestBenchGenerator branch", default="master")
+parser.add_argument("--test-bench-generator-remote", help="TestBenchGenerator remote", default="github.com/StanfordAHA/TestBenchGenerator.git")
 
 args = parser.parse_args()
 

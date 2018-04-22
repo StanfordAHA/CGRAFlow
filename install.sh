@@ -30,8 +30,8 @@ python3 scripts/repo_manager.py                                                 
     --smt-switch                  master                                        \
     --smt-switch-remote           github.com/makaimann/smt-switch.git           \
                                                                                 \
-    --cgra-mapper                 master                                        \
-    --cgra-mapper-remote          github.com/StanfordAHA/CGRAMapper.git         \
+    --mapper                      master                                        \
+    --mapper-remote               github.com/StanfordAHA/CGRAMapper.git         \
                                                                                 \
     --cgra-generator              master                                        \
     --cgra-generator-remote       github.com/StanfordAHA/CGRAGenerator.git      \
