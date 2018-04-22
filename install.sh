@@ -13,8 +13,8 @@ if [[ -z "${TRAVIS_BUILD_DIR}" ]]; then
     export TRAVIS_BUILD_DIR=`pwd`
 fi
 
-pip install sh
-python scripts/repo_manager.py.py \
+pip3 install sh
+python3 scripts/repo_manager.py.py \
     --halide master \
     --halide-remote github.com/jeffsetter/Halide_CoreIR.git \
     --coreir master \
