@@ -14,7 +14,7 @@ if [[ -z "${TRAVIS_BUILD_DIR}" ]]; then
 fi
 
 pip install sh
-python scripts/checkout_branches.py \
+python scripts/repo_manager.py.py \
     --halide master \
     --halide-remote github.com/jeffsetter/Halide_CoreIR.git \
     --coreir master \
