@@ -14,23 +14,30 @@ if [[ -z "${TRAVIS_BUILD_DIR}" ]]; then
 fi
 
 pip3 install --user sh
-python3 scripts/repo_manager.py \
-    --halide master \
-    --halide-remote github.com/jeffsetter/Halide_CoreIR.git \
-    --coreir master \
-    --coreir-remote github.com/rdaly525/coreir.git \
-    --pycoreir master \
-    --pycoreir-remote github.com/leonardt/pycoreir.git \
-    --pnr-doctor master \
-    --pnr-doctor-remote github.com/cdonovick/smt-pnr.git \
-    --smt-switch master \
-    --smt-switch-remote github.com/makaimann/smt-switch.git \
-    --cgra-mapper master \
-    --cgra-mapper-remote github.com/StanfordAHA/CGRAMapper.git \
-    --cgra-generator master \
-    --cgra-generator-remote github.com/StanfordAHA/CGRAGenerator.git \
-    --test-bench-generator master \
-    --test-bench-generator-remote  github.com/StanfordAHA/TestBenchGenerator.git
+python3 scripts/repo_manager.py                                                 \
+    --halide                      master                                        \
+    --halide-remote               github.com/jeffsetter/Halide_CoreIR.git       \
+                                                                                \
+    --coreir                      master                                        \
+    --coreir-remote               github.com/rdaly525/coreir.git                \
+                                                                                \
+    --pycoreir                    master                                        \
+    --pycoreir-remote             github.com/leonardt/pycoreir.git              \
+                                                                                \
+    --pnr-doctor                  master                                        \
+    --pnr-doctor-remote           github.com/cdonovick/smt-pnr.git              \
+                                                                                \
+    --smt-switch                  master                                        \
+    --smt-switch-remote           github.com/makaimann/smt-switch.git           \
+                                                                                \
+    --cgra-mapper                 master                                        \
+    --cgra-mapper-remote          github.com/StanfordAHA/CGRAMapper.git         \
+                                                                                \
+    --cgra-generator              master                                        \
+    --cgra-generator-remote       github.com/StanfordAHA/CGRAGenerator.git      \
+                                                                                \
+    --test-bench-generator        master                                        \
+    --test-bench-generator-remote github.com/StanfordAHA/TestBenchGenerator.git
 
 #halide
 export LLVM_VERSION=3.7.1
