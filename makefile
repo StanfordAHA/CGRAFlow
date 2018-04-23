@@ -329,13 +329,15 @@ build/%_CGRA_out.raw: build/%_pnr_bitstream
 	@echo "run.csh -config $*_pnr_bitstream"
 
 	cp $(VERILATOR_TOP)/sram_stub.v $(RTL_DIR)/sram_512w_16b.v  # SRAM hack
+	cp DW_tap.v $(RTL_DIR)/DW_tap.v
 
 	python TestBenchGenerator/generate_harness.py \
 		--use-jtag                                \
 		--pnr-io-collateral build/$*.io.json      \
 		--bitstream build/$*_pnr_bitstream        \
 		--max-clock-cycles 5000000                \
-		--output-file-name harness.cpp
+		--output-file-name harness.cpp            \
+		--verify-config
 	
 	# Verilator wrapper that only builds if the output object is not present
 	# (override with --force-rebuild)
