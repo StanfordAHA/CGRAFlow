@@ -345,6 +345,8 @@ build/%_CGRA_out.raw: build/%_pnr_bitstream
 		--output-directory build          \
 		--top-module-name top
 
+	cp TestBenchGenerator/jtag/jtagdriver.h build/
+
 	make --silent -C build -j -f Vtop.mk Vtop
 
 	# HACK: Input file name to inpurt port file name, also pre-processing input
