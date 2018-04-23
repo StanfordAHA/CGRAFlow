@@ -153,6 +153,9 @@ for repo in repos:
     if current_head != "refs/heads/{}".format(repo.branch) or args.force:
         run("git fetch origin", cwd=repo.directory)
         run("git checkout {}".format(repo.branch), cwd=repo.directory)
+        current_head = run("git symbolic-ref HEAD", cwd=repo.directory).rstrip()
+        if current_head != "refs/heads/{}".format(repo.branch):
+            raise Exception("Could not checkout branch {}".format(repo.branch))
         print(tab + "Installing")
         repo.install()
     else:
