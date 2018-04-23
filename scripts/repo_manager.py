@@ -158,9 +158,6 @@ for repo in repos:
             # explicitly
             checkout_prefix = "origin/"
         run("git checkout {}{}".format(checkout_prefix, repo.branch), cwd=repo.directory)
-        current_head = run("git symbolic-ref HEAD", cwd=repo.directory).rstrip()
-        if current_head != "refs/heads/{}".format(repo.branch):
-            raise Exception("Could not checkout branch {}".format(repo.branch))
         print(tab + "Installing")
         repo.install()
     else:
