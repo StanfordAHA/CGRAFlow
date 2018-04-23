@@ -152,7 +152,12 @@ for repo in repos:
     current_head = run("git symbolic-ref HEAD", cwd=repo.directory).rstrip()
     if current_head != "refs/heads/{}".format(repo.branch) or args.force:
         run("git fetch origin", cwd=repo.directory)
-        run("git checkout {}".format(repo.branch), cwd=repo.directory)
+        checkout_prefix = ""
+        if os.environ.get("TRAVIS") == "true":
+            # Strange behavior on travis requires us to specify the remote
+            # explicitly
+            checkout_prefix = "origin/"
+        run("git checkout {}{}".format(checkout_prefix, repo.branch), cwd=repo.directory)
         current_head = run("git symbolic-ref HEAD", cwd=repo.directory).rstrip()
         if current_head != "refs/heads/{}".format(repo.branch):
             raise Exception("Could not checkout branch {}".format(repo.branch))
