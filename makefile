@@ -332,12 +332,14 @@ build/%_CGRA_out.raw: build/%_pnr_bitstream
 	cp DW_tap.v $(RTL_DIR)/DW_tap.v
 
 	python TestBenchGenerator/generate_harness.py \
-		--use-jtag                                \
 		--pnr-io-collateral build/$*.io.json      \
 		--bitstream build/$*_pnr_bitstream        \
 		--max-clock-cycles 5000000                \
 		--output-file-name harness.cpp            \
-		--verify-config
+		--trace                                   \
+		--trace-file-name $*.vcd                  \
+		--verify-config                           \
+		--use-jtag
 	
 	# Verilator wrapper that only builds if the output object is not present
 	# (override with --force-rebuild)
@@ -345,6 +347,7 @@ build/%_CGRA_out.raw: build/%_pnr_bitstream
 		--harness harness.cpp             \
 		--verilog-directory $(RTL_DIR)    \
 		--output-directory build          \
+		--trace					          \
 		--top-module-name top
 
 	cp TestBenchGenerator/jtag/jtagdriver.h build/
