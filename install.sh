@@ -3,6 +3,9 @@ set -e  # Exit immediately if a command exits with a non-zero status.
 
 export prefix=$HOME/.cgra_flow_local
 mkdir -p $prefix
+mkdir -p $prefix/lib
+mkdir -p $prefix/bin
+mkdir -p $prefix/include
 
 if [[ -z "${TRAVIS_BUILD_DIR}" ]]; then
     # Halide_CoreIR/test/scripts/install_travis.sh is known to use this
