@@ -5,7 +5,7 @@ import delegator
 tab = "    "
 def run(command, *args, cwd=".", **kwargs):
     print(tab + "./" + cwd)
-    print(tab + "❯ " + command)
+    print(tab + "+ " + command)
     result = delegator.run(command, *args, cwd=cwd, **kwargs)
     print((tab * 2) + (tab * 2).join(result.out.splitlines()))
     if result.return_code:
