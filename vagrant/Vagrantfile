@@ -75,7 +75,7 @@ Vagrant.configure("2") do |config|
     source setenv.sh
     echo 'export CGRAFLOW_PATH=$HOME/CGRAFlow' >> $HOME/.bashrc
     echo 'source $CGRAFLOW_PATH/setenv.sh' >> $HOME/.bashrc
-    make test_all
+    make core_only
   SCRIPT
   config.vm.provision "shell", inline: $script, privileged: false
 end
