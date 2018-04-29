@@ -50,13 +50,13 @@ $(warning MEM_SWITCH = $(MEM_SWITCH))
 #      build/cascade_mapped.json
 
 test_newapp:
+	echo 'new app serpent tests' >> build/test_summary.txt
+	make new_app_serpent || (echo oops serpent failed | tee -a build/test_summary.txt)
+	grep oops build/test_summary.txt && exit 13 || exit 0
+	echo ''              >> build/test_summary.txt
 	make start_testing
 	echo 'New app SMT test'    >> build/test_summary.txt
 	make new_app || (echo oops SMT failed | tee -a build/test_summary.txt)
-	echo ''              >> build/test_summary.txt
-	echo 'New app Serpent tests' >> build/test_summary.txt
-	make new_app_serpent || (echo oops serpent failed | tee -a build/test_summary.txt)
-	grep oops build/test_summary.txt && exit 13 || exit 0
 	make end_testing
 
 test_all:
@@ -72,9 +72,11 @@ test_all:
 new_app:
 	make clean_pnr
 	make build/onebit_bool.correct.txt DELAY=0.0   GOLD=ignore
+
 new_app_serpent:
 	make clean_pnr
-	make build/onebit_bool.correct.txt DELAY=0.0   GOLD=ignore PNR=serpent
+	make build/onebit_bool.correct.txt DELAY=0.0   GOLD=ignore PNR=serpent ONEBIT=TRUE 
+
 core_only:
 	make start_testing
 	echo 'Core tests'    >> build/test_summary.txt
@@ -344,6 +346,19 @@ build/%_CGRA_out.raw: build/%_pnr_bitstream
 	@echo "CGRA program and run (run.csh, uses output of pnr)"
 	@echo "run.csh -config $*_pnr_bitstream"
 
+ifeq ($(ONEBIT), TRUE)
+	@cd $(VERILATOR_TOP);    \
+	build=../../../build;   \
+	./run.csh top_tb.cpp -hackmem   \
+		$(QVSWITCH)             \
+		$(MEM_SWITCH)                       \
+		-config $${build}/$*_pnr_bitstream  \
+		-input  $${build}/$*_input.png      \
+		-output $${build}/16bit_out.raw     \
+		-out1 s1t0 $${build}/$*_CGRA_out.raw\
+		-delay $(DELAY)                     \
+		-nclocks 5M
+else
 	cp $(VERILATOR_TOP)/sram_stub.v $(RTL_DIR)/sram_512w_16b.v  # SRAM hack
 
 	python TestBenchGenerator/generate_harness.py \
@@ -351,7 +366,7 @@ build/%_CGRA_out.raw: build/%_pnr_bitstream
 		--bitstream build/$*_pnr_bitstream        \
 		--max-clock-cycles 5000000                \
 		--output-file-name harness.cpp
-	
+
 	# Verilator wrapper that only builds if the output object is not present
 	# (override with --force-rebuild)
 	python TestBenchGenerator/verilate.py \
@@ -371,6 +386,7 @@ build/%_CGRA_out.raw: build/%_pnr_bitstream
 	# HACK: Output port file name to output file name, also post-processing
 	# output file for DELAY
 	cd build; python ../TestBenchGenerator/process_output.py $*.io.json $*_CGRA_out.raw $* $(DELAY)
+endif
 
 build/%.correct.txt: build/%_CGRA_out.raw
         # check to see that output is correct.
