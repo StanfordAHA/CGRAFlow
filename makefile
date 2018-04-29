@@ -34,10 +34,7 @@ $(warning OUTPUT = "$(OUTPUT)")
 IMAGE := default
 
 CGRA_SIZE := 16x16
-MEM_SWITCH := -newmem  # Don't really need this...riiight?
-
 $(warning CGRA_SIZE = $(CGRA_SIZE))
-$(warning MEM_SWITCH = $(MEM_SWITCH))
 
 # $(warning EGREGIOUS_CONV21_HACK = $(EGREGIOUS_CONV21_HACK))
 # $(warning EGREGIOUS_CONV21_HACK_SWITCH = $(EGREGIOUS_CONV21_HACK_SWITCH))
@@ -349,9 +346,8 @@ build/%_CGRA_out.raw: build/%_pnr_bitstream
 ifeq ($(ONEBIT), TRUE)
 	@cd $(VERILATOR_TOP);    \
 	build=../../../build;   \
-	./run.csh top_tb.cpp -hackmem   \
+	./run.csh top_tb.cpp            \
 		$(QVSWITCH)             \
-		$(MEM_SWITCH)                       \
 		-config $${build}/$*_pnr_bitstream  \
 		-input  $${build}/$*_input.png      \
 		-output $${build}/16bit_out.raw     \
