@@ -2,6 +2,9 @@ language: c
 dist: trusty
 sudo: required
 
+apt:
+  update: true
+
 env:
   global:
     - CGRAFLOW_HOME=${TRAVIS_BUILD_DIR}
@@ -27,9 +30,12 @@ script:
   # BUT what if we don't (to see if e.g. smt passes when serpent fails...?)
   # - set -e
   # - make SILENT=FALSE test_all
-  - make core_only
+
+  - make start_testing
+  -   make test_onebit_bool_serpent
+  -   make core_only
   # - make serpent_only
-  # - make test_all
+  - make end_testing
 
 after_failure:
   # The log file is getting very long and unwieldy.

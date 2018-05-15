@@ -12,12 +12,6 @@ CONVERT = CGRAGenerator/verilator/generator_z_tb/io/myconvert.csh
 DELAY := 0,0           # How long to wait before first output / last output
 $(warning DELAY = $(DELAY))
 
-# EGREGIOUS_CONV21_HACK := FALSE
-# EGREGIOUS_CONV21_HACK_SWITCH :=
-# ifeq ($(EGREGIOUS_CONV21_HACK), TRUE)
-# 	EGREGIOUS_CONV21_HACK_SWITCH := -egregious_conv21_hack
-# endif
-
 SILENT := TRUE
 ifeq ($(SILENT), TRUE)
 	OUTPUT           :=  > /dev/null
@@ -28,19 +22,16 @@ else
 	SILENT_FILTER_HF :=
 	QVSWITCH         :=  -v
 endif
-$(warning OUTPUT = "$(OUTPUT)")
 
 # Image being used
 IMAGE := default
-
 CGRA_SIZE := 16x16
-MEM_SWITCH := -newmem  # Don't really need this...riiight?
 
-$(warning CGRA_SIZE = $(CGRA_SIZE))
-$(warning MEM_SWITCH = $(MEM_SWITCH))
-
-# $(warning EGREGIOUS_CONV21_HACK = $(EGREGIOUS_CONV21_HACK))
-# $(warning EGREGIOUS_CONV21_HACK_SWITCH = $(EGREGIOUS_CONV21_HACK_SWITCH))
+ifneq ($(SILENT), TRUE)
+  $(warning PNR = $(PNR))
+  $(warning OUTPUT = "$(OUTPUT)")
+  $(warning CGRA_SIZE = $(CGRA_SIZE))
+endif
 
 ########################################################################
 
@@ -51,28 +42,87 @@ $(warning MEM_SWITCH = $(MEM_SWITCH))
 
 test_all:
 	make start_testing
-	echo 'Core tests'    >> build/test_summary.txt
-	make core_tests || (echo oops SMT failed | tee -a build/test_summary.txt)
-	echo ''              >> build/test_summary.txt
-	echo 'Serpent tests' >> build/test_summary.txt
-	make serpent_tests || (echo oops serpent failed | tee -a build/test_summary.txt)
-	grep oops build/test_summary.txt && exit 13 || exit 0
+	  @echo 'Core tests'    >> build/test_summary.txt
+	  make core_tests || (echo oops SMT failed | tee -a build/test_summary.txt)
+	  @echo ''              >> build/test_summary.txt
+	  @echo 'Serpent tests' >> build/test_summary.txt
+	  make serpent_tests || (echo oops serpent failed | tee -a build/test_summary.txt)
+	  grep oops build/test_summary.txt && exit 13 || exit 0
 	make end_testing
 
 core_only:
-	make start_testing
+        # make start_testing
 	echo 'Core tests'    >> build/test_summary.txt
 	make core_tests || (echo oops SMT failed | tee -a build/test_summary.txt)
 	grep oops build/test_summary.txt && exit 13 || exit 0
-	make end_testing
+        # make end_testing
 
 serpent_only:
-	make start_testing
+        # make start_testing
 	echo 'Serpent tests' >> build/test_summary.txt
 	make serpent_tests || (echo oops serpent failed | tee -a build/test_summary.txt)
 	grep oops build/test_summary.txt && exit 13 || exit 0
-	make end_testing
+        # make end_testing
 
+BSB  := CGRAGenerator/bitstream/bsbuilder
+J2D  := CGRAGenerator/testdir/graphcompare/json2dot.py
+VTOP := CGRAGenerator/verilator/generator_z_tb
+# (note cgra_info_16x16.txt builds cgra_info.txt as a side effect)
+# FIXME should make side effect explicit :(
+test_onebit_bool_serpent:  build/onebit_bool_mapped.json build/cgra_info_16x16.txt
+	echo 'Serpent onebit_bool test' >> build/test_summary.txt
+
+        # Bad things will happen if no sram hack
+	ls -l \
+	  CGRAGenerator/hardware/generator_z/top/genesis_verif/sram_512w_16b.v \
+	  CGRAGenerator/verilator/generator_z_tb/sram_stub.v
+
+	diff \
+	  CGRAGenerator/hardware/generator_z/top/genesis_verif/sram_512w_16b.v \
+	  CGRAGenerator/verilator/generator_z_tb/sram_stub.v
+
+	cmp \
+	  CGRAGenerator/hardware/generator_z/top/genesis_verif/sram_512w_16b.v \
+	  CGRAGenerator/verilator/generator_z_tb/sram_stub.v \
+	  || exit 13
+
+        ################################################################
+        # BUILD
+        # CGRAGenerator/bitstream/bsbuilder/testdir/make_bitstreams.csh build onebit_bool
+        # json => dot
+	$(J2D) < build/onebit_bool_mapped.json > build/onebit_bool_mapped.dot
+        # dot => bsb
+	$(BSB)/serpent.py build/onebit_bool_mapped.dot -o build/onebit_bool.bsb > build/onebit_bool.log.serpent
+        # bsb => bsa
+	$(BSB)/bsbuilder.py < build/onebit_bool.bsb > build/onebit_bool.bsa
+
+        ################################################################
+        # SIM
+        # CGRAGenerator/bitstream/bsbuilder/testdir/test_bitstreams.csh build onebit_bool\
+        # | tee -a build/compare_summary.txt;
+        #
+        # ./run.csh $buildswitch $tswitch -config $bsa -input $input -output $out $out1sw -delay $delay
+        # FIXME below should instead maybe do 'build=`pwd`/build; cd $(VTOP)...'
+        # --verilator_debug
+	cd $(VTOP); \
+	  build=../../../build; \
+	  ./run.csh -gen \
+	  -config    $${build}/onebit_bool.bsa \
+	  -input     $${build}/onebit_bool_input.raw \
+	  -output    $${build}/onebit_bool_CGRA_out16.raw \
+	  -out1 s1t0 $${build}/onebit_bool_CGRA_out1.raw \
+	  -delay 0,0 || exit 13
+
+        ################################################################
+        # TEST
+	$(BSB)/testdir/compare_images.csh onebit_bool \
+	  build/onebit_bool_halide_out.raw \
+	  build/onebit_bool_CGRA_out1.raw \
+	  | tee -a build/booltest_summary.txt || exit 13
+
+	@(grep PASSED build/booltest_summary.txt > /dev/null) \
+		&& echo ' ' `date +%H:%M:%S` TEST RESULT onebit_bool PASSED >> build/test_summary.txt \
+		|| echo ' ' `date +%H:%M:%S` TEST RESULT onebit_bool FAILED >> build/test_summary.txt
 
 
 core_tests:
@@ -87,10 +137,11 @@ core_tests:
 serpent_tests:
 	make clean_pnr
 #       # For verbose output add "SILENT=FALSE" to command line(s) below
-	make build/pointwise.correct.txt DELAY=0,0   GOLD=ignore PNR=serpent
-	make build/conv_1_2.correct.txt  DELAY=1,0   GOLD=ignore PNR=serpent
-	make build/conv_2_1.correct.txt  DELAY=10,0  GOLD=ignore PNR=serpent
-	make build/conv_3_1.correct.txt  DELAY=20,0  GOLD=ignore PNR=serpent
+	make build/onebit_bool.correct.txt DELAY=0,0 GOLD=ignore PNR=serpent ONEBIT=TRUE 
+	make build/pointwise.correct.txt   DELAY=0,0 GOLD=ignore PNR=serpent
+	make build/conv_1_2.correct.txt    DELAY=1,0 GOLD=ignore PNR=serpent
+	make build/conv_2_1.correct.txt   DELAY=10,0 GOLD=ignore PNR=serpent
+	make build/conv_3_1.correct.txt   DELAY=20,0 GOLD=ignore PNR=serpent
 	make build/conv_bw.correct.txt   DELAY=130,0 GOLD=ignore PNR=serpent
 
 clean_pnr:
@@ -120,8 +171,8 @@ ifeq ($(GOLD), ignore)
 	@echo "Skipping gold test because GOLD=ignore..."
 else
 	if `test -e test/compare_summary.txt`; then rm test/compare_summary.txt; fi
-	echo -n "GOLD-COMPARE SUMMARY " > test/compare_summary.txt
-	echo    "BEGIN `date +%H:%M:%S`"         >> test/compare_summary.txt
+	@echo -n "GOLD-COMPARE SUMMARY " > test/compare_summary.txt
+	@echo    "BEGIN `date +%H:%M:%S`"         >> test/compare_summary.txt
 endif
 
 
@@ -130,12 +181,12 @@ end_testing:
 ifeq ($(GOLD), ignore)
 	@echo "Skipping gold test because GOLD=ignore..."
 else
-	echo -n "GOLD-COMPARE SUMMARY " >> test/compare_summary.txt
-	echo    "END `date +%H:%M:%S`"            >> test/compare_summary.txt
-	echo ''
+	@echo -n "GOLD-COMPARE SUMMARY " >> test/compare_summary.txt
+	@echo    "END `date +%H:%M:%S`"            >> test/compare_summary.txt
+	@echo ''
 	cat test/compare_summary.txt
 endif
-	echo ''
+	@echo ''
 	cat build/test_summary.txt
 
 
@@ -224,7 +275,7 @@ endif
 build/cgra_info_16x16.txt:
 	@echo; echo Making $@ because of $?
 	@echo "CGRA generate (generates 16x16 CGRA + connection matrix for pnr)"
-	cd CGRAGenerator; export CGRA_GEN_USE_MEM=1; ./bin/generate.csh $(QVSWITCH) -$(CGRA_SIZE)|| exit 13
+	CGRAGenerator/bin/generate.csh $(QVSWITCH) -$(CGRA_SIZE)|| exit 13
 	cp CGRAGenerator/hardware/generator_z/top/cgra_info.txt build/cgra_info_16x16.txt
 	cp CGRAGenerator/hardware/generator_z/top/board_info.json build/board_info.json
 	CGRAGenerator/bin/cgra_info_analyzer.csh build/cgra_info_16x16.txt
@@ -328,6 +379,24 @@ build/%_CGRA_out.raw: build/%_pnr_bitstream
 	@echo "CGRA program and run (run.csh, uses output of pnr)"
 	@echo "run.csh -config $*_pnr_bitstream"
 
+ifeq ($(PNR), serpent)
+	@cd $(VERILATOR_TOP);   \
+	build=../../../build;   \
+	./run.csh top_tb.cpp    \
+		$(QVSWITCH)     \
+		-gen            \
+		-config $${build}/$*_pnr_bitstream \
+		-input  $${build}/$*_input.png     \
+		-output $${build}/$*_CGRA_out.raw  \
+		-out1 s1t0 $${build}/1bit_out.raw  \
+		-delay $(DELAY)                    \
+		-nclocks 5M
+
+    ifeq ($(ONEBIT), TRUE)
+	mv $${build}/1bit_out.raw $${build}/$*_CGRA_out.raw
+    endif
+
+else
 	cp $(VERILATOR_TOP)/sram_stub.v $(RTL_DIR)/sram_512w_16b.v  # SRAM hack
 
 	python TestBenchGenerator/generate_harness.py \
@@ -335,7 +404,7 @@ build/%_CGRA_out.raw: build/%_pnr_bitstream
 		--bitstream build/$*_pnr_bitstream        \
 		--max-clock-cycles 5000000                \
 		--output-file-name harness.cpp
-	
+
 	# Verilator wrapper that only builds if the output object is not present
 	# (override with --force-rebuild)
 	python TestBenchGenerator/verilate.py \
@@ -355,6 +424,7 @@ build/%_CGRA_out.raw: build/%_pnr_bitstream
 	# HACK: Output port file name to output file name, also post-processing
 	# output file for DELAY
 	cd build; python ../TestBenchGenerator/process_output.py $*.io.json $*_CGRA_out.raw $* $(DELAY)
+endif
 
 build/%.correct.txt: build/%_CGRA_out.raw
         # check to see that output is correct.
