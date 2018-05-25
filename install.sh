@@ -24,7 +24,7 @@ python3 scripts/repo_manager.py                                                 
     --pycoreir                    master                                        \
     --pycoreir-remote             github.com/leonardt/pycoreir.git              \
                                                                                 \
-    --pnr-doctor                  master                                        \
+    --pnr-doctor                  new-cgra-support                              \
     --pnr-doctor-remote           github.com/cdonovick/smt-pnr.git              \
                                                                                 \
     --smt-switch                  master                                        \
