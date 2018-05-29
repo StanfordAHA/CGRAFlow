@@ -101,10 +101,9 @@ pwd
 Halide_CoreIR/test/scripts/install_travis.sh
 
 # pnr
-# run script that installs solvers and adds necessary environment variables
-# if all the solvers are already cached it doesn't need to download
-# if there are any missing solvers, downloads from Makai's AFS
-. ./smt-pnr/util/get_smt_solvers.sh
+# run script that adds necessary environment variables for smt solvers
+# solvers are downloaded in `smt-pnr` install logic in repo_manager.py
+. ./smt-pnr/util/set_env_for_solvers.sh
 
 # need this for the new dot-compare test(s)
 # pip install pygtk
