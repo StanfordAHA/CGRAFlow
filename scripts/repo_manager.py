@@ -93,7 +93,8 @@ class PnRDoctor(Repo):
     directory = "smt-pnr"
 
     def install(self):
-        run("./smt-pnr/util/get_smt_solvers.sh")
+        run("./util/get_smt_solvers.sh", cwd=repo.directory)
+        run("pip install -e smt_solvers/monosat/python", cwd=repo.directory)
         run("pip install -e package", cwd=repo.directory)
 
 class smt_switch(Repo):
