@@ -1,5 +1,5 @@
 import argparse
-import os 
+import os
 import delegator
 
 tab = "    "
@@ -7,9 +7,9 @@ def run(command, *args, cwd=".", **kwargs):
     print(tab + "./" + cwd)
     print(tab + "+ " + command)
     result = delegator.run(command, *args, cwd=cwd, **kwargs)
-    print((tab * 2) + (tab * 2).join(result.out.splitlines()))
+    print((tab * 2) + ("\n" + (tab * 2)).join(result.out.splitlines()))
     if result.return_code:
-        print((tab * 2) + (tab * 2).join(result.err.splitlines()))
+        print((tab * 2) + ("\n" + (tab * 2)).join(result.err.splitlines()))
         raise RuntimeError("Running command {} failed".format(command))
     return result.out
 
@@ -111,35 +111,35 @@ class TestBenchGenerator(Repo):
 
 repos = (
     Halide_CoreIR(
-        remote=args.halide_remote, 
+        remote=args.halide_remote,
         branch=args.halide
-    ), 
+    ),
     coreir(
-        remote=args.coreir_remote, 
+        remote=args.coreir_remote,
         branch=args.coreir
-    ), 
+    ),
     pycoreir(
-        remote=args.pycoreir_remote, 
+        remote=args.pycoreir_remote,
         branch=args.pycoreir
-    ), 
+    ),
     CGRAMapper(
-        remote=args.mapper_remote, 
+        remote=args.mapper_remote,
         branch=args.mapper
-    ), 
+    ),
     PnRDoctor(
-        remote=args.pnr_doctor_remote, 
+        remote=args.pnr_doctor_remote,
         branch=args.pnr_doctor
-    ), 
+    ),
     smt_switch(
-        remote=args.smt_switch_remote, 
+        remote=args.smt_switch_remote,
         branch=args.smt_switch
     ),
     CGRAGenerator(
-        remote=args.cgra_generator_remote, 
+        remote=args.cgra_generator_remote,
         branch=args.cgra_generator
-    ), 
+    ),
     TestBenchGenerator(
-        remote=args.test_bench_generator_remote, 
+        remote=args.test_bench_generator_remote,
         branch=args.test_bench_generator)
 )
 
