@@ -101,7 +101,7 @@ class smt_switch(Repo):
     directory = "smt-switch"
 
     def install(self):
-        pass
+        run("pip install -e .", cwd=repo.directory)
 
 class CGRAGenerator(Repo):
     def install(self):

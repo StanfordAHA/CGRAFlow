@@ -92,9 +92,6 @@ cd ../;
 
 date
 
-# API for SMT solving with different solvers
-pip install -e smt-switch
-
 pwd
 
 # Halide installation (llvm, etc.)
@@ -103,10 +100,13 @@ Halide_CoreIR/test/scripts/install_travis.sh
 # pnr
 # run script that adds necessary environment variables for smt solvers
 # solvers are downloaded in `smt-pnr` install logic in repo_manager.py
-. ./smt-pnr/util/set_env_for_solvers.sh
+cd smt-pnr
+# We have to cd because the install step downloads the solvers in the smt-pnr
+# directory and the set-env script must ben run where the solvers are
+# downloaded
+. util/set_env_for_solvers.sh
+cd ..
 
 # need this for the new dot-compare test(s)
 # pip install pygtk
 sudo apt-get install python-gtk2 -y
-
-pip install delegator.py
