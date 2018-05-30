@@ -8,7 +8,7 @@ apt:
 env:
   global:
     - CGRAFLOW_HOME=${TRAVIS_BUILD_DIR}
-    - CGRAFLOW_PATH=${CGRAFLOW_HOME}/CGRAFlow
+    - CGRAFLOW_PATH=${CGRAFLOW_HOME}
 
 cache:
   apt: true
