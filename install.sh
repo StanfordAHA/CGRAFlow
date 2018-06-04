@@ -42,7 +42,7 @@ python scripts/repo_manager.py                                                  
     --pycoreir                    master                                        \
     --pycoreir-remote             github.com/leonardt/pycoreir.git              \
                                                                                 \
-    --pnr-doctor                  master                                        \
+    --pnr-doctor                  new-cgra-support                              \
     --pnr-doctor-remote           github.com/cdonovick/smt-pnr.git              \
                                                                                 \
     --smt-switch                  master                                        \
@@ -51,7 +51,7 @@ python scripts/repo_manager.py                                                  
     --mapper                      master                                        \
     --mapper-remote               github.com/StanfordAHA/CGRAMapper.git         \
                                                                                 \
-    --cgra-generator              dev                                           \
+    --cgra-generator              default_cgra_info                             \
     --cgra-generator-remote       github.com/StanfordAHA/CGRAGenerator.git      \
                                                                                 \
     --test-bench-generator        master                                        \
