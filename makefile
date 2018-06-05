@@ -137,7 +137,7 @@ core_tests:
 serpent_tests:
 	make clean_pnr
 #       # For verbose output add "SILENT=FALSE" to command line(s) below
-	make build/onebit_bool.correct.txt DELAY=0,0 GOLD=ignore PNR=serpent ONEBIT=TRUE 
+	make build/onebit_bool.correct.txt DELAY=0,0 GOLD=ignore PNR=serpent ONEBIT=TRUE
 	make build/pointwise.correct.txt   DELAY=0,0 GOLD=ignore PNR=serpent
 	make build/conv_1_2.correct.txt    DELAY=1,0 GOLD=ignore PNR=serpent
 	make build/conv_2_1.correct.txt   DELAY=10,0 GOLD=ignore PNR=serpent
@@ -331,7 +331,7 @@ endif
 
 
 
-        # Note: having the annotated bitstream embedded as cleartext in the log 
+        # Note: having the annotated bitstream embedded as cleartext in the log
         # file (below) is incredibly useful...let's please keep it if we can.
 	cat build/$*_annotated
 
@@ -353,7 +353,7 @@ else
         # Note: Pointwise is run in both 4x4 and 8x8 modes, each of which
         # will generate different intermediates but with the same names.
         # What to do? Gotta hack it :(
-        # 
+        #
 	@echo "GOLD-COMPARE --------------------------------------------------" \
 	  | tee -a build/compare_summary.txt
 	if `test "$(CGRA_SIZE)" = "4x4"` ; then \
@@ -403,6 +403,7 @@ else
 		--pnr-io-collateral build/$*.io.json      \
 		--bitstream build/$*_pnr_bitstream        \
 		--max-clock-cycles 5000000                \
+		--quiet                                   \
 		--output-file-name harness.cpp
 
 	# Verilator wrapper that only builds if the output object is not present
