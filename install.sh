@@ -51,7 +51,7 @@ python scripts/repo_manager.py                                                  
     --mapper                      master                                        \
     --mapper-remote               github.com/StanfordAHA/CGRAMapper.git         \
                                                                                 \
-    --cgra-generator              dev                                           \
+    --cgra-generator              master                                        \
     --cgra-generator-remote       github.com/StanfordAHA/CGRAGenerator.git      \
                                                                                 \
     --test-bench-generator        master                                        \
