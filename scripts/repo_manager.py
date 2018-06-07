@@ -52,6 +52,13 @@ class Repo:
         """
         raise NotImplementedError()
 
+    def setup(self):
+        """
+        Repositories can optionally implement a `setup` method that sets environment
+        variables needed to use the software
+        """
+        pass
+
     @property
     def directory(self):
         """
@@ -93,9 +100,11 @@ class PnRDoctor(Repo):
     directory = "smt-pnr"
 
     def install(self):
+        run("pip install -e package", cwd=repo.directory)
+
+    def setup(self):
         run("./util/get_smt_solvers.sh", cwd=repo.directory)
         run("pip install -e smt_solvers/monosat/python", cwd=repo.directory)
-        run("pip install -e package", cwd=repo.directory)
 
 class smt_switch(Repo):
     directory = "smt-switch"
@@ -159,4 +168,5 @@ for repo in repos:
         repo.install()
     else:
         print(tab + "Already on requested branch")
+    repo.setup()
     print()
