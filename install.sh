@@ -13,8 +13,26 @@ if [[ -z "${TRAVIS_BUILD_DIR}" ]]; then
     export TRAVIS_BUILD_DIR=`pwd`
 fi
 
-pip3 install --user delegator.py
-python3 scripts/repo_manager.py                                                 \
+#halide
+export LLVM_VERSION=3.7.1
+export BUILD_SYSTEM=MAKE
+export CXX_=g++-4.9
+export CC_=gcc-4.9
+
+wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
+bash miniconda.sh -u -b -p $HOME/miniconda
+export PATH="$HOME/miniconda/bin:$PATH"
+hash -r
+conda config --set always_yes yes --set changeps1 no
+conda update -q conda
+conda info -a
+
+which pip
+which python
+which python3
+
+pip install delegator.py
+python scripts/repo_manager.py                                                  \
     --halide                      master                                        \
     --halide-remote               github.com/jeffsetter/Halide_CoreIR.git       \
                                                                                 \
@@ -38,24 +56,6 @@ python3 scripts/repo_manager.py                                                 
                                                                                 \
     --test-bench-generator        master                                         \
     --test-bench-generator-remote github.com/StanfordAHA/TestBenchGenerator.git
-
-#halide
-export LLVM_VERSION=3.7.1
-export BUILD_SYSTEM=MAKE
-export CXX_=g++-4.9
-export CC_=gcc-4.9
-
-wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
-bash miniconda.sh -u -b -p $HOME/miniconda
-export PATH="$HOME/miniconda/bin:$PATH"
-hash -r
-conda config --set always_yes yes --set changeps1 no
-conda update -q conda
-conda info -a
-
-which pip
-which python
-which python3
 
 #[SR 12/2017] somebody might want to clean this up later
 git clone https://github.com/StanfordVLSI/Genesis2.git /tmp/Genesis2
@@ -92,23 +92,11 @@ cd ../;
 
 date
 
-# API for SMT solving with different solvers
-pip install -e smt-switch
-
 pwd
 
 # Halide installation (llvm, etc.)
 Halide_CoreIR/test/scripts/install_travis.sh
 
-# pnr
-# run script that installs solvers and adds necessary environment variables
-# if all the solvers are already cached it doesn't need to download
-# if there are any missing solvers, downloads from Makai's AFS
-. ./smt-pnr/util/get_smt_solvers.sh
-pip install -e smt-pnr/package
-
 # need this for the new dot-compare test(s)
 # pip install pygtk
 sudo apt-get install python-gtk2 -y
-
-pip install delegator.py
