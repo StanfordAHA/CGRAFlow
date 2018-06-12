@@ -1,4 +1,4 @@
-FROM ubuntu:latest
+FROM ubuntu:trusty
 
 # Need sudo for install.sh, ideally we wouldn't have to do this
 RUN apt-get update && \
@@ -10,8 +10,7 @@ RUN useradd -m docker && echo "docker:docker" | chpasswd && adduser docker sudo
 SHELL ["/bin/bash", "-c"]
 
 RUN apt-get install git software-properties-common wget make -y
-RUN git clone https://github.com/StanfordAHA/CGRAFlow
-RUN cd CGRAFlow && ./install.sh
+RUN git clone https://github.com/StanfordAHA/CGRAFlow $HOME/CGRAFlow
+RUN cd $HOME/CGRAFlow && ./install.sh
 RUN echo 'export CGRAFLOW_PATH=$HOME/CGRAFlow' >> $HOME/.bashrc
 RUN echo 'source $CGRAFLOW_PATH/setenv.sh' >> $HOME/.bashrc
-RUN cd CGRAFlow && CGRAFLOW_PATH=$PWD source setenv.sh && make core_only
