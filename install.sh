@@ -32,6 +32,16 @@ which python
 which python3
 
 export COREIRCONFIG="g++-4.9";
+# Had to add this (until someone comes up with something better):
+# sudo update-alternatives --remove-all gcc # Travis error: "no alternatives for gcc"
+# sudo update-alternatives --remove-all g++ # Travis error: "no alternatives for gcc"
+# Installs with priority 20, dunno why.  Web page says:
+#   Each alternative has a priority associated with it. When a link
+#   group is in automatic mode, the alternatives pointed to by members
+#   of the group will be those which have the highest priority.
+sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.9 20
+sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.9 20
+
 pip install delegator.py
 python scripts/repo_manager.py                                                  \
     --halide                      coreir-dev                                        \
@@ -66,7 +76,7 @@ source Halide_CoreIR/test/scripts/before_install_travis.sh
 
 # build coreir
 #cd coreir;
-export COREIRCONFIG="g++-4.9";
+#export COREIRCONFIG="g++-4.9";
 #-----
 # SR 171027 derp support
 # COREIRCONFIG var (above) did not do the trick for derp.
@@ -77,8 +87,8 @@ export COREIRCONFIG="g++-4.9";
 #   Each alternative has a priority associated with it. When a link
 #   group is in automatic mode, the alternatives pointed to by members
 #   of the group will be those which have the highest priority.
-sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.9 20
-sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.9 20
+#sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.9 20
+#sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.9 20
 #-----
 #make -j2 build
 #sudo make -j2 install
@@ -86,14 +96,14 @@ sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.9 20
 
 pip install -e pycoreir
 
-pwd
-cd CGRAMapper
-make -j2
-cd ../;
+#pwd
+#cd CGRAMapper
+#make -j2
+#cd ../;
 
 date
 
-pwd
+#pwd
 
 # Halide installation (llvm, etc.)
 Halide_CoreIR/test/scripts/install_travis.sh
