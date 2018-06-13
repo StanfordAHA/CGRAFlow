@@ -33,22 +33,22 @@ which python3
 
 pip install delegator.py
 python scripts/repo_manager.py                                                  \
-    --halide                      master                                        \
-    --halide-remote               github.com/jeffsetter/Halide_CoreIR.git       \
+    --halide                      coreir-dev                                        \
+    --halide-remote               github.com/rdaly525/Halide_CoreIR.git       \
                                                                                 \
-    --coreir                      master                                        \
+    --coreir                      dev                                        \
     --coreir-remote               github.com/rdaly525/coreir.git                \
                                                                                 \
-    --pycoreir                    master                                        \
+    --pycoreir                    dev                                        \
     --pycoreir-remote             github.com/leonardt/pycoreir.git              \
                                                                                 \
-    --pnr-doctor                  master                                        \
+    --pnr-doctor                  onebit-io                                        \
     --pnr-doctor-remote           github.com/cdonovick/smt-pnr.git              \
                                                                                 \
     --smt-switch                  master                                        \
     --smt-switch-remote           github.com/makaimann/smt-switch.git           \
                                                                                 \
-    --mapper                      master                                        \
+    --mapper                      dev                                        \
     --mapper-remote               github.com/StanfordAHA/CGRAMapper.git         \
                                                                                 \
     --cgra-generator              master                                        \
