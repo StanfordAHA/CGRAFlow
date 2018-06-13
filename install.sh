@@ -31,6 +31,7 @@ which pip
 which python
 which python3
 
+export COREIRCONFIG="g++-4.9";
 pip install delegator.py
 python scripts/repo_manager.py                                                  \
     --halide                      coreir-dev                                        \
@@ -64,7 +65,7 @@ git clone https://github.com/StanfordVLSI/Genesis2.git /tmp/Genesis2
 source Halide_CoreIR/test/scripts/before_install_travis.sh
 
 # build coreir
-cd coreir;
+#cd coreir;
 export COREIRCONFIG="g++-4.9";
 #-----
 # SR 171027 derp support
@@ -79,9 +80,9 @@ export COREIRCONFIG="g++-4.9";
 sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.9 20
 sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.9 20
 #-----
-make -j2 build
-sudo make -j2 install
-cd ..;
+#make -j2 build
+#sudo make -j2 install
+#cd ..;
 
 pip install -e pycoreir
 
