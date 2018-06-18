@@ -44,22 +44,22 @@ sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.9 20
 
 pip install delegator.py
 python scripts/repo_manager.py                                                  \
-    --halide                      coreir-dev                                        \
-    --halide-remote               github.com/rdaly525/Halide_CoreIR.git       \
+    --halide                      master                                        \
+    --halide-remote               github.com/jeffsetter/Halide_CoreIR.git       \
                                                                                 \
-    --coreir                      dev                                        \
+    --coreir                      master                                        \
     --coreir-remote               github.com/rdaly525/coreir.git                \
                                                                                 \
-    --pycoreir                    dev                                        \
+    --pycoreir                    master                                        \
     --pycoreir-remote             github.com/leonardt/pycoreir.git              \
                                                                                 \
-    --pnr-doctor                  onebit-io                                        \
+    --pnr-doctor                  master                                        \
     --pnr-doctor-remote           github.com/cdonovick/smt-pnr.git              \
                                                                                 \
     --smt-switch                  master                                        \
     --smt-switch-remote           github.com/makaimann/smt-switch.git           \
                                                                                 \
-    --mapper                      dev                                        \
+    --mapper                      master                                        \
     --mapper-remote               github.com/StanfordAHA/CGRAMapper.git         \
                                                                                 \
     --cgra-generator              master                                        \
@@ -74,32 +74,7 @@ git clone https://github.com/StanfordVLSI/Genesis2.git /tmp/Genesis2
 # setup halide env vars
 source Halide_CoreIR/test/scripts/before_install_travis.sh
 
-# build coreir
-#cd coreir;
-#export COREIRCONFIG="g++-4.9";
-#-----
-# SR 171027 derp support
-# COREIRCONFIG var (above) did not do the trick for derp.
-# Had to add this (until someone comes up with something better):
-# sudo update-alternatives --remove-all gcc # Travis error: "no alternatives for gcc"
-# sudo update-alternatives --remove-all g++ # Travis error: "no alternatives for gcc"
-# Installs with priority 20, dunno why.  Web page says:
-#   Each alternative has a priority associated with it. When a link
-#   group is in automatic mode, the alternatives pointed to by members
-#   of the group will be those which have the highest priority.
-#sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.9 20
-#sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.9 20
-#-----
-#make -j2 build
-#sudo make -j2 install
-#cd ..;
-
 pip install -e pycoreir
-
-#pwd
-#cd CGRAMapper
-#make -j2
-#cd ../;
 
 date
 
