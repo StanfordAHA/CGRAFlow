@@ -255,7 +255,7 @@ build/%_mapped.json: build/%_design_top.json
 
 	@echo "MAPPER"
 	@echo; echo Making $@ because of $?
-	./CGRAMapper/bin/mapper build/$*_design_top.json build/$*_mapped.json $(OUTPUT)
+	./CGRAMapper/bin/cgra-mapper build/$*_design_top.json build/$*_mapped.json $(OUTPUT)
 	cat build/$*_mapped.json $(OUTPUT)
 
         # Yeah, this doesn't always work (straight diff) (SD)
