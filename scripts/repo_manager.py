@@ -160,13 +160,7 @@ for repo in repos:
     print("=" * len(type(repo).__name__))
     if not os.path.exists(repo.directory):
         repo.clone()
-    current_head = run("git symbolic-ref HEAD", cwd=repo.directory).rstrip()
+    run("git checkout {}".format(repo.branch), cwd=repo.directory)
     repo.setup()
-    if current_head != "refs/heads/{}".format(repo.branch) or args.force:
-        run("git fetch origin", cwd=repo.directory)
-        run("git checkout {}".format(repo.branch), cwd=repo.directory)
-        print(tab + "Installing")
-        repo.install()
-    else:
-        print(tab + "Already on requested branch")
+    repo.install()
     print()
