@@ -68,11 +68,13 @@ test_all:
 
 new_app:
 	make clean_pnr
-	make build/onebit_bool.correct.txt DELAY=0.0   GOLD=ignore
+	make build/onebit_bool.correct.txt DELAY=0,0   GOLD=ignore
+#	make build/cascade.correct.txt     DELAY=0,0   GOLD=ignore
 
 new_app_serpent:
 	make clean_pnr
-	make build/onebit_bool.correct.txt DELAY=0.0   GOLD=ignore PNR=serpent ONEBIT=TRUE 
+	make build/onebit_bool.correct.txt DELAY=0,0   GOLD=ignore PNR=serpent ONEBIT=TRUE 
+	make build/cascade.correct.txt     DELAY=0,0   GOLD=ignore PNR=serpent
 
 core_only:
 	make start_testing
