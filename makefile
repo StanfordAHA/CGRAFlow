@@ -47,6 +47,8 @@ test_all:
 	  @echo ''              >> build/test_summary.txt
 	  @echo 'Serpent tests' >> build/test_summary.txt
 	  make serpent_tests || (echo oops serpent failed | tee -a build/test_summary.txt)
+	  @echo 'cgra_pnr tests' >> build/test_summary.txt
+	  make cgra_pnr_tests || (echo oops cgra_pnr failed | tee -a build/test_summary.txt)
 	  grep oops build/test_summary.txt && exit 13 || exit 0
 	make end_testing
 
@@ -143,6 +145,16 @@ serpent_tests:
 	make build/conv_2_1.correct.txt   DELAY=10,0 GOLD=ignore PNR=serpent
 	make build/conv_3_1.correct.txt   DELAY=20,0 GOLD=ignore PNR=serpent
 	make build/conv_bw.correct.txt   DELAY=130,0 GOLD=ignore PNR=serpent
+
+cgra_pnr_tests:
+	make clean_pnr
+#       # For verbose output add "SILENT=FALSE" to command line(s) below
+	make build/onebit_bool.correct.txt DELAY=0,0 GOLD=ignore PNR=cgra_pnr ONEBIT=TRUE
+	make build/pointwise.correct.txt   DELAY=0,0 GOLD=ignore PNR=cgra_pnr
+	make build/conv_1_2.correct.txt    DELAY=1,0 GOLD=ignore PNR=cgra_pnr
+	make build/conv_2_1.correct.txt   DELAY=10,0 GOLD=ignore PNR=cgra_pnr
+	make build/conv_3_1.correct.txt   DELAY=20,0 GOLD=ignore PNR=cgra_pnr
+	make build/conv_bw.correct.txt   DELAY=130,0 GOLD=ignore PNR=cgra_pnr
 
 clean_pnr:
 #       # Remove pnr intermediates for e.g. retesting w/serpent
@@ -310,6 +322,15 @@ ifeq ($(PNR), serpent)
 		-o build/$*_annotated
 
 	cp build/$*_annotated build/$*_pnr_bitstream
+
+else ifeq ($(PNR), cgra_pnr)
+	@echo Using cgra_pnr
+	@echo cgra_pnr/scripts/pnr_flow.sh \
+		$(filter %.txt , $?)     \ # config file   e.g. "build/cgra_info_4x4.txt"
+		$(filter %.json, $?)     \ # program graph e.g. "build/pointwise_mapped.json"
+	cgra_pnr/scripts/pnr_flow.sh \
+		$(filter %.txt , $?)     \
+		$(filter %.json, $?)     \
 
 else
 # 	smt-pnr/src/test.py  build/$*_mapped.json CGRAGenerator/hardware/generator_z/top/cgra_info.txt --bitstream build/$*_pnr_bitstream --annotate build/$*_annotated --print  --coreir-libs stdlib cgralib
