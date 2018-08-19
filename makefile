@@ -331,11 +331,13 @@ ifeq ($(PNR), serpent)
 else ifeq ($(PNR), cgra_pnr)
 	@echo Using cgra_pnr
 	@echo cgra_pnr/scripts/pnr_flow.sh \
-		$(filter %.txt , $?)     \ # config file   e.g. "build/cgra_info_4x4.txt"
-		$(filter %.json, $?)     \ # program graph e.g. "build/pointwise_mapped.json"
-	cgra_pnr/scripts/pnr_flow.sh \
 		$(filter %.txt , $?)     \
 		$(filter %.json, $?)     \
+	cgra_pnr/scripts/pnr_flow.sh \
+		$(filter %.txt , $?)     \
+		$(filter %.json, $?)
+	#   $(filter %.json, $?) => program graph e.g. "build/pointwise_mapped.json"
+	#   $(filter %.txt,  $?) => config file   e.g. "build/cgra_info_4x4.txt"
 
 else
 # 	smt-pnr/src/test.py  build/$*_mapped.json CGRAGenerator/hardware/generator_z/top/cgra_info.txt --bitstream build/$*_pnr_bitstream --annotate build/$*_annotated --print  --coreir-libs stdlib cgralib
