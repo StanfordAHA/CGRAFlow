@@ -66,6 +66,11 @@ serpent_only:
 	grep oops build/test_summary.txt && exit 13 || exit 0
         # make end_testing
 
+cgra_pnr_only:
+	echo 'cgra_pnr tests' >> build/test_summary.txt
+	make cgra_pnr_tests || (echo oops cgra_pnr failed | tee -a build/test_summary.txt)
+	grep oops build/test_summary.txt && exit 13 || exit 0
+
 BSB  := CGRAGenerator/bitstream/bsbuilder
 J2D  := CGRAGenerator/testdir/graphcompare/json2dot.py
 VTOP := CGRAGenerator/verilator/generator_z_tb

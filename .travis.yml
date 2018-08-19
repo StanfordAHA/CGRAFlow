@@ -33,7 +33,8 @@ script:
 
   - make start_testing
   # -   make test_onebit_bool_serpent
-  -   make core_only
+  -   make cgra_pnr_only
+  # -   make core_only
   # - make serpent_only
   - make end_testing
 
