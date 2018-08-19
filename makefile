@@ -335,7 +335,8 @@ else ifeq ($(PNR), cgra_pnr)
 		$(filter %.json, $?)     \
 	cgra_pnr/scripts/pnr_flow.sh \
 		$(filter %.txt , $?)     \
-		$(filter %.json, $?)
+		$(filter %.json, $?)     \
+		build/$*_annotated
 	#   $(filter %.json, $?) => program graph e.g. "build/pointwise_mapped.json"
 	#   $(filter %.txt,  $?) => config file   e.g. "build/cgra_info_4x4.txt"
 
