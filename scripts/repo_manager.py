@@ -27,6 +27,8 @@ parser.add_argument("--halide", help="halide branch", default="master")
 parser.add_argument("--halide-remote", help="halide remote", default="github.com/jeffsetter/Halide_CoreIR.git")
 parser.add_argument("--pnr-doctor", help="pnr branch", default="master")
 parser.add_argument("--pnr-doctor-remote", help="pnr remote", default="github.com/cdonovick/smt-pnr.git")
+parser.add_argument("--cgra-pnr", help="cgra_pnr branch", default="master")
+parser.add_argument("--cgra-pnr-remote", help="cgra_pnr remote", default="github.com/Kuree/cgra_pnr")
 parser.add_argument("--smt-switch", help="smt-switch branch", default="master")
 parser.add_argument("--smt-switch-remote", help="smt-switch remote", default="github.com/makaimann/smt-switch.git")
 parser.add_argument("--cgra-generator", help="generator branch", default="master")
@@ -96,6 +98,11 @@ class CGRAMapper(Repo):
         run("make clean", cwd=repo.directory)
         run("sudo make -j 2 install", cwd=repo.directory)
 
+class cgra_pnr(Repo):
+    def install(self):
+        run("pip install -r requirements.txt", cwd=repo.directory)
+        run("make", cwd=repo.directory)
+
 class PnRDoctor(Repo):
     directory = "smt-pnr"
 
@@ -136,6 +143,10 @@ repos = (
     CGRAMapper(
         remote=args.mapper_remote,
         branch=args.mapper
+    ),
+    cgra_pnr(
+        remote=args.cgra_pnr_remote,
+        branch=args.cgra_pnr
     ),
     PnRDoctor(
         remote=args.pnr_doctor_remote,
