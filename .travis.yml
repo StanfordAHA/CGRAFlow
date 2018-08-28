@@ -27,15 +27,15 @@ install:
 
 script:
   # "set -e" means "die at first error" - seems like a good idea!
-  # BUT what if we don't (to see if e.g. smt passes when serpent fails...?)
-  # - set -e
-  # - make SILENT=FALSE test_all
+  - set -e  # "die at first error"
 
   - make start_testing
-  # -   make test_onebit_bool_serpent
-  -   make core_only
-  # - make serpent_only
+  -   make serpent_only
   - make end_testing
+
+  # DEBUG/OLD
+  # - make SILENT=FALSE serpent_only
+  # - make SILENT=FALSE build/conv_bw.correct.txt DELAY=130,0 GOLD=ignore PNR=serpent
 
 after_failure:
   # The log file is getting very long and unwieldy.

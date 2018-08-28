@@ -3,6 +3,7 @@
 
 
 CONVERT = CGRAGenerator/verilator/generator_z_tb/io/myconvert.csh
+BUILD := $(CURDIR)/build
 
 ########################################################################
 # For 8x8 CGRA grid, change CGRA_SIZE from "4x4" to "8x8"
@@ -137,12 +138,12 @@ core_tests:
 serpent_tests:
 	make clean_pnr
 #       # For verbose output add "SILENT=FALSE" to command line(s) below
-	make build/onebit_bool.correct.txt DELAY=0,0 GOLD=ignore PNR=serpent ONEBIT=TRUE
 	make build/pointwise.correct.txt   DELAY=0,0 GOLD=ignore PNR=serpent
 	make build/conv_1_2.correct.txt    DELAY=1,0 GOLD=ignore PNR=serpent
 	make build/conv_2_1.correct.txt   DELAY=10,0 GOLD=ignore PNR=serpent
 	make build/conv_3_1.correct.txt   DELAY=20,0 GOLD=ignore PNR=serpent
 	make build/conv_bw.correct.txt   DELAY=130,0 GOLD=ignore PNR=serpent
+	make build/onebit_bool.correct.txt DELAY=0,0 GOLD=ignore PNR=serpent ONEBIT=TRUE
 
 clean_pnr:
 #       # Remove pnr intermediates for e.g. retesting w/serpent
@@ -366,7 +367,6 @@ else
 	fi
 endif
 
-BUILD := ../../../build
 VERILATOR_TOP := CGRAGenerator/verilator/generator_z_tb
 RTL_DIR=CGRAGenerator/hardware/generator_z/top/genesis_verif
 build/%_CGRA_out.raw: build/%_pnr_bitstream
@@ -381,50 +381,18 @@ build/%_CGRA_out.raw: build/%_pnr_bitstream
 
 ifeq ($(PNR), serpent)
 	@cd $(VERILATOR_TOP);   \
-	build=../../../build;   \
-	./run.csh top_tb.cpp    \
-		$(QVSWITCH)     \
-		-gen            \
-		-config $${build}/$*_pnr_bitstream \
-		-input  $${build}/$*_input.png     \
-		-output $${build}/$*_CGRA_out.raw  \
-		-out1 s1t0 $${build}/1bit_out.raw  \
-		-delay $(DELAY)                    \
+	./run_tbg.csh $(QVSWITCH) -gen \
+		-config    $(BUILD)/$*_pnr_bitstream \
+		-input     $(BUILD)/$*_input.png     \
+		-output    $(BUILD)/$*_CGRA_out.raw  \
+		-out1 s1t0 $(BUILD)/1bit_out.raw     \
+		-delay $(DELAY) \
 		-nclocks 5M
 
     ifeq ($(ONEBIT), TRUE)
-	mv $${build}/1bit_out.raw $${build}/$*_CGRA_out.raw
+	mv $(BUILD)/1bit_out.raw $(BUILD)/$*_CGRA_out.raw
     endif
 
-else
-	cp $(VERILATOR_TOP)/sram_stub.v $(RTL_DIR)/sram_512w_16b.v  # SRAM hack
-
-	python TestBenchGenerator/generate_harness.py \
-		--pnr-io-collateral build/$*.io.json      \
-		--bitstream build/$*_pnr_bitstream        \
-		--max-clock-cycles 5000000                \
-		--quiet                                   \
-		--output-file-name harness.cpp
-
-	# Verilator wrapper that only builds if the output object is not present
-	# (override with --force-rebuild)
-	python TestBenchGenerator/verilate.py \
-		--harness harness.cpp             \
-		--verilog-directory $(RTL_DIR)    \
-		--output-directory build          \
-		--top-module-name top
-
-	make --silent -C build -j -f Vtop.mk Vtop
-
-	# HACK: Input file name to inpurt port file name, also pre-processing input
-	# file for DELAY
-	cd build; python ../TestBenchGenerator/process_input.py $*.io.json $*_input.raw $(DELAY)
-
-	cd build; ./Vtop
-
-	# HACK: Output port file name to output file name, also post-processing
-	# output file for DELAY
-	cd build; python ../TestBenchGenerator/process_output.py $*.io.json $*_CGRA_out.raw $* $(DELAY)
 endif
 
 build/%.correct.txt: build/%_CGRA_out.raw
