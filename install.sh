@@ -59,7 +59,7 @@ python scripts/repo_manager.py                                                  
     --smt-switch                  master                                        \
     --smt-switch-remote           github.com/makaimann/smt-switch.git           \
                                                                                 \
-    --mapper                      master                                        \
+    --mapper                      fix_signedops                                 \
     --mapper-remote               github.com/StanfordAHA/CGRAMapper.git         \
                                                                                 \
     --cgra-generator              master                                        \
