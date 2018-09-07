@@ -65,7 +65,7 @@ python scripts/repo_manager.py                                                  
     --cgra-generator              master                                        \
     --cgra-generator-remote       github.com/StanfordAHA/CGRAGenerator.git      \
                                                                                 \
-    --test-bench-generator        hotfix-gcc-7-std-ios-1                                        \
+    --test-bench-generator        master                                        \
     --test-bench-generator-remote github.com/StanfordAHA/TestBenchGenerator.git
 
 #[SR 12/2017] somebody might want to clean this up later
