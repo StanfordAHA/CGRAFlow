@@ -46,8 +46,10 @@ test_all:
 	  @echo 'Core tests'    >> build/test_summary.txt
 	  make core_tests || (echo oops SMT failed | tee -a build/test_summary.txt)
 	  @echo ''              >> build/test_summary.txt
-	  @echo 'Serpent tests' >> build/test_summary.txt
-	  make serpent_tests || (echo oops serpent failed | tee -a build/test_summary.txt)
+	  # @echo 'Serpent tests' >> build/test_summary.txt
+	  # make serpent_tests || (echo oops serpent failed | tee -a build/test_summary.txt)
+	  @echo 'CGRA PnR' 		>> build/test_summary.txt
+	  make cgra_pnr_tests || (echo oops cgra_pnr failed | tee -a build/test_summary.txt)
 	  grep oops build/test_summary.txt && exit 13 || exit 0
 	make end_testing
 
@@ -64,6 +66,13 @@ serpent_only:
 	make serpent_tests || (echo oops serpent failed | tee -a build/test_summary.txt)
 	grep oops build/test_summary.txt && exit 13 || exit 0
         # make end_testing
+
+cgra_pnr_only:
+	# make start_testing
+	@echo 'CGRA PnR' 		>> build/test_summary.txt
+	make cgra_pnr_tests || (echo oops cgra_pnr failed | tee -a build/test_summary.txt)
+	grep oops build/test_summary.txt && exit 13 || exit 0
+	# make end_testing
 
 BSB  := CGRAGenerator/bitstream/bsbuilder
 J2D  := CGRAGenerator/testdir/graphcompare/json2dot.py
@@ -144,6 +153,16 @@ serpent_tests:
 	make build/conv_3_1.correct.txt   DELAY=20,0 GOLD=ignore PNR=serpent
 	make build/conv_bw.correct.txt   DELAY=130,0 GOLD=ignore PNR=serpent
 	make build/onebit_bool.correct.txt DELAY=0,0 GOLD=ignore PNR=serpent ONEBIT=TRUE
+
+cgra_pnr_tests:
+	make clean_pnr
+#       # For verbose output add "SILENT=FALSE" to command line(s) below
+	make build/pointwise.correct.txt   DELAY=0,0 GOLD=ignore PNR=cgra_pnr
+	make build/conv_1_2.correct.txt    DELAY=1,0 GOLD=ignore PNR=cgra_pnr
+	make build/conv_2_1.correct.txt   DELAY=10,0 GOLD=ignore PNR=cgra_pnr
+	make build/conv_3_1.correct.txt   DELAY=20,0 GOLD=ignore PNR=cgra_pnr
+	make build/conv_bw.correct.txt   DELAY=130,0 GOLD=ignore PNR=cgra_pnr
+	make build/onebit_bool.correct.txt DELAY=0,0 GOLD=ignore PNR=cgra_pnr ONEBIT=TRUE
 
 clean_pnr:
 #       # Remove pnr intermediates for e.g. retesting w/serpent
@@ -311,7 +330,24 @@ ifeq ($(PNR), serpent)
 		-o build/$*_annotated
 
 	cp build/$*_annotated build/$*_pnr_bitstream
-
+else ifeq ($(PNR), cgra_pnr)
+	@echo Using cgra_pnr
+	@echo pnr_flow.sh\
+		$(filter %.txt, $?)                 \
+		$(filter %.json,$?)                 \
+		build/$*_annotated.bsb
+	cgra_pnr/scripts/pnr_flow.sh            \
+		$(filter %.txt, $?)                 \
+		$(filter %.json,$?)                 \
+		build/$*_annotated.bsb
+	@echo "build bitstream using bsbuider"
+	@echo $(BSB)/bsbuilder.py               \
+		< build/$*_annotated.bsb            \
+		> build/$*_pnr_bitstream
+	$(BSB)/bsbuilder.py                     \
+		< build/$*_annotated.bsb            \
+		> build/$*_pnr_bitstream
+	cp build/$*_pnr_bitstream build/$*_annotated
 else
 # 	smt-pnr/src/test.py  build/$*_mapped.json CGRAGenerator/hardware/generator_z/top/cgra_info.txt --bitstream build/$*_pnr_bitstream --annotate build/$*_annotated --print  --coreir-libs stdlib cgralib
 
@@ -328,6 +364,7 @@ else
 		--solver Boolector                    \
 		--debug                               \
 		--print --coreir-libs cgralib
+
 endif
 
 
@@ -380,6 +417,22 @@ build/%_CGRA_out.raw: build/%_pnr_bitstream
 	@echo "run.csh -config $*_pnr_bitstream"
 
 ifeq ($(PNR), serpent)
+	@cd $(VERILATOR_TOP);   \
+	./run_tbg.csh $(QVSWITCH) -gen \
+		-config    $(BUILD)/$*_pnr_bitstream \
+		-input     $(BUILD)/$*_input.png     \
+		-output    $(BUILD)/$*_CGRA_out.raw  \
+		-out1 s1t0 $(BUILD)/1bit_out.raw     \
+		-delay $(DELAY) \
+		-nclocks 5M
+
+    ifeq ($(ONEBIT), TRUE)
+	mv $(BUILD)/1bit_out.raw $(BUILD)/$*_CGRA_out.raw
+    endif
+
+endif
+
+ifeq ($(PNR), cgra_pnr)
 	@cd $(VERILATOR_TOP);   \
 	./run_tbg.csh $(QVSWITCH) -gen \
 		-config    $(BUILD)/$*_pnr_bitstream \

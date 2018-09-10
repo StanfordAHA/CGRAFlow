@@ -30,7 +30,9 @@ parser.add_argument("--pnr-doctor-remote", help="pnr remote", default="github.co
 parser.add_argument("--smt-switch", help="smt-switch branch", default="master")
 parser.add_argument("--smt-switch-remote", help="smt-switch remote", default="github.com/makaimann/smt-switch.git")
 parser.add_argument("--cgra-generator", help="generator branch", default="master")
-parser.add_argument("--cgra-generator-remote", help="generator remote", default="github.com/StanfordAHA/CGRAGenerator.git")
+parser.add_argument("--cgra-generator-remote", help="generator remote", default="github.com/Kuree/cgra_pnr.git")
+parser.add_argument("--cgra-pnr", help="cgra_pnr branch", default="master")
+parser.add_argument("--cgra-pnr-remote", help="cgra_pnr remote", default="github.com/Kuree/cgra_pnr.git")
 parser.add_argument("--test-bench-generator", help="TestBenchGenerator branch", default="master")
 parser.add_argument("--test-bench-generator-remote", help="TestBenchGenerator remote", default="github.com/StanfordAHA/TestBenchGenerator.git")
 
@@ -116,6 +118,13 @@ class CGRAGenerator(Repo):
     def install(self):
         pass
 
+class cgra_pnr(Repo):
+    directory = "cgra_pnr"
+
+    def install(self):
+        run("pip install -r requirements.txt", cwd=repo.directory)
+        run("make", cwd=repo.directory)
+
 class TestBenchGenerator(Repo):
     def install(self):
         pass
@@ -148,6 +157,10 @@ repos = (
     CGRAGenerator(
         remote=args.cgra_generator_remote,
         branch=args.cgra_generator
+    ),
+    cgra_pnr(
+        remote=args.cgra_pnr_remote,
+        branch=args.cgra_pnr
     ),
     TestBenchGenerator(
         remote=args.test_bench_generator_remote,

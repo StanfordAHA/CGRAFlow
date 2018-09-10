@@ -66,7 +66,11 @@ python scripts/repo_manager.py                                                  
     --cgra-generator-remote       github.com/StanfordAHA/CGRAGenerator.git      \
                                                                                 \
     --test-bench-generator        master                                        \
-    --test-bench-generator-remote github.com/StanfordAHA/TestBenchGenerator.git
+    --test-bench-generator-remote github.com/StanfordAHA/TestBenchGenerator.git \
+                                                                                \
+    --cgra-pnr                    master                                        \
+    --cgra-pnr-remote             github.com/Kuree/cgra_pnr.git                 \
+
 
 #[SR 12/2017] somebody might want to clean this up later
 git clone https://github.com/StanfordVLSI/Genesis2.git /tmp/Genesis2

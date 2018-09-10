@@ -30,7 +30,7 @@ script:
   - set -e  # "die at first error"
 
   - make start_testing
-  -   make serpent_only
+  -   make cgra_pnr_only
   - make end_testing
 
   # DEBUG/OLD
