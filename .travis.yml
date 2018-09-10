@@ -58,3 +58,5 @@ addons:
 #      - ubuntu-toolchain-r-test
     packages:
 #      - g++-4.9
+       # preinstalled for most linux distros, but no in travis
+       - realpath
