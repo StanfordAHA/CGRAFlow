@@ -46,11 +46,8 @@ test_all:
 	  @echo 'Core tests'    >> build/test_summary.txt
 	  make core_tests || (echo oops SMT failed | tee -a build/test_summary.txt)
 	  @echo ''              >> build/test_summary.txt
-	  # @echo 'Serpent tests' >> build/test_summary.txt
-	  # make serpent_tests || (echo oops serpent failed | tee -a build/test_summary.txt)
 	  @echo 'CGRA PnR' 		>> build/test_summary.txt
 	  make cgra_pnr_tests || (echo oops cgra_pnr failed | tee -a build/test_summary.txt)
-	  grep oops build/test_summary.txt && exit 13 || exit 0
 	make end_testing
 
 core_only:
@@ -198,6 +195,7 @@ endif
 
 
 end_testing:
+	grep oops build/test_summary.txt && exit 13 || exit 0
 ifeq ($(GOLD), ignore)
 	@echo "Skipping gold test because GOLD=ignore..."
 else
@@ -364,10 +362,7 @@ else
 		--solver Boolector                    \
 		--debug                               \
 		--print --coreir-libs cgralib
-
 endif
-
-
 
         # Note: having the annotated bitstream embedded as cleartext in the log
         # file (below) is incredibly useful...let's please keep it if we can.
