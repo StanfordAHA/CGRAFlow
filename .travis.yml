@@ -10,11 +10,7 @@ env:
     - CGRAFLOW_HOME=${TRAVIS_BUILD_DIR}
     - CGRAFLOW_PATH=${CGRAFLOW_HOME}
 
-cache:
-  apt: true
-  directories:
-    # cache smt solvers to speed up build
-    ./smt_solvers
+cache: pip
 
 compiler:
   - gcc
