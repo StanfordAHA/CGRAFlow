@@ -347,21 +347,7 @@ else ifeq ($(PNR), cgra_pnr)
 		> build/$*_pnr_bitstream
 	cp build/$*_pnr_bitstream build/$*_annotated
 else
-# 	smt-pnr/src/test.py  build/$*_mapped.json CGRAGenerator/hardware/generator_z/top/cgra_info.txt --bitstream build/$*_pnr_bitstream --annotate build/$*_annotated --print  --coreir-libs stdlib cgralib
-
-        # $(filter %.json, $?) => program graph e.g. "build/pointwise_mapped.json"
-        # $(filter %.txt,  $?) => config file   e.g. "build/cgra_info_4x4.txt"
-        # (Could also maybe use $(word 1, $?) and $(word 2, $?)
-        # Note json file must come before config file on command line!!!
-	smt-pnr/run_pnr.py                        \
-		$(filter %.json,$?)                   \
-		$(filter %.txt, $?)                   \
-		--bitstream build/$*_pnr_bitstream    \
-		--annotate build/$*_annotated         \
-		--io-collateral build/$*.io.json      \
-		--solver Boolector                    \
-		--debug                               \
-		--print --coreir-libs cgralib
+	$(error smt_pnr no longer supported)
 endif
 
         # Note: having the annotated bitstream embedded as cleartext in the log
