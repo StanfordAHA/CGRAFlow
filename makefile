@@ -346,6 +346,7 @@ else ifeq ($(PNR), cgra_pnr)
 		< build/$*_annotated.bsb            \
 		> build/$*_pnr_bitstream
 	cp build/$*_pnr_bitstream build/$*_annotated
+	cp build/$*_annotated.bsb.json build/$*_io.json
 else
 	$(error smt_pnr no longer supported)
 endif
@@ -403,7 +404,7 @@ ifeq ($(PNR), serpent)
 		-config    $(BUILD)/$*_pnr_bitstream \
 		-input     $(BUILD)/$*_input.png     \
 		-output    $(BUILD)/$*_CGRA_out.raw  \
-		-out1 s1t0 $(BUILD)/1bit_out.raw     \
+		-out1      $(BUILD)/1bit_out.raw     \
 		-delay $(DELAY) \
 		-nclocks 5M
 
@@ -417,9 +418,10 @@ ifeq ($(PNR), cgra_pnr)
 	@cd $(VERILATOR_TOP);   \
 	./run_tbg.csh $(QVSWITCH) -gen \
 		-config    $(BUILD)/$*_pnr_bitstream \
+		-io_config $(BUILD)/$*_io.json       \
 		-input     $(BUILD)/$*_input.png     \
 		-output    $(BUILD)/$*_CGRA_out.raw  \
-		-out1 s1t0 $(BUILD)/1bit_out.raw     \
+		-out1      $(BUILD)/1bit_out.raw     \
 		-delay $(DELAY) \
 		-nclocks 5M
 
