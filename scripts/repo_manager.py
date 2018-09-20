@@ -25,10 +25,6 @@ parser.add_argument("--mapper", help="mapper branch", default="master")
 parser.add_argument("--mapper-remote", help="mapper remote", default="github.com/StanfordAHA/CGRAMapper.git")
 parser.add_argument("--halide", help="halide branch", default="master")
 parser.add_argument("--halide-remote", help="halide remote", default="github.com/jeffsetter/Halide_CoreIR.git")
-parser.add_argument("--pnr-doctor", help="pnr branch", default="master")
-parser.add_argument("--pnr-doctor-remote", help="pnr remote", default="github.com/cdonovick/smt-pnr.git")
-parser.add_argument("--smt-switch", help="smt-switch branch", default="master")
-parser.add_argument("--smt-switch-remote", help="smt-switch remote", default="github.com/makaimann/smt-switch.git")
 parser.add_argument("--cgra-generator", help="generator branch", default="master")
 parser.add_argument("--cgra-generator-remote", help="generator remote", default="github.com/Kuree/cgra_pnr.git")
 parser.add_argument("--cgra-pnr", help="cgra_pnr branch", default="master")
@@ -98,22 +94,6 @@ class CGRAMapper(Repo):
         run("make clean", cwd=repo.directory)
         run("sudo make -j 2 install", cwd=repo.directory)
 
-class PnRDoctor(Repo):
-    directory = "smt-pnr"
-
-    def install(self):
-        run("pip install -e package", cwd=repo.directory)
-
-    def setup(self):
-        run("./util/get_smt_solvers.sh", cwd=repo.directory)
-        run("pip install -e smt_solvers/monosat/python", cwd=repo.directory)
-
-class smt_switch(Repo):
-    directory = "smt-switch"
-
-    def install(self):
-        run("pip install -e .", cwd=repo.directory)
-
 class CGRAGenerator(Repo):
     def install(self):
         pass
@@ -145,14 +125,6 @@ repos = (
     CGRAMapper(
         remote=args.mapper_remote,
         branch=args.mapper
-    ),
-    PnRDoctor(
-        remote=args.pnr_doctor_remote,
-        branch=args.pnr_doctor
-    ),
-    smt_switch(
-        remote=args.smt_switch_remote,
-        branch=args.smt_switch
     ),
     CGRAGenerator(
         remote=args.cgra_generator_remote,
