@@ -59,7 +59,7 @@ python scripts/repo_manager.py                                                  
     --cgra-generator              master                                        \
     --cgra-generator-remote       github.com/StanfordAHA/CGRAGenerator.git      \
                                                                                 \
-    --test-bench-generator        io-reset                                      \
+    --test-bench-generator        master                                        \
     --test-bench-generator-remote github.com/StanfordAHA/TestBenchGenerator.git \
                                                                                 \
     --cgra-pnr                    master                                        \
