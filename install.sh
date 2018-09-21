@@ -44,10 +44,10 @@ sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.9 20
 
 pip install delegator.py
 python scripts/repo_manager.py                                                  \
-    --halide                      refactor                                      \
+    --halide                      master                                        \
     --halide-remote               github.com/jeffsetter/Halide_CoreIR.git       \
                                                                                 \
-    --coreir                      newapp_fix                                    \
+    --coreir                      master                                        \
     --coreir-remote               github.com/rdaly525/coreir.git                \
                                                                                 \
     --pycoreir                    master                                        \
