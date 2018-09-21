@@ -365,7 +365,10 @@ endif
 
         # Note: having the annotated bitstream embedded as cleartext in the log
         # file (below) is incredibly useful...let's please keep it if we can.
+
+ifeq ($(SILENT), FALSE)
 	cat build/$*_annotated
+endif
 
         # bsa_verify compares PNR bitstream intent (encoded as annotations to
         # the bitstream) versus a separately-decoded version of the bitstream,
