@@ -155,6 +155,7 @@ serpent_tests:
 cgra_pnr_tests:
 	make clean_pnr
 #       # For verbose output add "SILENT=FALSE" to command line(s) below
+	make build/onebit_bool.correct.txt DELAY=0,0 GOLD=ignore PNR=cgra_pnr ONEBIT=TRUE
 	make build/pointwise.correct.txt   DELAY=0,0 GOLD=ignore PNR=cgra_pnr
 	make build/conv_1_2.correct.txt    DELAY=1,0 GOLD=ignore PNR=cgra_pnr
 	make build/conv_2_1.correct.txt   DELAY=10,0 GOLD=ignore PNR=cgra_pnr
@@ -162,7 +163,6 @@ cgra_pnr_tests:
 	make build/conv_bw.correct.txt   DELAY=130,0 GOLD=ignore PNR=cgra_pnr
 	make build/cascade.correct.txt DELAY=260,0 GOLD=ignore PNR=cgra_pnr
 	make build/harris_valid.correct.txt DELAY=390,0 GOLD=ignore PNR=cgra_pnr
-	make build/onebit_bool.correct.txt DELAY=0,0 GOLD=ignore PNR=cgra_pnr ONEBIT=TRUE
 
 clean_pnr:
 #       # Remove pnr intermediates for e.g. retesting w/serpent
@@ -339,9 +339,13 @@ else ifeq ($(PNR), cgra_pnr)
 		build/$*_annotated.bsb
 	# NOTE: currently the mapper has some bugs
 	# will use custom fix script to fix some of them
+    ifeq ($(ONEBIT), TRUE)
+	@echo "not fixing onebit bool"
+    else
 	cgra_pnr/coreir_fix/fix_all.sh		    \
 		$(filter %.json,$?)                 \
 		$(filter %.json,$?)
+    endif
 	cgra_pnr/scripts/pnr_flow.sh            \
 		$(filter %.txt, $?)                 \
 		$(filter %.json,$?)                 \
@@ -434,6 +438,7 @@ ifeq ($(PNR), cgra_pnr)
 		-nclocks 5M
 
     ifeq ($(ONEBIT), TRUE)
+	@echo "mv $(BUILD)/1bit_out.raw $(BUILD)/$*_CGRA_out.raw"
 	mv $(BUILD)/$*_CGRA_out1.raw $(BUILD)/$*_CGRA_out.raw
     endif
 
