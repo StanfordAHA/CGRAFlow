@@ -440,11 +440,6 @@ ifeq ($(PNR), cgra_pnr)
 		-delay $(DELAY) \
 		-nclocks 5M
 
-    ifeq ($(ONEBIT), TRUE)
-	@echo "mv $(BUILD)/1bit_out.raw $(BUILD)/$*_CGRA_out.raw"
-	mv $(BUILD)/$*_CGRA_out1.raw $(BUILD)/$*_CGRA_out.raw
-    endif
-
 endif
 
 build/%.correct.txt: build/%_CGRA_out.raw
@@ -460,10 +455,8 @@ build/%.correct.txt: build/%_CGRA_out.raw
 	@echo "VISUAL COMPARE OF CGRA VS. HALIDE OUTPUT BYTES (should be null)"
 	@od -t u1 -w1 -v -A none build/$*_halide_out.raw > build/$*_halide_out.od
 	@od -t u1 -w1 -v -A none build/$*_CGRA_out.raw   > build/$*_CGRA_out.od
-	diff build/$*_halide_out.od build/$*_CGRA_out.od | head -50
-	@echo
 	@echo "BYTE-BY-BYTE COMPARE OF CGRA VS. HALIDE OUTPUT IMAGES (should be null)"
-	@echo python build/$*_halide_out.raw build/$*_CGRA_out.raw
+	@echo python $(CMP) build/$*_halide_out.raw build/$*_CGRA_out.raw
 	@python $(CMP) build/$*_CGRA_out.raw build/$*_CGRA_out1.raw build/$*_halide_out.raw \
 		&& echo ' ' `date +%H:%M:%S` TEST RESULT $* PASSED >> build/test_summary.txt \
 		|| echo ' ' `date +%H:%M:%S` TEST RESULT $* FAILED >> build/test_summary.txt
