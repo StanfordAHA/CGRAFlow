@@ -339,13 +339,9 @@ else ifeq ($(PNR), cgra_pnr)
 		build/$*_annotated.bsb
 	# NOTE: currently the mapper has some bugs
 	# will use custom fix script to fix some of them
-    ifeq ($(ONEBIT), TRUE)
-	@echo "not fixing onebit bool"
-    else
 	cgra_pnr/coreir_fix/fix_all.sh		    \
 		$(filter %.json,$?)                 \
 		$(filter %.json,$?)
-    endif
 	cgra_pnr/scripts/pnr_flow.sh            \
 		$(filter %.txt, $?)                 \
 		$(filter %.json,$?)                 \
