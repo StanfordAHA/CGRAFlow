@@ -74,6 +74,7 @@ cgra_pnr_only:
 BSB  := CGRAGenerator/bitstream/bsbuilder
 J2D  := CGRAGenerator/testdir/graphcompare/json2dot.py
 VTOP := CGRAGenerator/verilator/generator_z_tb
+CMP  := CGRAGenerator/verilator/generator_z_tb/bin/keyi_compare.py
 # (note cgra_info_16x16.txt builds cgra_info.txt as a side effect)
 # FIXME should make side effect explicit :(
 test_onebit_bool_serpent:  build/onebit_bool_mapped.json build/cgra_info_16x16.txt
@@ -154,12 +155,14 @@ serpent_tests:
 cgra_pnr_tests:
 	make clean_pnr
 #       # For verbose output add "SILENT=FALSE" to command line(s) below
+	make build/onebit_bool.correct.txt DELAY=0,0 GOLD=ignore PNR=cgra_pnr ONEBIT=TRUE
 	make build/pointwise.correct.txt   DELAY=0,0 GOLD=ignore PNR=cgra_pnr
 	make build/conv_1_2.correct.txt    DELAY=1,0 GOLD=ignore PNR=cgra_pnr
 	make build/conv_2_1.correct.txt   DELAY=10,0 GOLD=ignore PNR=cgra_pnr
 	make build/conv_3_1.correct.txt   DELAY=20,0 GOLD=ignore PNR=cgra_pnr
 	make build/conv_bw.correct.txt   DELAY=130,0 GOLD=ignore PNR=cgra_pnr
-	make build/onebit_bool.correct.txt DELAY=0,0 GOLD=ignore PNR=cgra_pnr ONEBIT=TRUE
+	make build/cascade.correct.txt DELAY=260,0 GOLD=ignore PNR=cgra_pnr
+	make build/harris_valid.correct.txt DELAY=390,0 GOLD=ignore PNR=cgra_pnr
 
 clean_pnr:
 #       # Remove pnr intermediates for e.g. retesting w/serpent
@@ -334,6 +337,11 @@ else ifeq ($(PNR), cgra_pnr)
 		$(filter %.txt, $?)                 \
 		$(filter %.json,$?)                 \
 		build/$*_annotated.bsb
+	# NOTE: currently the mapper has some bugs
+	# will use custom fix script to fix some of them
+	cgra_pnr/coreir_fix/fix_all.sh		    \
+		$(filter %.json,$?)                 \
+		$(filter %.json,$?)
 	cgra_pnr/scripts/pnr_flow.sh            \
 		$(filter %.txt, $?)                 \
 		$(filter %.json,$?)                 \
@@ -353,7 +361,10 @@ endif
 
         # Note: having the annotated bitstream embedded as cleartext in the log
         # file (below) is incredibly useful...let's please keep it if we can.
+
+ifeq ($(SILENT), FALSE)
 	cat build/$*_annotated
+endif
 
         # bsa_verify compares PNR bitstream intent (encoded as annotations to
         # the bitstream) versus a separately-decoded version of the bitstream,
@@ -421,13 +432,9 @@ ifeq ($(PNR), cgra_pnr)
 		-io_config $(BUILD)/$*_io.json       \
 		-input     $(BUILD)/$*_input.png     \
 		-output    $(BUILD)/$*_CGRA_out.raw  \
-		-out1      $(BUILD)/1bit_out.raw     \
+		-out1      $(BUILD)/$*_CGRA_out1.raw \
 		-delay $(DELAY) \
 		-nclocks 5M
-
-    ifeq ($(ONEBIT), TRUE)
-	mv $(BUILD)/1bit_out.raw $(BUILD)/$*_CGRA_out.raw
-    endif
 
 endif
 
@@ -444,11 +451,9 @@ build/%.correct.txt: build/%_CGRA_out.raw
 	@echo "VISUAL COMPARE OF CGRA VS. HALIDE OUTPUT BYTES (should be null)"
 	@od -t u1 -w1 -v -A none build/$*_halide_out.raw > build/$*_halide_out.od
 	@od -t u1 -w1 -v -A none build/$*_CGRA_out.raw   > build/$*_CGRA_out.od
-	diff build/$*_halide_out.od build/$*_CGRA_out.od | head -50
-	@echo
 	@echo "BYTE-BY-BYTE COMPARE OF CGRA VS. HALIDE OUTPUT IMAGES (should be null)"
-	@echo cmp build/$*_halide_out.raw build/$*_CGRA_out.raw
-	@cmp build/$*_halide_out.raw build/$*_CGRA_out.raw \
+	@echo python $(CMP) build/$*_halide_out.raw build/$*_CGRA_out.raw
+	@python $(CMP) build/$*_CGRA_out.raw build/$*_CGRA_out1.raw build/$*_halide_out.raw \
 		&& echo ' ' `date +%H:%M:%S` TEST RESULT $* PASSED >> build/test_summary.txt \
 		|| echo ' ' `date +%H:%M:%S` TEST RESULT $* FAILED >> build/test_summary.txt
 
@@ -462,7 +467,8 @@ build/%.correct.txt: build/%_CGRA_out.raw
 	@echo "************************************************************************"
 
         # Build target file if all went well
-	@cmp build/$*_halide_out.raw build/$*_CGRA_out.raw && touch build/$*.correct.txt
+	@python $(CMP) build/$*_CGRA_out.raw build/$*_CGRA_out1.raw build/$*_halide_out.raw \
+		&& touch build/$*.correct.txt
 
 #	(OLD)
 #	# Build target file if all went well i.e.
