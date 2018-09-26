@@ -62,7 +62,7 @@ python scripts/repo_manager.py                                                  
     --test-bench-generator        master                                        \
     --test-bench-generator-remote github.com/StanfordAHA/TestBenchGenerator.git \
                                                                                 \
-    --cgra-pnr                    master                                        \
+    --cgra-pnr                    dev                                           \
     --cgra-pnr-remote             github.com/Kuree/cgra_pnr.git                 \
 
 
