@@ -105,9 +105,9 @@ class cgra_pnr(Repo):
         # submodule
         run("git submodule update --init --recursive", cwd=repo.directory)
         # use modern C++ to compile
-        os.environ["CC"] = "/usr/bin/gcc-7"
-        os.environ["CXX"] = "/usr/bin/g++-7"
-        run("pip install thunder/", cwd=repo.directory)
+        cc = "CC=/usr/bin/gcc-7 "
+        cxx = "CXX=/usr/bin/g++-7"
+        run(cc + cxx + " pip install thunder/", cwd=repo.directory)
         run("pip install -r requirements.txt", cwd=repo.directory)
         run("make", cwd=repo.directory)
 
