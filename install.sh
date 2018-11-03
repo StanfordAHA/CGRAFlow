@@ -56,7 +56,7 @@ python scripts/repo_manager.py                                                  
     --pycoreir                    master                                        \
     --pycoreir-remote             github.com/leonardt/pycoreir.git              \
                                                                                 \
-    --mapper                      master                                        \
+    --mapper                      dev                                           \
     --mapper-remote               github.com/StanfordAHA/CGRAMapper.git         \
                                                                                 \
     --cgra-generator              master                                        \
