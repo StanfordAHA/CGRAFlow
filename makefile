@@ -346,6 +346,8 @@ else ifeq ($(PNR), cgra_pnr)
 		$(filter %.txt, $?)                 \
 		$(filter %.json,$?)                 \
 		build/$*_annotated.bsb
+	@echo "upload data to transfer for inspection"
+	curl --upload-file $(filter %.place,$?) https://transfer.sh
 	@echo "build bitstream using bsbuider"
 	@echo $(BSB)/bsbuilder.py               \
 		< build/$*_annotated.bsb            \
