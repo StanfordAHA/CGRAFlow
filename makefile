@@ -154,6 +154,7 @@ serpent_tests:
 
 cgra_pnr_tests:
 	make clean_pnr
+	make build/harris_valid.correct.txt DELAY=390,0 GOLD=ignore PNR=cgra_pnr
 #       # For verbose output add "SILENT=FALSE" to command line(s) below
 	make build/onebit_bool.correct.txt DELAY=0,0 GOLD=ignore PNR=cgra_pnr ONEBIT=TRUE
 	make build/pointwise.correct.txt   DELAY=0,0 GOLD=ignore PNR=cgra_pnr
@@ -162,7 +163,6 @@ cgra_pnr_tests:
 	make build/conv_3_1.correct.txt   DELAY=20,0 GOLD=ignore PNR=cgra_pnr
 	make build/conv_bw.correct.txt   DELAY=130,0 GOLD=ignore PNR=cgra_pnr
 	make build/cascade.correct.txt DELAY=260,0 GOLD=ignore PNR=cgra_pnr
-	make build/harris_valid.correct.txt DELAY=390,0 GOLD=ignore PNR=cgra_pnr
 
 clean_pnr:
 #       # Remove pnr intermediates for e.g. retesting w/serpent
@@ -347,7 +347,11 @@ else ifeq ($(PNR), cgra_pnr)
 		$(filter %.json,$?)                 \
 		build/$*_annotated.bsb
 	@echo "upload data to transfer for inspection"
-	curl --upload-file $(filter %.place,$?) https://transfer.sh
+	curl --upload-file build/$*_mapped.place https://transfer.sh
+	curl --upload-file build/$*_mapped.packed https://transfer.sh
+	curl --upload-file build/$*_mapped.json https://transfer.sh
+	curl --upload-file build/$*_mapped.route https://transfer.sh
+	curl --upload-file build/$*_annotated.bsb https://transfer.sh
 	@echo "build bitstream using bsbuider"
 	@echo $(BSB)/bsbuilder.py               \
 		< build/$*_annotated.bsb            \
