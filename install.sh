@@ -50,7 +50,7 @@ python scripts/repo_manager.py                                                  
     --halide                      master                                        \
     --halide-remote               github.com/jeffsetter/Halide_CoreIR.git       \
                                                                                 \
-    --coreir                      master                                        \
+    --coreir                      dev                                           \
     --coreir-remote               github.com/rdaly525/coreir.git                \
                                                                                 \
     --pycoreir                    master                                        \
