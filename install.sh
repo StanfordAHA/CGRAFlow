@@ -59,7 +59,7 @@ python scripts/repo_manager.py                                                  
     --mapper                      ashr                                          \
     --mapper-remote               github.com/StanfordAHA/CGRAMapper.git         \
                                                                                 \
-    --cgra-generator              dev                                           \
+    --cgra-generator              fix_io_config                                 \
     --cgra-generator-remote       github.com/StanfordAHA/CGRAGenerator.git      \
                                                                                 \
     --test-bench-generator        master                                        \
