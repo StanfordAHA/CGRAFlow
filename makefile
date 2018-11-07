@@ -155,6 +155,7 @@ serpent_tests:
 cgra_pnr_tests:
 	make clean_pnr
 #       # For verbose output add "SILENT=FALSE" to command line(s) below
+	make build/harris_valid.correct.txt DELAY=390,0 GOLD=ignore PNR=cgra_pnr
 	make build/onebit_bool.correct.txt DELAY=0,0 GOLD=ignore PNR=cgra_pnr ONEBIT=TRUE
 	make build/pointwise.correct.txt   DELAY=0,0 GOLD=ignore PNR=cgra_pnr
 	make build/conv_1_2.correct.txt    DELAY=1,0 GOLD=ignore PNR=cgra_pnr
@@ -162,7 +163,6 @@ cgra_pnr_tests:
 	make build/conv_3_1.correct.txt   DELAY=20,0 GOLD=ignore PNR=cgra_pnr
 	make build/conv_bw.correct.txt   DELAY=130,0 GOLD=ignore PNR=cgra_pnr
 	make build/cascade.correct.txt DELAY=260,0 GOLD=ignore PNR=cgra_pnr
-	make build/harris_valid.correct.txt DELAY=390,0 GOLD=ignore PNR=cgra_pnr
 
 clean_pnr:
 #       # Remove pnr intermediates for e.g. retesting w/serpent
