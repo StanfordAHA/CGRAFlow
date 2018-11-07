@@ -50,22 +50,22 @@ python scripts/repo_manager.py                                                  
     --halide                      master                                        \
     --halide-remote               github.com/jeffsetter/Halide_CoreIR.git       \
                                                                                 \
-    --coreir                      dev                                           \
+    --coreir                      master                                        \
     --coreir-remote               github.com/rdaly525/coreir.git                \
                                                                                 \
     --pycoreir                    master                                        \
     --pycoreir-remote             github.com/leonardt/pycoreir.git              \
                                                                                 \
-    --mapper                      dev                                           \
+    --mapper                      master                                        \
     --mapper-remote               github.com/StanfordAHA/CGRAMapper.git         \
                                                                                 \
-    --cgra-generator              fix_io_config                                 \
+    --cgra-generator              dev                                           \
     --cgra-generator-remote       github.com/StanfordAHA/CGRAGenerator.git      \
                                                                                 \
     --test-bench-generator        master                                        \
     --test-bench-generator-remote github.com/StanfordAHA/TestBenchGenerator.git \
                                                                                 \
-    --cgra-pnr                    dev                                           \
+    --cgra-pnr                    master                                        \
     --cgra-pnr-remote             github.com/Kuree/cgra_pnr.git                 \
 
 
