@@ -108,7 +108,7 @@ class cgra_pnr(Repo):
         cc = "CC=/usr/bin/gcc-7 "
         cxx = "CXX=/usr/bin/g++-7"
         run(cc + cxx + " pip install thunder/", cwd=repo.directory)
-        run(cc + cxx + " pip install cyclone/", cwd=repo.directory)
+        run(cc + cxx + " cyclone/.travis.sh", cwd=repo.directory)
         run("pip install -r requirements.txt", cwd=repo.directory)
         run("make", cwd=repo.directory)
 
