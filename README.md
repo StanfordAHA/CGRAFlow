@@ -32,14 +32,15 @@ git checkout local_install
 export CGRAFLOW_PATH="<path_to_git_directory>/CGRAFlow"
 source setenv.sh
 ```
-Now run the local_install.sh to pull in the other repos.
+Remove line 57 from local_install.sh and then run it to pull in the other repos.
 ```
 ./local_install.sh
 ```
-Remove line 57 from local_install.sh
-Remove the last line of Halide_CoreIR/test/scripts/install_travis.sh
+After this, remove the last line of Halide_CoreIR/test/scripts/install_travis.sh
+Additionally, add the libraries from CGRAMapper to your LD_LIBRARY_PATH.
+```
 export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/$CGRAFLOW_PATH/CGRAMapper/lib/"
-
+```
 Now you should be able to run the tests
 ```
 make cgra_pnr_tests
