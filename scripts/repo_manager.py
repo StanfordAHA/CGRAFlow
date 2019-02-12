@@ -109,7 +109,7 @@ class cgra_pnr(Repo):
         cxx = "CXX=/usr/bin/g++-7"
         run(cc + cxx + " pip install thunder/", cwd=repo.directory)
         run(cc + cxx + " pip install cyclone/", cwd=repo.directory)
-        run(cc + cxx + " cyclone/install.sh", cwd=repo.directory)
+        run(cc + cxx + " ./install.sh", cwd=repo.directory)
         run("pip install -r requirements.txt", cwd=repo.directory)
 
 class TestBenchGenerator(Repo):
