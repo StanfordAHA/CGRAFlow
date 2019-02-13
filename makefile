@@ -232,21 +232,25 @@ build/%_design_top.json: %_input_image Halide-to-Hardware/apps/hardware_benchmar
         # as well as the DAG "design_top.json" for the mapper.
         #
 
-	FOLDER=tests
-        # determine if this is an app or test
-	if [ -d Halide-to-Hardware/apps/hardware_benchmarks/apps/$* ]; then \
-		FOLDER=apps; \
-	fi
-
         # remake the json and cpu output image for our test app
 	@echo; echo Making $@ because of $?
         # E.g. '$*' = "pointwise" when building "build/pointwise/correct.txt"
-	make -C Halide-to-Hardware/apps/hardware_benchmarks/$(FOLDER)/$*/ clean design_top.json output_cpu.png $(SILENT_FILTER_HF)
 
-        # copy over all pertinent files
-	cp Halide-to-Hardware/apps/hardware_benchmarks/$(FOLDER)/$*/bin/design_top.json build/$*_design_top.json
-	cp Halide-to-Hardware/apps/hardware_benchmarks/$(FOLDER)/$*/input.png           build/$*_input.png
-	cp Halide-to-Hardware/apps/hardware_benchmarks/$(FOLDER)/$*/output_cpu.png      build/$*_halide_out.png
+	if [ -d Halide-to-Hardware/apps/hardware_benchmarks/apps/$* ]; then \
+		make -C Halide-to-Hardware/apps/hardware_benchmarks/$(FOLDER)/$*/ clean design_top.json output_cpu.png $(SILENT_FILTER_HF);\
+
+                # copy over all pertinent files
+		cp Halide-to-Hardware/apps/hardware_benchmarks/$(FOLDER)/$*/bin/design_top.json build/$*_design_top.json;\
+		cp Halide-to-Hardware/apps/hardware_benchmarks/$(FOLDER)/$*/input.png           build/$*_input.png;\
+		cp Halide-to-Hardware/apps/hardware_benchmarks/$(FOLDER)/$*/output_cpu.png      build/$*_halide_out.png;\
+	else \
+		make -C Halide-to-Hardware/apps/hardware_benchmarks/$(FOLDER)/$*/ clean design_top.json output_cpu.png $(SILENT_FILTER_HF);\
+
+                # copy over all pertinent files
+		cp Halide-to-Hardware/apps/hardware_benchmarks/$(FOLDER)/$*/bin/design_top.json build/$*_design_top.json;\
+		cp Halide-to-Hardware/apps/hardware_benchmarks/$(FOLDER)/$*/input.png           build/$*_input.png;      \
+		cp Halide-to-Hardware/apps/hardware_benchmarks/$(FOLDER)/$*/output_cpu.png      build/$*_halide_out.png; \
+	fi
 	cd ..
 
 	@if [ $(SILENT) != "TRUE" ]; then ls -la build; fi
