@@ -239,15 +239,15 @@ build/%_design_top.json: %_input_image Halide-to-Hardware/apps/hardware_benchmar
 	make -C Halide-to-Hardware bin/build/halide_config.make
 	cp Halide-to-Hardware/bin/build/halide_config.make Halide-to-Hardware/distrib
 	if [ -d Halide-to-Hardware/apps/hardware_benchmarks/apps/$* ]; then \
-		make -C Halide-to-Hardware/apps/hardware_benchmarks/apps/$*/ clean design_top.json output_cpu.png $(SILENT_FILTER_HF);\
+		make -C Halide-to-Hardware/apps/hardware_benchmarks/apps/$*/ clean bin/design_top.json bin/output_cpu.png $(SILENT_FILTER_HF);\
 		cp Halide-to-Hardware/apps/hardware_benchmarks/apps/$*/bin/design_top.json build/$*_design_top.json;\
 		cp Halide-to-Hardware/apps/hardware_benchmarks/apps/$*/input.png           build/$*_input.png;\
-		cp Halide-to-Hardware/apps/hardware_benchmarks/apps/$*/output_cpu.png      build/$*_halide_out.png;\
+		cp Halide-to-Hardware/apps/hardware_benchmarks/apps/$*/bin/output_cpu.png      build/$*_halide_out.png;\
 	else \
-		make -C Halide-to-Hardware/apps/hardware_benchmarks/tests/$*/ clean design_top.json output_cpu.png $(SILENT_FILTER_HF);\
+		make -C Halide-to-Hardware/apps/hardware_benchmarks/tests/$*/ clean bin/design_top.json bin/output_cpu.png $(SILENT_FILTER_HF);\
 		cp Halide-to-Hardware/apps/hardware_benchmarks/tests/$*/bin/design_top.json build/$*_design_top.json;\
 		cp Halide-to-Hardware/apps/hardware_benchmarks/tests/$*/input.png           build/$*_input.png;      \
-		cp Halide-to-Hardware/apps/hardware_benchmarks/tests/$*/output_cpu.png      build/$*_halide_out.png; \
+		cp Halide-to-Hardware/apps/hardware_benchmarks/tests/$*/bin/output_cpu.png      build/$*_halide_out.png; \
 	fi
 	cd ..
 
