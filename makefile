@@ -238,15 +238,11 @@ build/%_design_top.json: %_input_image Halide-to-Hardware/apps/hardware_benchmar
 
 	if [ -d Halide-to-Hardware/apps/hardware_benchmarks/apps/$* ]; then \
 		make -C Halide-to-Hardware/apps/hardware_benchmarks/apps/$*/ clean design_top.json output_cpu.png $(SILENT_FILTER_HF);\
-
-                # copy over all pertinent files
 		cp Halide-to-Hardware/apps/hardware_benchmarks/apps/$*/bin/design_top.json build/$*_design_top.json;\
 		cp Halide-to-Hardware/apps/hardware_benchmarks/apps/$*/input.png           build/$*_input.png;\
 		cp Halide-to-Hardware/apps/hardware_benchmarks/apps/$*/output_cpu.png      build/$*_halide_out.png;\
 	else \
 		make -C Halide-to-Hardware/apps/hardware_benchmarks/tests/$*/ clean design_top.json output_cpu.png $(SILENT_FILTER_HF);\
-
-                # copy over all pertinent files
 		cp Halide-to-Hardware/apps/hardware_benchmarks/tests/$*/bin/design_top.json build/$*_design_top.json;\
 		cp Halide-to-Hardware/apps/hardware_benchmarks/tests/$*/input.png           build/$*_input.png;      \
 		cp Halide-to-Hardware/apps/hardware_benchmarks/tests/$*/output_cpu.png      build/$*_halide_out.png; \
