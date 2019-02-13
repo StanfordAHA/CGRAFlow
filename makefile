@@ -236,6 +236,8 @@ build/%_design_top.json: %_input_image Halide-to-Hardware/apps/hardware_benchmar
 	@echo; echo Making $@ because of $?
         # E.g. '$*' = "pointwise" when building "build/pointwise/correct.txt"
 
+	make -C Halide-to-Hardware bin/build/halide_config.make
+	cp Halide-to-Hardware/bin/build/halide_config.make Halide-to-Hardware/distrib
 	if [ -d Halide-to-Hardware/apps/hardware_benchmarks/apps/$* ]; then \
 		make -C Halide-to-Hardware/apps/hardware_benchmarks/apps/$*/ clean design_top.json output_cpu.png $(SILENT_FILTER_HF);\
 		cp Halide-to-Hardware/apps/hardware_benchmarks/apps/$*/bin/design_top.json build/$*_design_top.json;\
