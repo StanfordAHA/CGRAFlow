@@ -76,7 +76,7 @@ class Repo:
         run("git clone {}{}".format(Repo.remote_prefix, self.remote))
 
 
-class Halide-to-Hardware(Repo):
+class Halide_to_Hardware(Repo):
     def install(self):
         pass
 
@@ -117,7 +117,7 @@ class TestBenchGenerator(Repo):
         pass
 
 repos = (
-    Halide-to-Hardware(
+    Halide_to_Hardware(
         remote=args.halide_remote,
         branch=args.halide
     ),
