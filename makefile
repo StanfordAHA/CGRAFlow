@@ -235,7 +235,7 @@ build/%_design_top.json: %_input_image Halide-to-Hardware/apps/hardware_benchmar
 	FOLDER=tests
         # determine if this is an app or test
 	if [ -d Halide-to-Hardware/apps/hardware_benchmarks/apps/$* ]; then \
-		FOLDER=apps \
+		FOLDER=apps; \
 	fi
 
         # remake the json and cpu output image for our test app
