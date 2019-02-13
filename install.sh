@@ -17,7 +17,7 @@ if [[ -z "${TRAVIS_BUILD_DIR}" ]]; then
 fi
 
 #halide
-export LLVM_VERSION=3.7.1
+export LLVM_VERSION=5.0.0
 export BUILD_SYSTEM=MAKE
 export CXX_=g++-4.9
 export CC_=gcc-4.9
