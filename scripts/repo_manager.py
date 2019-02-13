@@ -79,6 +79,8 @@ class Repo:
 class Halide_to_Hardware(Repo):
     def install(self):
         pass
+    def directory(self):
+        return "Halide-to-Hardware"
 
 class coreir(Repo):
     def install(self):
