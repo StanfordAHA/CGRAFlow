@@ -12,7 +12,7 @@ sudo apt-get install g++-7 -y
 sudo apt-get install verilator luajit build-essential clang libedit-dev libpng-dev csh libgmp3-dev git cmake zlib1g zlib1g-dev graphviz-dev python3 swig2.0 libcln-dev imagemagick python-virtualenv libxml2-dev libxslt-dev python3-dev python3-pip realpath libigraph0-dev -y
 
 if [[ -z "${TRAVIS_BUILD_DIR}" ]]; then
-    # Halide_CoreIR/test/scripts/install_travis.sh is known to use this
+    # Halide-to-Hardware/test/scripts/install_travis.sh is known to use this
     export TRAVIS_BUILD_DIR=`pwd`
 fi
 
@@ -48,7 +48,7 @@ sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.9 20
 pip install delegator.py
 python scripts/repo_manager.py                                                  \
     --halide                      master                                        \
-    --halide-remote               github.com/jeffsetter/Halide_CoreIR.git       \
+    --halide-remote               github.com/StanfordAHA/Halide-to-Hardware.git \
                                                                                 \
     --coreir                      master                                        \
     --coreir-remote               github.com/rdaly525/coreir.git                \
@@ -73,7 +73,7 @@ python scripts/repo_manager.py                                                  
 git clone https://github.com/StanfordVLSI/Genesis2.git /tmp/Genesis2
 
 # setup halide env vars
-source Halide_CoreIR/test/scripts/before_install_travis.sh
+source Halide-to-Hardware/test/scripts/before_install_travis.sh
 
 pip install -e pycoreir
 
@@ -82,7 +82,7 @@ date
 #pwd
 
 # Halide installation (llvm, etc.)
-Halide_CoreIR/test/scripts/install_travis.sh
+Halide-to-Hardware/test/scripts/install_travis.sh
 
 # need this for the new dot-compare test(s)
 # pip install pygtk

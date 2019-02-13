@@ -140,7 +140,7 @@ core_tests:
 	make build/conv_1_2.correct.txt  DELAY=1,0   GOLD=ignore
 	make build/conv_2_1.correct.txt  DELAY=10,0  GOLD=ignore
 	make build/conv_3_1.correct.txt  DELAY=20,0  GOLD=ignore
-	make build/conv_bw.correct.txt   DELAY=130,0 GOLD=ignore
+	make build/conv_3_3.correct.txt   DELAY=130,0 GOLD=ignore
 
 serpent_tests:
 	make clean_pnr
@@ -149,20 +149,20 @@ serpent_tests:
 	make build/conv_1_2.correct.txt    DELAY=1,0 GOLD=ignore PNR=serpent
 	make build/conv_2_1.correct.txt   DELAY=10,0 GOLD=ignore PNR=serpent
 	make build/conv_3_1.correct.txt   DELAY=20,0 GOLD=ignore PNR=serpent
-	make build/conv_bw.correct.txt   DELAY=130,0 GOLD=ignore PNR=serpent
-	make build/onebit_bool.correct.txt DELAY=0,0 GOLD=ignore PNR=serpent ONEBIT=TRUE
+	make build/conv_3_3.correct.txt   DELAY=130,0 GOLD=ignore PNR=serpent
+#make build/onebit_bool.correct.txt DELAY=0,0 GOLD=ignore PNR=serpent ONEBIT=TRUE
 
 cgra_pnr_tests:
 	make clean_pnr
 #       # For verbose output add "SILENT=FALSE" to command line(s) below
-	make build/onebit_bool.correct.txt DELAY=0,0 GOLD=ignore PNR=cgra_pnr ONEBIT=TRUE
+        #make build/onebit_bool.correct.txt DELAY=0,0 GOLD=ignore PNR=cgra_pnr ONEBIT=TRUE
 	make build/pointwise.correct.txt   DELAY=0,0 GOLD=ignore PNR=cgra_pnr
 	make build/conv_1_2.correct.txt    DELAY=1,0 GOLD=ignore PNR=cgra_pnr
 	make build/conv_2_1.correct.txt   DELAY=10,0 GOLD=ignore PNR=cgra_pnr
 	make build/conv_3_1.correct.txt   DELAY=20,0 GOLD=ignore PNR=cgra_pnr
-	make build/conv_bw.correct.txt   DELAY=130,0 GOLD=ignore PNR=cgra_pnr
+	make build/conv_3_3.correct.txt   DELAY=130,0 GOLD=ignore PNR=cgra_pnr
 	make build/cascade.correct.txt DELAY=260,0 GOLD=ignore PNR=cgra_pnr
-	make build/harris_valid.correct.txt DELAY=390,0 GOLD=ignore PNR=cgra_pnr
+	make build/harris.correct.txt DELAY=390,0 GOLD=ignore PNR=cgra_pnr
 
 clean_pnr:
 #       # Remove pnr intermediates for e.g. retesting w/serpent
@@ -216,10 +216,14 @@ endif
         # copy image to halide branch if not using "default"
 	if [ $(IMAGE) != default ]; then\
 		$(MAKE) -C $(TESTIMAGE_PATH) $(IMAGE);\
-		cp tools/gen_testimage/input.png Halide_CoreIR/apps/coreir_examples/$*/input.png;\
+		if [ -d Halide-to-Hardware/apps/hardware_benchmarks/apps/$* ]; then \
+			cp tools/gen_testimage/input.png Halide-to-Hardware/apps/hardware_benchmarks/apps/$*/input.png;\
+		else \
+			cp tools/gen_testimage/input.png Halide-to-Hardware/apps/hardware_benchmarks/tests/$*/input.png;\
+		fi \
 	fi
 
-build/%_design_top.json: %_input_image Halide_CoreIR/apps/coreir_examples/%
+build/%_design_top.json: %_input_image Halide-to-Hardware/apps/hardware_benchmarks/apps/%
 	@echo "Halide FLOW"
 
         # Halide files needed are already in the repo
@@ -228,15 +232,21 @@ build/%_design_top.json: %_input_image Halide_CoreIR/apps/coreir_examples/%
         # as well as the DAG "design_top.json" for the mapper.
         #
 
+	FOLDER=tests
+        # determine if this is an app or test
+	if [ -d Halide-to-Hardware/apps/hardware_benchmarks/apps/$* ]; then \
+		FOLDER=apps \
+	fi
+
         # remake the json and cpu output image for our test app
 	@echo; echo Making $@ because of $?
         # E.g. '$*' = "pointwise" when building "build/pointwise/correct.txt"
-	make -C Halide_CoreIR/apps/coreir_examples/$*/ clean design_top.json out.png $(SILENT_FILTER_HF)
+	make -C Halide-to-Hardware/apps/hardware_benchmarks/$(FOLDER)/$*/ clean design_top.json output_cpu.png $(SILENT_FILTER_HF)
 
         # copy over all pertinent files
-	cp Halide_CoreIR/apps/coreir_examples/$*/design_top.json build/$*_design_top.json
-	cp Halide_CoreIR/apps/coreir_examples/$*/input.png       build/$*_input.png
-	cp Halide_CoreIR/apps/coreir_examples/$*/out.png         build/$*_halide_out.png
+	cp Halide-to-Hardware/apps/hardware_benchmarks/$(FOLDER)/$*/bin/design_top.json build/$*_design_top.json
+	cp Halide-to-Hardware/apps/hardware_benchmarks/$(FOLDER)/$*/input.png           build/$*_input.png
+	cp Halide-to-Hardware/apps/hardware_benchmarks/$(FOLDER)/$*/output_cpu.png      build/$*_halide_out.png
 	cd ..
 
 	@if [ $(SILENT) != "TRUE" ]; then ls -la build; fi
