@@ -36,7 +36,7 @@ Remove line 57 from local_install.sh and then run it to pull in the other repos.
 ```
 ./local_install.sh
 ```
-After this, remove the last line of Halide_CoreIR/test/scripts/install_travis.sh
+After this, remove the last line of Halide-to-Hardware/test/scripts/install_travis.sh
 Additionally, add the libraries from CGRAMapper to your LD_LIBRARY_PATH.
 ```
 export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/$CGRAFLOW_PATH/CGRAMapper/lib/"

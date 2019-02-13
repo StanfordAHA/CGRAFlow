@@ -17,7 +17,7 @@ fi
 INPUT_IMAGE=$1
 APP_NAME=$2
 TESTIMAGE_PATH="tools/gen_testimage"
-HALIDEAPP_PATH="Halide_CoreIR/apps/coreir_examples"
+HALIDEAPP_PATH="Halide-to-Hardware/apps/hardware_benchmarks/apps"
 
 # Create image and copy to app folder
 make -C $TESTIMAGE_PATH $INPUT_IMAGE

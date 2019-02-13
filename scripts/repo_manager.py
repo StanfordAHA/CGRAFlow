@@ -24,7 +24,7 @@ parser.add_argument("--pycoreir-remote", help="pycoreir remote ", default="githu
 parser.add_argument("--mapper", help="mapper branch", default="master")
 parser.add_argument("--mapper-remote", help="mapper remote", default="github.com/StanfordAHA/CGRAMapper.git")
 parser.add_argument("--halide", help="halide branch", default="master")
-parser.add_argument("--halide-remote", help="halide remote", default="github.com/jeffsetter/Halide_CoreIR.git")
+parser.add_argument("--halide-remote", help="halide remote", default="github.com/StanfordAHA/Halide-to-Hardware.git")
 parser.add_argument("--cgra-generator", help="generator branch", default="master")
 parser.add_argument("--cgra-generator-remote", help="generator remote", default="github.com/Kuree/cgra_pnr.git")
 parser.add_argument("--cgra-pnr", help="cgra_pnr branch", default="master")
@@ -76,7 +76,7 @@ class Repo:
         run("git clone {}{}".format(Repo.remote_prefix, self.remote))
 
 
-class Halide_CoreIR(Repo):
+class Halide-to-Hardware(Repo):
     def install(self):
         pass
 
@@ -117,7 +117,7 @@ class TestBenchGenerator(Repo):
         pass
 
 repos = (
-    Halide_CoreIR(
+    Halide-to-Hardware(
         remote=args.halide_remote,
         branch=args.halide
     ),
