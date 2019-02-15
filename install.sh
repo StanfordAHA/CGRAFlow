@@ -9,7 +9,7 @@ sudo apt-get install gcc-4.9 -y
 sudo apt-get install gcc-7 -y
 sudo apt-get install g++-7 -y
 
-sudo apt-get install verilator luajit build-essential clang libedit-dev libpng-dev csh libgmp3-dev git cmake zlib1g zlib1g-dev graphviz-dev python3 swig2.0 libcln-dev imagemagick python-virtualenv libxml2-dev libxslt-dev python3-dev python3-pip realpath -y
+sudo apt-get install verilator luajit build-essential clang libedit-dev libpng-dev csh libgmp3-dev git cmake zlib1g zlib1g-dev graphviz-dev python3 swig2.0 libcln-dev imagemagick python-virtualenv libxml2-dev libxslt-dev python3-dev python3-pip realpath libigraph0-dev -y
 
 if [[ -z "${TRAVIS_BUILD_DIR}" ]]; then
     # Halide_CoreIR/test/scripts/install_travis.sh is known to use this
