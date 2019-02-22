@@ -87,7 +87,7 @@ class Halide_to_Hardware(Repo):
 
 class coreir(Repo):
     def install(self):
-        run("make clean", cwd=repo.directory)
+        #run("make clean", cwd=repo.directory)
         run("make -j8", cwd=repo.directory)
 
 class pycoreir(Repo):
@@ -96,7 +96,7 @@ class pycoreir(Repo):
 
 class CGRAMapper(Repo):
     def install(self):
-        run("make clean", cwd=repo.directory)
+        #run("make clean", cwd=repo.directory)
         run("echo ${LD_LIBRARY_PATH}")
         lib_dir = os.path.join(os.environ["COREIR"], "lib")
         dst_lib_dir = os.path.join(repo.directory, "lib")
