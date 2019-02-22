@@ -1,6 +1,8 @@
 import argparse
 import os
 import delegator
+import glob
+import shutil
 
 tab = "    "
 def run(command, *args, cwd=".", **kwargs):
@@ -86,7 +88,7 @@ class Halide_to_Hardware(Repo):
 class coreir(Repo):
     def install(self):
         run("make clean", cwd=repo.directory)
-        run("sudo make -j 2 install", cwd=repo.directory)
+        run("make -j8", cwd=repo.directory)
 
 class pycoreir(Repo):
     def install(self):
@@ -95,7 +97,13 @@ class pycoreir(Repo):
 class CGRAMapper(Repo):
     def install(self):
         run("make clean", cwd=repo.directory)
-        run("sudo make -j 2 install", cwd=repo.directory)
+        run("echo ${LD_LIBRARY_PATH}")
+        lib_dir = os.path.join(os.environ["COREIR"], "lib")
+        dst_lib_dir = os.path.join(repo.directory, "lib")
+        lib_files = glob.glob(lib_dir + "/*.so")
+        for lib in lib_files:
+            shutil.copy(lib, dst_lib_dir)
+        run("make -j8", cwd=repo.directory)
 
 class CGRAGenerator(Repo):
     def install(self):
