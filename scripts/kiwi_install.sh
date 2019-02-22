@@ -16,7 +16,9 @@ export BUILD_SYSTEM=MAKE
 export CXX_=g++-4.9
 export CC_=gcc-4.9
 export COREIRCONFIG="g++-4.9";
-
+export LLVM_CONFIG=/usr/bin/llvm-config-5.0
+export LLVM_DIR=/usr/lib/llvm-5.0/cmake
+export CLANG=/usr/bin/clang-5.0
 
 export PATH="$HOME/miniconda/bin:$PATH"
 if ! [ -d "$HOME/miniconda/bin" ]; then
@@ -37,7 +39,7 @@ export LD_LIBRARY_PATH=$COREIR/lib:$LD_LIBRARY_PATH
 
 pip install delegator.py
 python scripts/repo_manager.py                                                  \
-    --halide                      master                                        \
+    --halide                      cleanup_codegen                               \
     --halide-remote               github.com/StanfordAHA/Halide-to-Hardware.git \
                                                                                 \
     --coreir                      jeff_fp                                       \
@@ -59,15 +61,19 @@ python scripts/repo_manager.py                                                  
     --cgra-pnr-remote             github.com/Kuree/cgra_pnr.git                 \
 
 
-#[SR 12/2017] somebody might want to clean this up later
-git clone https://github.com/StanfordVLSI/Genesis2.git /tmp/Genesis2
-
 # setup halide env vars
-source Halide_CoreIR/test/scripts/before_install_travis.sh
+source Halide-to-Hardware/test/scripts/before_install_travis.sh
 
 pip install -e pycoreir
 
-date
-
 # add mapper to ld path
 export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/$CGRAFLOW_PATH/CGRAMapper/lib/"
+
+# get the halide release
+cd Halide-to-Hardware
+curl -s https://api.github.com/repos/StanfordAHA/Halide-to-Hardware/releases/latest?access_token=$GITHUB_TOKEN | grep browser_download_url | cut -d '"' -f 4 | wget -qi -
+tar zxvf halide_distrib.tgz
+ls distrib
+cd ../
+
+date
