@@ -16,9 +16,6 @@ export BUILD_SYSTEM=MAKE
 export CXX_=g++-4.9
 export CC_=gcc-4.9
 export COREIRCONFIG="g++-4.9";
-export LLVM_CONFIG=/usr/bin/llvm-config-5.0
-export LLVM_DIR=/usr/lib/llvm-5.0/cmake
-export CLANG=/usr/bin/clang-5.0
 
 export PATH="$HOME/miniconda/bin:$PATH"
 if ! [ -d "$HOME/miniconda/bin" ]; then
@@ -48,7 +45,7 @@ python scripts/repo_manager.py                                                  
     --pycoreir                    master                                        \
     --pycoreir-remote             github.com/leonardt/pycoreir.git              \
                                                                                 \
-    --mapper                      master                                        \
+    --mapper                      new_coreir_lib                                \
     --mapper-remote               github.com/StanfordAHA/CGRAMapper.git         \
                                                                                 \
     --cgra-generator              master                                        \
@@ -67,7 +64,7 @@ source Halide-to-Hardware/test/scripts/before_install_travis.sh
 pip install -e pycoreir
 
 # add mapper to ld path
-export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/$CGRAFLOW_PATH/CGRAMapper/lib/"
+export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$CGRAFLOW_PATH/CGRAMapper/lib/"
 
 # get the halide release
 cd Halide-to-Hardware
@@ -77,3 +74,6 @@ ls distrib
 cd ../
 
 date
+export LLVM_CONFIG=/usr/bin/llvm-config-5.0
+export LLVM_DIR=/usr/lib/llvm-5.0/cmake
+export CLANG=/usr/bin/clang-5.0

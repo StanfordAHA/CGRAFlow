@@ -47,7 +47,7 @@ sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.9 20
 
 pip install delegator.py
 python scripts/repo_manager.py                                                  \
-    --halide                      master                                        \
+    --halide                      cleanup_codegen                               \
     --halide-remote               github.com/StanfordAHA/Halide-to-Hardware.git \
                                                                                 \
     --coreir                      jeff_fp                                       \
@@ -56,7 +56,7 @@ python scripts/repo_manager.py                                                  
     --pycoreir                    master                                        \
     --pycoreir-remote             github.com/leonardt/pycoreir.git              \
                                                                                 \
-    --mapper                      master                                        \
+    --mapper                      new_coreir_lib                                \
     --mapper-remote               github.com/StanfordAHA/CGRAMapper.git         \
                                                                                 \
     --cgra-generator              master                                        \
