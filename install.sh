@@ -35,6 +35,7 @@ which python
 which python3
 
 export COREIRCONFIG="g++-4.9";
+export COREIR=$CGRAFLOW_PATH/coreir
 # Had to add this (until someone comes up with something better):
 # sudo update-alternatives --remove-all gcc # Travis error: "no alternatives for gcc"
 # sudo update-alternatives --remove-all g++ # Travis error: "no alternatives for gcc"

@@ -1,12 +1,8 @@
 #!/bin/bash
 set -e  # Exit immediately if a command exits with a non-zero status.
 
-# this uses that this script is in the scripts folder to set CGRAFlow path
-SCRIPT_PATH=`realpath "$0"`
-export CGRAFLOW_PATH=$(dirname "$(dirname "${SCRIPT_PATH}")" )
-echo ${CGRAFLOW_PATH}
-
 source setenv.sh
+echo ${CGRAFLOW_PATH}
 
 ### Note that below are sections from install.sh ###
 
@@ -74,6 +70,7 @@ ls distrib
 cd ../
 
 date
+source setenv.sh
 export LLVM_CONFIG=/usr/bin/llvm-config-5.0
 export LLVM_DIR=/usr/lib/llvm-5.0/cmake
 export CLANG=/usr/bin/clang-5.0
