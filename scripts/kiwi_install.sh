@@ -28,7 +28,6 @@ which python3
 
 # get the root folder
 export COREIR=${CGRAFLOW_PATH}/coreir
-export LD_LIBRARY_PATH=$COREIR/lib:$LD_LIBRARY_PATH
 
 pip install delegator.py
 python scripts/repo_manager.py                                                  \
@@ -54,13 +53,7 @@ python scripts/repo_manager.py                                                  
     --cgra-pnr-remote             github.com/Kuree/cgra_pnr.git                 \
 
 
-# setup halide env vars
-source Halide-to-Hardware/test/scripts/before_install_travis.sh
-
 pip install -e pycoreir
-
-# add mapper to ld path
-export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$CGRAFLOW_PATH/CGRAMapper/lib/"
 
 # get the halide release
 cd Halide-to-Hardware
@@ -70,7 +63,3 @@ ls distrib
 cd ../
 
 date
-source setenv.sh
-export LLVM_CONFIG=/usr/bin/llvm-config-5.0
-export LLVM_DIR=/usr/lib/llvm-5.0/cmake
-export CLANG=/usr/bin/clang-5.0
