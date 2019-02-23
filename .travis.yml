@@ -16,9 +16,7 @@ compiler:
   - gcc
 
 before_install:
-  # setup halide env vars (clang, llvm, cxx, etc)
-  - source Halide-to-Hardware/test/scripts/before_install_travis.sh
-  # setup remainder of environment variables
+  # setup environment variables
   - source setenv.sh
   
 install:
