@@ -26,26 +26,20 @@ install:
   - source scripts/install_locally.sh
 
 script:
-  # "set -e" means "die at first error" - seems like a good idea!
   - set -e  # "die at first error"
 
   - make start_testing
   -   make cgra_pnr_only
   - make end_testing
 
-  # DEBUG/OLD
-  # - make SILENT=FALSE serpent_only
-  # - make SILENT=FALSE build/conv_bw.correct.txt DELAY=130,0 GOLD=ignore PNR=serpent
-
 after_failure:
+  # Note "after_failure" DOES NOT WORK when using "set -e" in script above (apparently)
   # The log file is getting very long and unwieldy.
   # What if we make a summary of the test results, to print out at the end?
   # Also see https://docs.travis-ci.com/user/customizing-the-build/
   - if `test -e build/test_summary.txt`; then cat build/test_summary.txt; fi
-  # Note "after_failure" DOES NOT WORK when using "set -e" in script above (apparently)
 
 after_script:
-  # - echo Why does this not work
   # Note "after_script" DOES NOT WORK when using "set -e" in script above (apparently)
 
 notifications:
