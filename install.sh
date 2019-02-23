@@ -88,3 +88,10 @@ Halide-to-Hardware/test/scripts/install_travis.sh
 # need this for the new dot-compare test(s)
 # pip install pygtk
 sudo apt-get install python-gtk2 -y
+
+# get the halide release
+cd Halide-to-Hardware
+curl -s https://api.github.com/repos/StanfordAHA/Halide-to-Hardware/releases/latest?access_token=$GITHUB_TOKEN | grep browser_download_url | cut -d '"' -f 4 | wget -qi -
+tar zxvf halide_distrib.tgz
+ls distrib
+cd ../

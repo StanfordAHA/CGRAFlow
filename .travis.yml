@@ -16,17 +16,14 @@ compiler:
   - gcc
 
 before_install:
-  - source ./install.sh
+  # setup halide env vars (clang, llvm, cxx, etc)
+  - source Halide-to-Hardware/test/scripts/before_install_travis.sh
+  # setup remainder of environment variables
   - source setenv.sh
-  # get the halide release
-  - cd Halide-to-Hardware
-  - curl -s https://api.github.com/repos/StanfordAHA/Halide-to-Hardware/releases/latest?access_token=$GITHUB_TOKEN | grep browser_download_url | cut -d '"' -f 4 | wget -qi -
-  - tar zxvf halide_distrib.tgz
-  - ls distrib
-  - cd ../
-
-
+  
 install:
+  - source scripts/install_using_sudo.sh
+  - source scripts/install_locally.sh
 
 script:
   # "set -e" means "die at first error" - seems like a good idea!
