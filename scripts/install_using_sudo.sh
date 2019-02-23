@@ -26,11 +26,6 @@ sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.9 20
 #[SR 12/2017] somebody might want to clean this up later
 git clone https://github.com/StanfordVLSI/Genesis2.git /tmp/Genesis2
 
-# setup halide env vars
-source Halide-to-Hardware/test/scripts/before_install_travis.sh
-
-# Halide installation (llvm, clang)
-Halide-to-Hardware/test/scripts/install_travis.sh
 
 # need this for the new dot-compare test(s)
 # pip install pygtk
