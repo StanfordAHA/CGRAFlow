@@ -98,11 +98,13 @@ class CGRAMapper(Repo):
     def install(self):
         #run("make clean", cwd=repo.directory)
         run("echo ${LD_LIBRARY_PATH}")
+        run("echo ${COREIR}")
         lib_dir = os.path.join(os.environ["COREIR"], "lib")
         dst_lib_dir = os.path.join(repo.directory, "lib")
         lib_files = glob.glob(lib_dir + "/*.so")
         for lib in lib_files:
             shutil.copy(lib, dst_lib_dir)
+        run("ls lib", cwd=repo.directory)
         run("make -j8", cwd=repo.directory)
 
 class CGRAGenerator(Repo):
