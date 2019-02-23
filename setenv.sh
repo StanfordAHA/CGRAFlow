@@ -1,8 +1,5 @@
 #!/bin/bash
 
-SCRIPT_PATH=`realpath "$0"`
-export CGRAFLOW_PATH=$(dirname "${SCRIPT_PATH}")
-
 export PATH="$HOME/miniconda/bin:$PATH"
 export PYTHONPATH=$PYTHONPATH:$CGRAFLOW_PATH/smt-switch
 
