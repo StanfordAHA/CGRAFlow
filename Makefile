@@ -36,11 +36,6 @@ endif
 
 ########################################################################
 
-# No longer used
-# all: start_testing \
-#      build/pointwise.correct.txt \
-#      build/cascade_mapped.json
-
 test_all:
 	make start_testing
 	  @echo 'Core tests'    >> build/test_summary.txt
