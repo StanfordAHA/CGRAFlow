@@ -20,7 +20,7 @@ before_install:
   - source setenv.sh
   
 install:
-  - source scripts/install_using_sudo.sh
+  - source scripts/install_machine_deps.sh
   - source scripts/install_locally.sh
 
 after_install:

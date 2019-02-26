@@ -153,12 +153,12 @@ cgra_pnr_tests:
 # this test no longer exists
 #make build/onebit_bool.correct.txt DELAY=0,0 GOLD=ignore PNR=cgra_pnr ONEBIT=TRUE
 	make build/pointwise.correct.txt   DELAY=0,0 GOLD=ignore PNR=cgra_pnr
-# removed for now since CGRAGenerator/verilator/generator_z_tb/bin/conv_1_2_convert assumes a 10x10 image
-#	make build/conv_1_2.correct.txt    DELAY=1,0 GOLD=ignore PNR=cgra_pnr
+	make build/conv_1_2.correct.txt    DELAY=1,0 GOLD=ignore PNR=cgra_pnr
 	make build/conv_2_1.correct.txt   DELAY=10,0 GOLD=ignore PNR=cgra_pnr
 	make build/conv_3_1.correct.txt   DELAY=20,0 GOLD=ignore PNR=cgra_pnr
 	make build/conv_3_3.correct.txt   DELAY=130,0 GOLD=ignore PNR=cgra_pnr
 	make build/cascade.correct.txt DELAY=260,0 GOLD=ignore PNR=cgra_pnr
+# harris does not pass simulation due to simulating and never completing
 	make build/harris.correct.txt DELAY=390,0 GOLD=ignore PNR=cgra_pnr
 
 clean_pnr:
