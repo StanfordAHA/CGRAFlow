@@ -9,7 +9,7 @@ patch to resolve these issues.
 
 Install dependencies
 ```
-source setenv.sh
+source scripts/setenv.sh
 ./scripts/install_using_sudo.sh
 ./scripts/install_locally.sh
 ```
@@ -19,7 +19,7 @@ note that this script expects an environment variable `CGRAFLOW_PATH` that
 points to the directory where `install.sh` was run (typically something like
 `export CGRAFLOW_PATH=$HOME/CGRAFlow`).
 ```bash
-source setenv.sh
+source scripts/setenv.sh
 ```
 
 Note you'll need to explicitly set the CC and CXX variables for make to the right version of GCC
@@ -34,11 +34,11 @@ git clone https://github.com/StanfordAHA/CGRAFlow.git
 bash
 source scripts/kiwi_setenv.sh
 source scripts/install_locally.sh
-source scripts/kiwi_setenv.sh
 ```
 
 Now you should be able to run the tests
 ```
+source scripts/kiwi_setenv.sh
 make cgra_pnr_tests
 ```
 

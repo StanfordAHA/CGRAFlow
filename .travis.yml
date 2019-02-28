@@ -17,7 +17,7 @@ compiler:
 
 before_install:
   # setup environment variables
-  - source setenv.sh
+  - source scripts/setenv.sh
   
 install:
   - source scripts/install_machine_deps.sh

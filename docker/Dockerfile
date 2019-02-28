@@ -11,6 +11,6 @@ SHELL ["/bin/bash", "-c"]
 
 RUN apt-get install git software-properties-common wget make -y
 RUN git clone https://github.com/StanfordAHA/CGRAFlow $HOME/CGRAFlow
-RUN cd $HOME/CGRAFlow && ./install.sh
+RUN cd $HOME/CGRAFlow && ./scripts/install_machine_deps.sh && ./scripts/install_locally.sh
 RUN echo 'export CGRAFLOW_PATH=$HOME/CGRAFlow' >> $HOME/.bashrc
-RUN echo 'source $CGRAFLOW_PATH/setenv.sh' >> $HOME/.bashrc
+RUN echo 'source $CGRAFLOW_PATH/scripts/setenv.sh' >> $HOME/.bashrc
