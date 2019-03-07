@@ -28,16 +28,16 @@ export COREIR=${CGRAFLOW_PATH}/coreir
 
 pip install delegator.py
 python scripts/repo_manager.py                                                  \
-    --halide                      cleanup_codegen                               \
+    --halide                      master                                        \
     --halide-remote               github.com/StanfordAHA/Halide-to-Hardware.git \
                                                                                 \
-    --coreir                      more_bitops                                   \
+    --coreir                      master                                        \
     --coreir-remote               github.com/rdaly525/coreir.git                \
                                                                                 \
     --pycoreir                    master                                        \
     --pycoreir-remote             github.com/leonardt/pycoreir.git              \
                                                                                 \
-    --mapper                      new_coreir_lib                                \
+    --mapper                      master                                        \
     --mapper-remote               github.com/StanfordAHA/CGRAMapper.git         \
                                                                                 \
     --cgra-generator              master                                        \

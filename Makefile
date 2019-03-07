@@ -152,13 +152,40 @@ cgra_pnr_tests:
 #       # For verbose output add "SILENT=FALSE" to command line(s) below
 # this test no longer exists
 #make build/onebit_bool.correct.txt DELAY=0,0 GOLD=ignore PNR=cgra_pnr ONEBIT=TRUE
-	make build/pointwise.correct.txt   DELAY=0,0 GOLD=ignore PNR=cgra_pnr
-	make build/conv_1_2.correct.txt    DELAY=1,0 GOLD=ignore PNR=cgra_pnr
+	make build/pointwise.correct.txt  DELAY=0,0 GOLD=ignore PNR=cgra_pnr
+	make build/conv_1_2.correct.txt   DELAY=1,0 GOLD=ignore PNR=cgra_pnr
 	make build/conv_2_1.correct.txt   DELAY=10,0 GOLD=ignore PNR=cgra_pnr
 	make build/conv_3_1.correct.txt   DELAY=20,0 GOLD=ignore PNR=cgra_pnr
 	make build/conv_3_3.correct.txt   DELAY=130,0 GOLD=ignore PNR=cgra_pnr
-	make build/cascade.correct.txt DELAY=260,0 GOLD=ignore PNR=cgra_pnr
-	make build/harris.correct.txt DELAY=390,0 GOLD=ignore PNR=cgra_pnr
+	make build/cascade.correct.txt    DELAY=260,0 GOLD=ignore PNR=cgra_pnr
+	make build/harris.correct.txt     DELAY=390,0 GOLD=ignore PNR=cgra_pnr
+
+
+cgra_pnr_fulltests:
+	make clean_pnr
+#       # For verbose output add "SILENT=FALSE" to command line(s) below
+	make build/pointwise.correct.txt     DELAY=0,0 GOLD=ignore PNR=cgra_pnr
+	make build/conv_1_2.correct.txt      DELAY=1,0 GOLD=ignore PNR=cgra_pnr
+	make build/conv_2_1.correct.txt      DELAY=10,0 GOLD=ignore PNR=cgra_pnr
+	make build/conv_3_1.correct.txt      DELAY=20,0 GOLD=ignore PNR=cgra_pnr
+	make build/conv_3_3.correct.txt      DELAY=130,0 GOLD=ignore PNR=cgra_pnr
+	make build/cascade.correct.txt       DELAY=260,0 GOLD=ignore PNR=cgra_pnr
+	make build/harris.correct.txt        DELAY=390,0 GOLD=ignore PNR=cgra_pnr
+	make build/absolute.correct.txt      DELAY=0,0 GOLD=ignore PNR=cgra_pnr
+	make build/arith.correct.txt         DELAY=0,0 GOLD=ignore PNR=cgra_pnr
+	make build/bitwise.correct.txt       DELAY=0,0 GOLD=ignore PNR=cgra_pnr
+	make build/boolean_ops.correct.txt   DELAY=0,0 GOLD=ignore PNR=cgra_pnr
+	make build/scomp.correct.txt         DELAY=0,0 GOLD=ignore PNR=cgra_pnr
+	make build/ucomp.correct.txt         DELAY=0,0 GOLD=ignore PNR=cgra_pnr
+	make build/sminmax.correct.txt       DELAY=0,0 GOLD=ignore PNR=cgra_pnr
+	make build/uminmax.correct.txt       DELAY=0,0 GOLD=ignore PNR=cgra_pnr
+	make build/sshift.correct.txt        DELAY=0,0 GOLD=ignore PNR=cgra_pnr
+	make build/ushift.correct.txt        DELAY=0,0 GOLD=ignore PNR=cgra_pnr
+	make build/ternary.correct.txt       DELAY=0,0 GOLD=ignore PNR=cgra_pnr
+#       # These are still failing:
+#	make build/counter.correct.txt       DELAY=0,0 GOLD=ignore PNR=cgra_pnr
+#	make build/equal.correct.txt         DELAY=0,0 GOLD=ignore PNR=cgra_pnr
+#	make build/inout_onebit.correct.txt  DELAY=0,0 GOLD=ignore PNR=cgra_pnr
 
 clean_pnr:
 #       # Remove pnr intermediates for e.g. retesting w/serpent
@@ -235,12 +262,12 @@ build/%_design_top.json: %_input_image
 	make -C Halide-to-Hardware bin/build/halide_config.make
 	cp Halide-to-Hardware/bin/build/halide_config.make Halide-to-Hardware/distrib/halide_config.make
 	if [ -d Halide-to-Hardware/apps/hardware_benchmarks/apps/$* ]; then \
-		make -C Halide-to-Hardware/apps/hardware_benchmarks/apps/$*/ clean bin/design_top.json bin/output_cpu.png $(SILENT_FILTER_HF);\
+		make -C Halide-to-Hardware/apps/hardware_benchmarks/apps/$*/ bin/design_top.json bin/output_cpu.png $(SILENT_FILTER_HF);\
 		cp Halide-to-Hardware/apps/hardware_benchmarks/apps/$*/bin/design_top.json build/$*_design_top.json;\
 		cp Halide-to-Hardware/apps/hardware_benchmarks/apps/$*/input.png           build/$*_input.png;\
 		cp Halide-to-Hardware/apps/hardware_benchmarks/apps/$*/bin/output_cpu.png      build/$*_halide_out.png;\
 	else \
-		make -C Halide-to-Hardware/apps/hardware_benchmarks/tests/$*/ clean bin/design_top.json bin/output_cpu.png $(SILENT_FILTER_HF);\
+		make -C Halide-to-Hardware/apps/hardware_benchmarks/tests/$*/ bin/design_top.json bin/output_cpu.png $(SILENT_FILTER_HF);\
 		cp Halide-to-Hardware/apps/hardware_benchmarks/tests/$*/bin/design_top.json build/$*_design_top.json;\
 		cp Halide-to-Hardware/apps/hardware_benchmarks/tests/$*/input.png           build/$*_input.png;      \
 		cp Halide-to-Hardware/apps/hardware_benchmarks/tests/$*/bin/output_cpu.png      build/$*_halide_out.png; \
