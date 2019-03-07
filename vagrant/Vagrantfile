@@ -73,11 +73,12 @@ Vagrant.configure("2") do |config|
     cd CGRAFlow
     git checkout $1
     git pull
-    source ./install.sh
+    source ./scripts/install_machine_deps.sh
+    source ./scripts/install_locally.sh
     export CGRAFLOW_PATH=$HOME/CGRAFlow
-    source setenv.sh
+    source scripts/setenv.sh
     echo 'export CGRAFLOW_PATH=$HOME/CGRAFlow' >> $HOME/.bashrc
-    echo 'source $CGRAFLOW_PATH/setenv.sh' >> $HOME/.bashrc
+    echo 'source $CGRAFLOW_PATH/scripts/setenv.sh' >> $HOME/.bashrc
     make core_only
   SCRIPT
   $branch = `git rev-parse --abbrev-ref HEAD`

@@ -1,6 +1,8 @@
 import argparse
 import os
 import delegator
+import glob
+import shutil
 
 tab = "    "
 def run(command, *args, cwd=".", **kwargs):
@@ -24,7 +26,7 @@ parser.add_argument("--pycoreir-remote", help="pycoreir remote ", default="githu
 parser.add_argument("--mapper", help="mapper branch", default="master")
 parser.add_argument("--mapper-remote", help="mapper remote", default="github.com/StanfordAHA/CGRAMapper.git")
 parser.add_argument("--halide", help="halide branch", default="master")
-parser.add_argument("--halide-remote", help="halide remote", default="github.com/jeffsetter/Halide_CoreIR.git")
+parser.add_argument("--halide-remote", help="halide remote", default="github.com/StanfordAHA/Halide-to-Hardware.git")
 parser.add_argument("--cgra-generator", help="generator branch", default="master")
 parser.add_argument("--cgra-generator-remote", help="generator remote", default="github.com/Kuree/cgra_pnr.git")
 parser.add_argument("--cgra-pnr", help="cgra_pnr branch", default="master")
@@ -76,14 +78,17 @@ class Repo:
         run("git clone {}{}".format(Repo.remote_prefix, self.remote))
 
 
-class Halide_CoreIR(Repo):
+class Halide_to_Hardware(Repo):
     def install(self):
         pass
+    @property
+    def directory(self):
+        return "Halide-to-Hardware"
 
 class coreir(Repo):
     def install(self):
-        run("make clean", cwd=repo.directory)
-        run("sudo make -j 2 install", cwd=repo.directory)
+        #run("make clean", cwd=repo.directory)
+        run("make -j8", cwd=repo.directory)
 
 class pycoreir(Repo):
     def install(self):
@@ -91,8 +96,16 @@ class pycoreir(Repo):
 
 class CGRAMapper(Repo):
     def install(self):
-        run("make clean", cwd=repo.directory)
-        run("sudo make -j 2 install", cwd=repo.directory)
+        #run("make clean", cwd=repo.directory)
+        run("echo ${LD_LIBRARY_PATH}")
+        run("echo ${COREIR}")
+        lib_dir = os.path.join(os.environ["COREIR"], "lib")
+        dst_lib_dir = os.path.join(repo.directory, "lib")
+        lib_files = glob.glob(lib_dir + "/*.so")
+        for lib in lib_files:
+            shutil.copy(lib, dst_lib_dir)
+        run("ls lib", cwd=repo.directory)
+        run("make -j8", cwd=repo.directory)
 
 class CGRAGenerator(Repo):
     def install(self):
@@ -117,7 +130,7 @@ class TestBenchGenerator(Repo):
         pass
 
 repos = (
-    Halide_CoreIR(
+    Halide_to_Hardware(
         remote=args.halide_remote,
         branch=args.halide
     ),
