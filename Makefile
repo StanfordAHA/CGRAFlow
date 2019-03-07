@@ -182,9 +182,9 @@ cgra_pnr_fulltests:
 	make build/sshift.correct.txt        DELAY=0,0 GOLD=ignore PNR=cgra_pnr
 	make build/ushift.correct.txt        DELAY=0,0 GOLD=ignore PNR=cgra_pnr
 	make build/ternary.correct.txt       DELAY=0,0 GOLD=ignore PNR=cgra_pnr
+	make build/equal.correct.txt         DELAY=0,0 GOLD=ignore PNR=cgra_pnr
 #       # These are still failing:
 #	make build/counter.correct.txt       DELAY=0,0 GOLD=ignore PNR=cgra_pnr
-#	make build/equal.correct.txt         DELAY=0,0 GOLD=ignore PNR=cgra_pnr
 #	make build/inout_onebit.correct.txt  DELAY=0,0 GOLD=ignore PNR=cgra_pnr
 
 clean_pnr:

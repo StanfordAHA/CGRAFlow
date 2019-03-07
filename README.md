@@ -10,7 +10,7 @@ patch to resolve these issues.
 Install dependencies
 ```
 source scripts/setenv.sh
-./scripts/install_using_sudo.sh
+./scripts/install_machine_deps.sh
 ./scripts/install_locally.sh
 ```
 
