@@ -31,7 +31,7 @@ python scripts/repo_manager.py                                                  
     --halide                      cleanup_codegen                               \
     --halide-remote               github.com/StanfordAHA/Halide-to-Hardware.git \
                                                                                 \
-    --coreir                      jeff_fp                                       \
+    --coreir                      more_bitops                                   \
     --coreir-remote               github.com/rdaly525/coreir.git                \
                                                                                 \
     --pycoreir                    master                                        \
@@ -40,7 +40,7 @@ python scripts/repo_manager.py                                                  
     --mapper                      new_coreir_lib                                \
     --mapper-remote               github.com/StanfordAHA/CGRAMapper.git         \
                                                                                 \
-    --cgra-generator              remove_crop                                   \
+    --cgra-generator              master                                        \
     --cgra-generator-remote       github.com/StanfordAHA/CGRAGenerator.git      \
                                                                                 \
     --test-bench-generator        master                                        \
