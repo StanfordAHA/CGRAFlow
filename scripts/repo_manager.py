@@ -88,7 +88,7 @@ class Halide_to_Hardware(Repo):
 class coreir(Repo):
     def install(self):
         #run("make clean", cwd=repo.directory)
-        run("make -j8", cwd=repo.directory)
+        run("cd build && cmake .. && make -j8 && cd ..", cwd=repo.directory)
 
 class pycoreir(Repo):
     def install(self):
