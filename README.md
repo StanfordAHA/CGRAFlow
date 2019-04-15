@@ -3,7 +3,7 @@ Integration (end-to-end) test for entire CGRA build-and-run flow. Specific to **
 
 
 # Local Setup
-## Ubuntu
+## On generic Ubuntu machine
 **NOTE**: All these commands assume you are in the root directory of the
 CGRAFlow repo. Ideally this wouldn't be the case, please feel free to submit a
 patch to resolve these issues.
@@ -29,7 +29,7 @@ Note you'll need to explicitly set the CC and CXX variables for *make* to use th
 make CC=gcc-4.9 CXX=g++-4.9 CGRA_SIZE=8x8 build/pointwise.correct.txt
 ```
 
-## Kiwi
+## On Kiwi
 1. Running the following commands will set all needed environment variables and 
 ```
 git clone https://github.com/StanfordAHA/CGRAFlow.git
