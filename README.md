@@ -1,5 +1,10 @@
 # CGRAFlow [![Build Status](https://travis-ci.org/StanfordAHA/CGRAFlow.svg?branch=master)](https://travis-ci.org/StanfordAHA/CGRAFlow)
-Integration test for entire CGRA flow
+Integration (end-to-end) test for entire CGRA build-and-run flow.
+
+Specific to **first-generation (Genesis2-based) CGRA only.**
+
+For second generation flow see ?
+
 
 # Local Setup
 ## Ubuntu
