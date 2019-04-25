@@ -12,7 +12,7 @@ export COREIRCONFIG="g++-4.9";
 
 export PATH="$HOME/miniconda/bin:$PATH"
 if ! [ -d "$HOME/miniconda/bin" ]; then
-    wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
+    wget -q https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
     bash miniconda.sh -u -b -p $HOME/miniconda
     hash -r
     conda config --set always_yes yes --set changeps1 no
@@ -28,10 +28,10 @@ export COREIR=${CGRAFLOW_PATH}/coreir
 
 pip install delegator.py
 python scripts/repo_manager.py                                                  \
-    --halide                      coreir-dev                                    \
+    --halide                      master                                        \
     --halide-remote               github.com/StanfordAHA/Halide-to-Hardware.git \
                                                                                 \
-    --coreir                      dev                                           \
+    --coreir                      master                                        \
     --coreir-remote               github.com/rdaly525/coreir.git                \
                                                                                 \
     --pycoreir                    master                                        \
