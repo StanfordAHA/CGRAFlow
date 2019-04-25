@@ -12,7 +12,7 @@ export COREIRCONFIG="g++-4.9";
 
 export PATH="$HOME/miniconda/bin:$PATH"
 if ! [ -d "$HOME/miniconda/bin" ]; then
-    wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
+    wget -q https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
     bash miniconda.sh -u -b -p $HOME/miniconda
     hash -r
     conda config --set always_yes yes --set changeps1 no

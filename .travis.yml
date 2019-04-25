@@ -24,10 +24,10 @@ install:
   - source scripts/install_locally.sh
 
 after_install:
-# setup halide env vars
-- source Halide-to-Hardware/test/scripts/before_install_travis.sh
-# Halide installation (llvm, clang)
-- Halide-to-Hardware/test/scripts/install_travis.sh
+  # setup halide env vars
+  - source Halide-to-Hardware/test/scripts/before_install_travis.sh
+  # Halide installation (llvm, clang)
+  - Halide-to-Hardware/test/scripts/install_travis.sh
 
 script:
   - set -e  # "die at first error"
