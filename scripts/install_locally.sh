@@ -28,7 +28,7 @@ export COREIR=${CGRAFLOW_PATH}/coreir
 
 pip install delegator.py
 python scripts/repo_manager.py                                                  \
-    --halide                      master                                        \
+    --halide                      fix_abi                                       \
     --halide-remote               github.com/StanfordAHA/Halide-to-Hardware.git \
                                                                                 \
     --coreir                      master                                        \
