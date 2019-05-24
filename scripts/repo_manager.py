@@ -21,8 +21,6 @@ parser.add_argument("-f", "--force", action="store_true", help="Force rebuild an
 parser.add_argument("--with-ssh", action="store_true", help="Clone with ssh", default=False)
 parser.add_argument("--coreir", help="coreir branch", default="master")
 parser.add_argument("--coreir-remote", help="coreir remote ", default="github.com/rdaly525/coreir.git")
-parser.add_argument("--pycoreir", help="pycoreir branch", default="master")
-parser.add_argument("--pycoreir-remote", help="pycoreir remote ", default="github.com/leonardt/pycoreir.git")
 parser.add_argument("--mapper", help="mapper branch", default="master")
 parser.add_argument("--mapper-remote", help="mapper remote", default="github.com/StanfordAHA/CGRAMapper.git")
 parser.add_argument("--halide", help="halide branch", default="master")
@@ -90,10 +88,6 @@ class coreir(Repo):
         #run("make clean", cwd=repo.directory)
         run("cd build && cmake .. && make -j8 && cd ..", cwd=repo.directory)
 
-class pycoreir(Repo):
-    def install(self):
-        run("pip install -e .", cwd=repo.directory)
-
 class CGRAMapper(Repo):
     def install(self):
         #run("make clean", cwd=repo.directory)
@@ -137,10 +131,6 @@ repos = (
     coreir(
         remote=args.coreir_remote,
         branch=args.coreir
-    ),
-    pycoreir(
-        remote=args.pycoreir_remote,
-        branch=args.pycoreir
     ),
     CGRAMapper(
         remote=args.mapper_remote,

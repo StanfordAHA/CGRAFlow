@@ -34,9 +34,6 @@ python scripts/repo_manager.py                                                  
     --coreir                      master                                        \
     --coreir-remote               github.com/rdaly525/coreir.git                \
                                                                                 \
-    --pycoreir                    master                                        \
-    --pycoreir-remote             github.com/leonardt/pycoreir.git              \
-                                                                                \
     --mapper                      master                                        \
     --mapper-remote               github.com/StanfordAHA/CGRAMapper.git         \
                                                                                 \
@@ -49,8 +46,6 @@ python scripts/repo_manager.py                                                  
     --cgra-pnr                    dev                                           \
     --cgra-pnr-remote             github.com/Kuree/cgra_pnr.git                 \
 
-
-pip install -e pycoreir
 
 # get the halide release
 cd Halide-to-Hardware
