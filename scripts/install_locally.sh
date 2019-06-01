@@ -28,7 +28,7 @@ export COREIR=${CGRAFLOW_PATH}/coreir
 
 pip install delegator.py
 python scripts/repo_manager.py                                                  \
-    --halide                      master                                        \
+    --halide                      d0f9aff2f52e766767408e70e940216beda0ceaa      \
     --halide-remote               github.com/StanfordAHA/Halide-to-Hardware.git \
                                                                                 \
     --coreir                      master                                        \
@@ -49,7 +49,7 @@ python scripts/repo_manager.py                                                  
 
 # get the halide release
 cd Halide-to-Hardware
-curl -s https://api.github.com/repos/StanfordAHA/Halide-to-Hardware/releases/latest?access_token=$GITHUB_TOKEN | grep browser_download_url | cut -d '"' -f 4 | wget -qi -
+wget -qi https://github.com/StanfordAHA/Halide-to-Hardware/releases/download/v0.0.4/halide_distrib.tgz
 tar zxvf halide_distrib.tgz
 ls distrib
 cd ../
