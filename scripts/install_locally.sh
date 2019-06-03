@@ -49,7 +49,7 @@ python scripts/repo_manager.py                                                  
 
 # get the halide release
 cd Halide-to-Hardware
-wget -qi https://github.com/StanfordAHA/Halide-to-Hardware/releases/download/v0.0.4/halide_distrib.tgz
+wget https://github.com/StanfordAHA/Halide-to-Hardware/releases/download/v0.0.4/halide_distrib.tgz
 tar zxvf halide_distrib.tgz
 ls distrib
 cd ../
