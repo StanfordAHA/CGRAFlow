@@ -44,10 +44,6 @@ after_failure:
 after_script:
   # Note "after_script" DOES NOT WORK when using "set -e" in script above (apparently)
 
-notifications:
-  slack:
-    secure: Ke4bYFrRafdXGNvtYkxNXroRQzxReDISBpeOZIfptyVG2mOFhLZFwNGhmmqFR1qyJKkqPfWyDE59XWJFzdPQbCtx+GEOgffN6CPN2Jyf3MN+CnAjNEuUSDYFk+zKm8ccjSiaO+vTwyxeaxTpKtky0bJmF+8l7+1z794DYDe/bA/THjYmWKeLWrzXhNoIe3+Nl6HBgkWlPH9+m6mOBXStpxuii/JjShmSh73bEFOR5kOxv/JzTzTdBXb84jJ4bYSPmEdsEt4k/lkFgw6T1hb5KlEj09zNvx+L7ji9A+0+j2T75p/WSFjknA9bAY460DO1hqm2nfKhuXGkrnn1VR1ND9PwHCCXmDVYyhrUW+2o+sSLm1+xGrrcq7minG63jB/fLanM1BNgFcDcubHvuxrZH7R/TxljptCiIp+BRpQM1lwPohsJNghEW5O0IjNMHNt0TCNd1mgimdKMJlq8GH897aR/R4UJ8jVSs9Z1WkZM+upMxqg/u1DffEgIxbrtkx2TzFbAucAFEQrrLvPfBDRBD1n35dGwx70r+Ip6olO4TN5w/Z6kSW36vb72410vXfcM64r+GZ7Tmr/0QIPAZHx9/OcH8m6wzOT8i6M0DYofb9oX54pa+FpOUp2zUHNZtb9tP3CLTU4/9kB5/2MH/y9i4uGaffttA41l4aT/Aw7R56A=
-
 addons:
   apt:
     sources:
